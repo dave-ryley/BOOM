@@ -1,10 +1,322 @@
-display.setStatusBar( display.HiddenStatusBar )
+-- Map the names to identify an axis with a device's physical inputs
+local axisMap = {}
+axisMap["OUYA Game Controller"] = {}
+axisMap["OUYA Game Controller"][1] = "left_x"
+axisMap["OUYA Game Controller"][2] = "left_y"
+axisMap["OUYA Game Controller"][3] = "left_trigger"
+axisMap["OUYA Game Controller"][4] = "right_x"
+axisMap["OUYA Game Controller"][5] = "right_y"
+axisMap["OUYA Game Controller"][6] = "right_trigger"
 
-local controls = {}
+-- Create table to map each controller's axis number to a usable name
+local axis = {}
+axis["Gamepad 1"] = {}
+axis["Gamepad 1"]["left_x"] = 1
+axis["Gamepad 1"]["left_y"] = 2
+axis["Gamepad 1"]["left_trigger"] = 5
+axis["Gamepad 1"]["right_x"] = 3
+axis["Gamepad 1"]["right_y"] = 4
+axis["Gamepad 1"]["right_trigger"] = 6
 
-local inputDevices = system.getInputDevices()
-for i = 1,#inputDevices do
-	local device = inputDevices[i]
-	controls[device.descriptor] = presetControls.presetForDevice( device )
+local redPlayer = display.newRect( display.contentCenterX-15, display.contentCenterY-15, 30, 30 )
+redPlayer:setFillColor( 1, 0, 0 )
+redPlayer.x = display.contentCenterX
+redPlayer.y = display.contentCenterY
+redPlayer.isMovingX = 0
+redPlayer.isMovingY = 0
+redPlayer.isRotatingX = 0
+redPlayer.isRotatingY = 0
+redPlayer.thisAngle = 0
+redPlayer.lastAngle = 0
+redPlayer.rotationDistance = 0
+redPlayer.isGrowing = 0
+redPlayer.color = "red"
+
+local blueDot = display.newCircle( display.contentCenterX, display.contentCenterY, 7 )
+blueDot:setFillColor( 0, 0, 1 )
+
+local whiteDot = display.newCircle( display.contentCenterX, display.contentCenterY, 2 )
+whiteDot:setFillColor( 1 )
+
+-- Calculate the angle to rotate the square. Using simple right angle math, we can
+-- determine the base and height of a right triangle where one point is 0,0
+-- (stick center) and the values returned from the two axis numbers returned
+-- from the stick
+
+-- This will give us a 0-90 value, so we have to map it to the quadrant
+-- based on if the values for the two axis are positive or negative
+-- Negative Y, positive X is top-right area
+-- Positive X, Positive Y is bottom-right area
+-- Negative X, positive Y is bottom-left area
+-- Negative x, negative y is top-left area
+
+-- These UI elements show the current keypress and axis information
+
+
+local myKeyDisplayText = display.newText( "", 100, 200, 300, 0, native.systemFont, 20 )
+myKeyDisplayText.x = display.contentWidth / 2
+myKeyDisplayText.y = 50
+
+local myAxisDisplayText = display.newText( "", 0, 0, 300, 0, native.systemFont, 20 )
+myAxisDisplayText.x = display.contentWidth / 2
+myAxisDisplayText.y = 100
+
+local function calculateAngle( sideX, sideY )
+
+    if ( sideX == 0 or sideY == 0 ) then
+        return nil
+    else
+        local tanX = math.abs( sideY ) / math.abs( sideX )
+        local atanX = math.atan( tanX )  -- Result in radians
+        local angleX = atanX * 180 / math.pi  -- Converted to degrees
+
+        if ( sideY < 0 ) then
+            angleX = angleX * -1
+        end
+
+        if ( sideX < 0 and sideY < 0 ) then
+            angleX = 270 + math.abs( angleX )
+        elseif ( sideX < 0 and sideY > 0 ) then
+            angleX = 270 - math.abs( angleX )
+        elseif ( sideX > 0 and sideY > 0 ) then
+            angleX = 90 + math.abs( angleX )
+        else
+            angleX = 90 - math.abs( angleX )
+        end
+    end
+
+    return angleX
 end
 
+-- Since controllers don't generate constant values, but simply events when
+-- the values change, we need to set a movement amount when the event happens,
+-- and also have the game loop continuously apply it
+
+-- We can also calculate our rotation angle here
+
+local function moveRedPlayer()
+
+    -- Set the .isMovingX and .isMovingY values in our event handler
+    -- If this number isn't 0 (stopped moving), move the player
+    if ( redPlayer.isMovingX ~= 0 ) then
+        redPlayer.x = redPlayer.x + redPlayer.isMovingX
+    end
+    if ( redPlayer.isMovingY ~= 0 ) then
+        redPlayer.y = redPlayer.y + redPlayer.isMovingY
+    end
+
+    -- Rotation code
+    if ( redPlayer.rotationDistance > 0.1 ) then
+        if ( redPlayer.thisAngle > redPlayer.lastAngle ) then
+            redPlayer.rotation = redPlayer.rotation + redPlayer.rotationDistance
+        else
+            redPlayer.rotation = redPlayer.rotation - redPlayer.rotationDistance
+        end
+    end
+end
+
+local function onAxisEvent( event )
+
+    -- Display some info on the screen about this axis event
+    local message = "Axis '" .. event.axis.descriptor .. "' was moved " .. tostring( event.normalizedValue )
+    myAxisDisplayText.text = message
+
+    -- Map event data to simple variables
+    local abs = math.abs
+    local controller = event.device.descriptor
+    print( controller )
+    local thisAxis = event.axis.number
+    print( thisAxis )
+    local thisPlayer = redPlayer
+
+    -- Check which controller this is coming from; you can trust the names
+    -- "Joystick 1" and "Joystick 2" to represent player 1, player 2, etc.
+    -- Based on the controller for this event, pick the object to manipulate
+
+    -- Now that we know which controller it is, determine which axis to measure
+    -- Because the "right trigger" might be 6 on one brand of controller
+    -- but 14 on another, we use the mapping system described above
+
+    if ( axis[controller]["left_x"] and axis[controller]["left_x"] == thisAxis ) then
+
+        -- This helps handle noisy sticks and sticks that don't settle back to 0 exactly
+        -- You can adjust the value based on the sensitivity of the stick
+        -- If the stick is moved far enough, then move the player, else force it to
+        -- settle back to a zero value
+
+        -- Set the X distance in the player object so the enterFrame function can move it
+
+       if ( abs(event.normalizedValue) > 0.15 ) then
+           thisPlayer.isMovingX = event.normalizedValue
+       else
+           thisPlayer.isMovingX = 0
+       end
+
+       -- Draw the blue dot around the center to show how far you actually moved the stick
+       blueDot.x = display.contentCenterX + event.normalizedValue * 10
+
+    elseif ( axis[controller]["left_y"] and axis[controller]["left_y"] == thisAxis ) then
+
+       -- Just like X, now handle the Y axis
+
+       if ( abs(event.normalizedValue) > 0.15 ) then
+           thisPlayer.isMovingY = event.normalizedValue
+       else
+           thisPlayer.isMovingY = 0
+       end
+
+       -- Move the blue dot
+       blueDot.y = display.contentCenterY + event.normalizedValue * 10
+
+    elseif ( axis[controller]["right_x"] and axis[controller]["right_x"] == thisAxis ) then
+
+        -- We will use the right stick to rotate our player
+        thisPlayer.isRotatingX = event.normalizedValue
+        print( "X rotation" .. thisPlayer.isRotatingX)
+
+        -- Use Pythagoras' Theorem to compute the distance the stick is moved from center
+
+        local a = math.abs( thisPlayer.isRotatingX * thisPlayer.isRotatingX )
+        local b = math.abs( thisPlayer.isRotatingY * thisPlayer.isRotatingY )
+        local d = math.sqrt( a + b )
+
+        -- If the distance isn't very far, set it to zero to account for
+        -- stick "slop" and not settling back to perfect center
+
+        if ( d < 0.15 ) then
+            thisPlayer.rotationDistance = 0
+        else
+
+            -- In the Runtime enterFrame listener we look at the current angle and the
+            -- last angle to determine which direction we need to rotate
+
+            thisPlayer.rotationDistance = d * 3
+            thisPlayer.lastAngle = thisPlayer.thisAngle
+            local quickAngle = calculateAngle(thisPlayer.isRotatingX, thisPlayer.isRotatingY)
+            if (quickAngle ~= nil ) then
+                print( "rotating" )
+                thisPlayer.thisAngle = math.floor( quickAngle )
+            end
+        end
+
+    elseif ( axis[controller]["right_y"] and axis[controller]["right_y"] == thisAxis ) then
+
+        -- Repeat for the Y axis on the right stick
+        thisPlayer.isRotatingY = event.normalizedValue
+        print( "Y rotation" .. thisPlayer.isRotatingY)
+
+        local a = math.abs( thisPlayer.isRotatingX * thisPlayer.isRotatingX )
+        local b = math.abs( thisPlayer.isRotatingY * thisPlayer.isRotatingY )
+        local d = math.sqrt( a + b )
+
+        if ( d < 0.15 ) then
+            thisPlayer.rotationDistance = 0
+        else
+            thisPlayer.rotationDistance = d * 3
+            thisPlayer.lastAngle = thisPlayer.thisAngle
+            local quickAngle = calculateAngle(thisPlayer.isRotatingX, thisPlayer.isRotatingY)
+            if (quickAngle ~= nil ) then
+                print( "rotating" )
+                thisPlayer.thisAngle = math.floor( quickAngle )
+            end
+        end
+
+    elseif ( axis[controller]["left_trigger"] or axis[controller]["right_trigger"] == thisAxis ) then
+
+        -- Use the analog triggers to gradually change the color of the player
+        -- No trigger pressure will be full brightness
+        -- The more you squeeze the trigger, the darker the square gets
+
+        local color = 1 * (1 - event.normalizedValue)
+        if ( color < 0.125 ) then
+            color = 0.125
+        elseif ( color >= 1 ) then
+            color = 1
+        end
+
+        if ( thisPlayer.color == "red" ) then
+            thisPlayer:setFillColor( color, 0, 0 )
+        else
+            thisPlayer:setFillColor( 0, color, 0 )
+        end
+    end
+
+    return true
+end
+
+-- Fetch all input devices currently connected to the system
+local inputDevices = system.getInputDevices()
+
+-- Traverse all input devices
+for deviceIndex = 1, #inputDevices do
+
+    -- Fetch the input device's axes
+    print( deviceIndex, "andoridDeviceid", inputDevices[deviceIndex].androidDeviceId )
+    print( deviceIndex, "canVibrate", inputDevices[deviceIndex].canVibrate )
+    print( deviceIndex, "connectionState", inputDevices[deviceIndex].connectionState )
+    print( deviceIndex, "descriptor", inputDevices[deviceIndex].descriptor )
+    print( deviceIndex, "displayName", inputDevices[deviceIndex].displayName )
+    print( deviceIndex, "isConnected", inputDevices[deviceIndex].isConnected )
+    print( deviceIndex, "permenantid", tostring(inputDevices[deviceIndex].permanentId) )
+    print( deviceIndex, "type", inputDevices[deviceIndex].type )
+
+    -- OUYA may append the controller name to the end of the display name in a future update
+    -- Future-proof this by looking at the first few characters and, if necessary, parse it
+
+    local displayName = inputDevices[deviceIndex].displayName
+
+    if ( string.sub(displayName,1,14) == "XInput Gamepad" ) then
+        displayName = string.sub( displayName,1,14 )
+    end
+    local descriptor = inputDevices[deviceIndex].descriptor
+    local inputAxes = inputDevices[deviceIndex]:getAxes()
+
+    -- Only look for gamepads at the moment and map the controllers
+    if ( inputDevices[deviceIndex].type == "gamepad" ) then
+        print( "We have a gamepad; let's find some analog inputs!" )
+        if ( #inputAxes > 0 ) then
+            local controller = 0
+
+            for axisIndex = 1, #inputAxes do
+                if ( axisMap[displayName] and axisMap[displayName][axisIndex] ) then
+                    axis[descriptor][axisMap[displayName][axisIndex]] = axisIndex
+                    print( "mapped axis[" .. axisMap[displayName][axisIndex] .. "] to ", axisIndex )
+                end
+            end
+        else
+            -- Device does not have any axes!
+            print( inputDevices[deviceIndex].descriptor .. ": No axes found." )
+        end
+
+    else
+        print( "Not a gamepad" )
+    end
+end
+
+-- Keys were handled in a previous blog post, but let's handle them to
+-- demonstrate how some axis values map to key events
+
+local function onKeyEvent( event )
+   local phase = event.phase
+   local keyName = event.keyName
+   print( event.phase, event.keyName )
+   local message = "Key '" .. event.keyName .. "' was pressed " .. event.phase
+   myKeyDisplayText.text = message
+   return false
+end
+
+local function onInputDeviceStatusChanged( event )
+
+    -- Handle the input device change
+    if ( event.connectionStateChanged ) then
+        print( event.device.displayName .. ": " .. event.device.connectionState, event.device.descriptor, event.device.type, event.device.canVibrate )
+    end
+end
+
+Runtime:addEventListener( "inputDeviceStatus", onInputDeviceStatusChanged )
+
+Runtime:addEventListener( "key", onKeyEvent )
+
+Runtime:addEventListener( "axis", onAxisEvent )
+
+Runtime:addEventListener( "enterFrame", moveRedPlayer )
