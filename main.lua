@@ -149,7 +149,7 @@ local function onAxisEvent( event )
             color = 1
         end
 
-        player:setFillColor( 0, color, 0 )
+        player.image:setFillColor( 0, color, 0 )
     end
 
     return true

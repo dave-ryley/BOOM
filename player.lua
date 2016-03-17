@@ -6,6 +6,8 @@ P.image.x = display.contentCenterX
 P.image.y = display.contentCenterY
 P.isMovingX = 0
 P.isMovingY = 0
+P.isRotatingX = 0
+P.isRotatingY = 0
 P.thisAngle = 0
 P.image.color = "red"
 P.velocity = 10
@@ -14,7 +16,7 @@ local function calculateAngle( sideX, sideY )
 
     local angle
     if ( math.abs( sideX ) < 0.1 and math.abs( sideY ) < 0.1 ) then
-        angle = player.thisAngle
+        angle = P.thisAngle
     elseif ( sideX == 0 ) then
         if ( sideY < 0 ) then
             angle = 0
