@@ -18,56 +18,14 @@ axis["Gamepad 1"]["right_x"] = 3
 axis["Gamepad 1"]["right_y"] = 4
 axis["Gamepad 1"]["right_trigger"] = 6
 
-local player = display.newImage( "TestFace.png" )
-player:setFillColor( 1, 0, 0 )
-player.x = display.contentCenterX
-player.y = display.contentCenterY
-player.isMovingX = 0
-player.isMovingY = 0
-player.isRotatingX = 0
-player.isRotatingY = 0
-player.thisAngle = 0
-player.rotationDistance = 0
-player.isGrowing = 0
-player.color = "red"
-player.velocity = 10
+-- Determines which input is used for the controller
+local controller = ""
 
+local player = require "player"
 
 -- Setting up display thumbsticks
 
-local rightThumbstick = display.newGroup()
-
-local rightThumbstickHead = display.newCircle( 0, 0, 14 )
-rightThumbstickHead:setFillColor( 1 )
-rightThumbstickHead.alpha = 0.5
-
-local rightThumbstickBase = display.newCircle( 0, 0, 20 )
-rightThumbstickBase:setFillColor( 1 )
-rightThumbstickBase.alpha = 0.5
-
-rightThumbstick:insert( rightThumbstickBase )
-rightThumbstick:insert( rightThumbstickHead )
-
-local leftThumbstick = display.newGroup()
-
-local leftThumbstickHead = display.newCircle( 0, 0, 14 )
-leftThumbstickHead:setFillColor( 1 )
-leftThumbstickHead.alpha = 0.5
-
-local leftThumbstickBase = display.newCircle( 0, 0, 20 )
-leftThumbstickBase:setFillColor( 1 )
-leftThumbstickBase.alpha = 0.5
-
-leftThumbstick:insert( leftThumbstickBase )
-leftThumbstick:insert( leftThumbstickHead )
-
-
-rightThumbstick.x = display.contentWidth/2 + 50
-rightThumbstick.y = display.contentHeight - 200
-leftThumbstick.x = display.contentWidth/2 - 50
-leftThumbstick.y = display.contentHeight - 200
-
-
+local thumbsticks = require "visualThumbsticks"
 
 -- Calculate the angle to rotate the square. Using simple right angle math, we can
 -- determine the base and height of a right triangle where one point is 0,0
@@ -92,45 +50,6 @@ local myAxisDisplayText = display.newText( "", 0, 0, 300, 0, native.systemFont, 
 myAxisDisplayText.x = display.contentWidth / 2
 myAxisDisplayText.y = 100
 
-local function calculateAngle( sideX, sideY )
-
-    local angle
-    if ( math.abs( sideX ) < 0.1 and math.abs( sideY ) < 0.1 ) then
-        angle = player.thisAngle
-    elseif ( sideX == 0 ) then
-        if ( sideY < 0 ) then
-            angle = 0
-        else
-            angle = 180
-        end
-    elseif ( sideY == 0 ) then
-        if ( sideX < 0 ) then
-            angle = 270
-        else
-            angle = 90
-        end
-    else
-        local tanX = math.abs( sideY ) / math.abs( sideX )
-        local atanX = math.atan( tanX )  -- Result in radians
-        angle = atanX * 180 / math.pi  -- Converted to degrees
-
-        if ( sideY < 0 ) then
-            angle = angle * -1
-        end
-
-        if ( sideX < 0 and sideY < 0 ) then
-            angle = 270 + math.abs( angle )
-        elseif ( sideX < 0 and sideY > 0 ) then
-            angle = 270 - math.abs( angle )
-        elseif ( sideX > 0 and sideY > 0 ) then
-            angle = 90 + math.abs( angle )
-        else
-            angle = 90 - math.abs( angle )
-        end
-    end
-    return angle
-end
-
 -- Since controllers don't generate constant values, but simply events when
 -- the values change, we need to set a movement amount when the event happens,
 -- and also have the game loop continuously apply it
@@ -142,13 +61,13 @@ local function moveplayer()
     -- Set the .isMovingX and .isMovingY values in our event handler
     -- If this number isn't 0 (stopped moving), move the player
     if ( player.isMovingX ~= 0 ) then
-        player.x = player.x + player.isMovingX
+        player.image.x = player.image.x + player.isMovingX
     end
     if ( player.isMovingY ~= 0 ) then
-        player.y = player.y + player.isMovingY
+        player.image.y = player.image.y + player.isMovingY
     end
 
-    player.rotation = player.thisAngle
+    player.image.rotation = player.thisAngle
 end
 
 local function onAxisEvent( event )
@@ -161,7 +80,6 @@ local function onAxisEvent( event )
     local abs = math.abs
     local controller = event.device.descriptor
     local thisAxis = event.axis.number
-    local thisPlayer = player
 
     -- Check which controller this is coming from; you can trust the names
     -- "Joystick 1" and "Joystick 2" to represent player 1, player 2, etc.
@@ -181,42 +99,42 @@ local function onAxisEvent( event )
         -- Set the X distance in the player object so the enterFrame function can move it
 
        if ( abs(event.normalizedValue) > 0.15 ) then
-           thisPlayer.isMovingX = event.normalizedValue * thisPlayer.velocity
+           player.isMovingX = event.normalizedValue * player.velocity
        else
-           thisPlayer.isMovingX = 0
+           player.isMovingX = 0
        end
 
-       leftThumbstickHead.x = event.normalizedValue * 10
+       thumbsticks.leftThumbstickHead.x = event.normalizedValue * 10
 
     elseif ( axis[controller]["left_y"] == thisAxis ) then
 
        -- Just like X, now handle the Y axis
 
        if ( abs(event.normalizedValue) > 0.15 ) then
-           thisPlayer.isMovingY = event.normalizedValue * thisPlayer.velocity
+           player.isMovingY = event.normalizedValue * player.velocity
        else
-           thisPlayer.isMovingY = 0
+           player.isMovingY = 0
        end
 
-       leftThumbstickHead.y = event.normalizedValue * 10
+       thumbsticks.leftThumbstickHead.y = event.normalizedValue * 10
 
     elseif ( axis[controller]["right_x"] == thisAxis ) then
 
         -- We will use the right stick to rotate our player
-        thisPlayer.isRotatingX = event.normalizedValue
-        thisPlayer.thisAngle = math.floor( calculateAngle(thisPlayer.isRotatingX, thisPlayer.isRotatingY) )
+        player.isRotatingX = event.normalizedValue
+        player.thisAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY) )
 
         -- Draw the blue dot around the center to show how far you actually moved the stick
-       rightThumbstickHead.x = event.normalizedValue * 10
+       thumbsticks.rightThumbstickHead.x = event.normalizedValue * 10
 
     elseif ( axis[controller]["right_y"] == thisAxis ) then
 
         -- Repeat for the Y axis on the right stick
-        thisPlayer.isRotatingY = event.normalizedValue
-        thisPlayer.thisAngle = math.floor( calculateAngle(thisPlayer.isRotatingX, thisPlayer.isRotatingY) )
+        player.isRotatingY = event.normalizedValue
+        player.thisAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY) )
 
         -- Move the blue dot
-       rightThumbstickHead.y = event.normalizedValue * 10
+       thumbsticks.rightThumbstickHead.y = event.normalizedValue * 10
 
     elseif ( axis[controller]["left_trigger"] or axis[controller]["right_trigger"] == thisAxis ) then
 
@@ -231,7 +149,7 @@ local function onAxisEvent( event )
             color = 1
         end
 
-        thisPlayer:setFillColor( 0, color, 0 )
+        player:setFillColor( 0, color, 0 )
     end
 
     return true
