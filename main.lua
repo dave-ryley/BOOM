@@ -19,7 +19,6 @@ axis["Gamepad 1"]["right_y"] = 4
 axis["Gamepad 1"]["right_trigger"] = 6
 
 -- Determines which input is used for the controller
-local controller = ""
 
 local player = require "player"
 
@@ -27,20 +26,7 @@ local player = require "player"
 
 local thumbsticks = require "visualThumbsticks"
 
--- Calculate the angle to rotate the square. Using simple right angle math, we can
--- determine the base and height of a right triangle where one point is 0,0
--- (stick center) and the values returned from the two axis numbers returned
--- from the stick
-
--- This will give us a 0-90 value, so we have to map it to the quadrant
--- based on if the values for the two axis are positive or negative
--- Negative Y, positive X is top-right area
--- Positive X, Positive Y is bottom-right area
--- Negative X, positive Y is bottom-left area
--- Negative x, negative y is top-left area
-
 -- These UI elements show the current keypress and axis information
-
 
 local myKeyDisplayText = display.newText( "", 100, 200, 300, 0, native.systemFont, 20 )
 myKeyDisplayText.x = display.contentWidth / 2
@@ -61,13 +47,133 @@ local function moveplayer()
     -- Set the .isMovingX and .isMovingY values in our event handler
     -- If this number isn't 0 (stopped moving), move the player
     if ( player.isMovingX ~= 0 ) then
-        player.image.x = player.image.x + player.isMovingX
+        player.parent.x = player.parent.x + player.isMovingX
     end
     if ( player.isMovingY ~= 0 ) then
-        player.image.y = player.image.y + player.isMovingY
+        player.parent.y = player.parent.y + player.isMovingY
     end
 
-    player.image.rotation = player.thisAngle
+    -- Animate Upper Body
+    local upperBodyAnim = ""
+    if player.thisAimAngle > 337 or player.thisAimAngle < 23 then
+        upperBodyAnim = "up"
+        player.torch.x = -70
+        player.torch.y = -100
+    elseif player.thisAimAngle < 68 then
+        upperBodyAnim = "upRight"
+        player.torch.x = -65
+        player.torch.y = -120
+    elseif player.thisAimAngle < 113 then
+        upperBodyAnim = "right"
+        player.torch.x = 65
+        player.torch.y = -135
+    elseif player.thisAimAngle < 158 then
+        upperBodyAnim = "downRight"
+        player.torch.x = 65
+        player.torch.y = -125
+    elseif player.thisAimAngle < 203 then
+        upperBodyAnim = "down"
+        player.torch.x = 60
+        player.torch.y = -105
+    elseif player.thisAimAngle < 248 then
+        upperBodyAnim = "downLeft"
+        player.torch.x = 30
+        player.torch.y = -120
+    elseif player.thisAimAngle < 293 then
+        upperBodyAnim = "left"
+        player.torch.x = -10
+        player.torch.y = -115
+    else
+        upperBodyAnim = "upLeft"
+        player.torch.x = -45
+        player.torch.y = -105
+    end
+
+    if player.upperBodyAnim ~= upperBodyAnim then
+        player.upperBodyRun_sprite:setSequence(upperBodyAnim)
+        player.upperBodyRun_sprite:play()
+        player.upperBodyAnim = upperBodyAnim
+    end
+
+    -- Animate Lower Body
+    local lowerBodyAnim = "idle"
+    if player.isMovingX + player.isMovingY >= 0.1 then
+        
+
+        -- 1. Get the direction moving compared to the direction facing
+        -- 2. Set the animation based on the direction facing
+        local reverse = false
+        local localAngle = (player.thisAimAngle+360 - player.thisDirectionAngle) % 360
+        if localAngle > 110 and localAngle < 250 then
+            reverse = true
+        end
+        if player.thisDirectionAngle > 337 or player.thisDirectionAngle < 23 then
+            -- direction upAhead or downBack
+            if reverse then
+                lowerBodyAnim = "downBack"
+            else
+                lowerBodyAnim = "upAhead"
+            end
+        elseif player.thisDirectionAngle < 68 then
+            -- direction upRightAhead or downLeftBack
+            if reverse then
+                lowerBodyAnim = "downLeftBack"
+            else
+                lowerBodyAnim = "upRightAhead"
+            end
+        elseif player.thisDirectionAngle < 113 then
+            -- direction rightAhead or leftBack
+            if reverse then
+                lowerBodyAnim = "leftBack"
+            else
+                lowerBodyAnim = "rightAhead"                
+            end
+        elseif player.thisDirectionAngle < 158 then
+            -- direction downRightAhead or upLeftBack
+            if reverse then
+                lowerBodyAnim = "upLeftBack"
+            else
+                lowerBodyAnim = "downRightAhead"                
+            end
+        elseif player.thisDirectionAngle < 203 then
+            -- direction downAhead or upBack
+            if reverse then
+                lowerBodyAnim = "upBack"
+            else
+                lowerBodyAnim = "downAhead"                
+            end
+        elseif player.thisDirectionAngle < 248 then
+            -- direction downLeftAhead or upRightBack
+            if reverse then
+                lowerBodyAnim = "upRightBack"
+            else
+                lowerBodyAnim = "downLeftAhead"                
+            end
+        elseif player.thisDirectionAngle < 293 then
+            -- direction leftAhead or rightBack
+            if reverse then
+                lowerBodyAnim = "rightBack"
+            else
+                lowerBodyAnim = "leftAhead"                
+            end
+        else
+            -- direction upLeftAhead or downRightBack
+            if reverse then
+                lowerBodyAnim = "downRightBack"
+            else
+                lowerBodyAnim = "upLeftAhead"                
+            end
+        end
+    else
+        --Optional, indlude standing animation.
+    end
+
+    if player.lowerBodyAnim ~= lowerBodyAnim then
+        player.lowerBodyRun_sprite:setSequence(lowerBodyAnim)
+        player.lowerBodyRun_sprite:play()
+        player.lowerBodyAnim = lowerBodyAnim
+    end
+
 end
 
 local function onAxisEvent( event )
@@ -100,6 +206,7 @@ local function onAxisEvent( event )
 
        if ( abs(event.normalizedValue) > 0.15 ) then
            player.isMovingX = event.normalizedValue * player.velocity
+           player.thisDirectionAngle = math.floor( player.calculateAngle(player.isMovingX, player.isMovingY, player.thisDirectionAngle) )
        else
            player.isMovingX = 0
        end
@@ -112,6 +219,7 @@ local function onAxisEvent( event )
 
        if ( abs(event.normalizedValue) > 0.15 ) then
            player.isMovingY = event.normalizedValue * player.velocity
+           player.thisDirectionAngle = math.floor( player.calculateAngle(player.isMovingX, player.isMovingY, player.thisDirectionAngle) )
        else
            player.isMovingY = 0
        end
@@ -122,7 +230,8 @@ local function onAxisEvent( event )
 
         -- We will use the right stick to rotate our player
         player.isRotatingX = event.normalizedValue
-        player.thisAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY) )
+        print(player.isRotatingX .. player.isRotatingY)
+        player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
 
         -- Draw the blue dot around the center to show how far you actually moved the stick
        thumbsticks.rightThumbstickHead.x = event.normalizedValue * 10
@@ -131,7 +240,7 @@ local function onAxisEvent( event )
 
         -- Repeat for the Y axis on the right stick
         player.isRotatingY = event.normalizedValue
-        player.thisAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY) )
+        player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
 
         -- Move the blue dot
        thumbsticks.rightThumbstickHead.y = event.normalizedValue * 10
@@ -142,14 +251,7 @@ local function onAxisEvent( event )
         -- No trigger pressure will be full brightness
         -- The more you squeeze the trigger, the darker the square gets
 
-        local color = 1 * (1 - event.normalizedValue)
-        if ( color < 0.125 ) then
-            color = 0.125
-        elseif ( color >= 1 ) then
-            color = 1
-        end
-
-        player.image:setFillColor( 0, color, 0 )
+        local value = 1 * (1 - event.normalizedValue)
     end
 
     return true
