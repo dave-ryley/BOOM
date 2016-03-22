@@ -113,7 +113,7 @@ local function moveplayer()
 
     -- Animate Lower Body
     local lowerBodyAnim = "idle"
-    if player.isMovingX + player.isMovingY >= 0.1 then
+    if math.abs(player.isMovingX) + math.abs(player.isMovingY) >= 0.1 then
         
 
         -- 1. Get the direction moving compared to the direction facing
@@ -123,6 +123,7 @@ local function moveplayer()
         if localAngle > 110 and localAngle < 250 then
             reverse = true
         end
+        myKeyDisplayText.text = player.thisDirectionAngle
         if player.thisDirectionAngle > 337 or player.thisDirectionAngle < 23 then
             if reverse then
                 lowerBodyAnim = "downBack"
