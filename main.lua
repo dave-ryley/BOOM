@@ -316,12 +316,68 @@ local function onKeyEvent( event )
    myKeyDisplayText.text = message
 
     if (event.phase == "down") then
+
+        -- Adjust velocity for testing, remove for final game        
         if ( event.keyName == "[" or event.keyName == "rightShoulderButton1" ) then
             if (player.velocity > 0 ) then
                 player.velocity = player.velocity - 1
             end
         elseif ( event.keyName == "]" or event.keyName == "leftShoulderButton1" ) then
             player.velocity = player.velocity + 1
+            print("] was pressed")
+        end
+        -- WASD and ArrowKeys pressed down
+        if ( event.keyName == "w" ) then
+            player.isMovingY = -1 * player.velocity
+            player.thisDirectionAngle = math.floor( player.calculateAngle(player.isMovingX, player.isMovingY, player.thisDirectionAngle) )
+        elseif ( event.keyName == "s") then
+            player.isMovingY = 1 * player.velocity
+            player.thisDirectionAngle = math.floor( player.calculateAngle(player.isMovingX, player.isMovingY, player.thisDirectionAngle) )
+        elseif ( event.keyName == "a") then
+            player.isMovingX = -1 * player.velocity
+            player.thisDirectionAngle = math.floor( player.calculateAngle(player.isMovingX, player.isMovingY, player.thisDirectionAngle) )
+        elseif ( event.keyName == "d") then
+            player.isMovingX = 1 * player.velocity
+            player.thisDirectionAngle = math.floor( player.calculateAngle(player.isMovingX, player.isMovingY, player.thisDirectionAngle) )
+        elseif ( event.keyName == "up") then
+            player.isRotatingY = -1
+            player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
+        elseif ( event.keyName == "down") then
+            player.isRotatingY = 1
+            player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
+        elseif ( event.keyName == "left") then
+            player.isRotatingX = -1
+            player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
+        elseif ( event.keyName == "right") then
+            player.isRotatingX = 1
+            player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
+        end
+    else
+        -- WASD and Arrow keys pressed up
+        if ( event.keyName == "w" and player.isMovingY < 0) then
+            player.isMovingY = 0
+            player.thisDirectionAngle = math.floor( player.calculateAngle(player.isMovingX, player.isMovingY, player.thisDirectionAngle) )
+        elseif ( event.keyName == "s" and player.isMovingY > 0 ) then
+            player.isMovingY = 0
+            player.thisDirectionAngle = math.floor( player.calculateAngle(player.isMovingX, player.isMovingY, player.thisDirectionAngle) )
+        elseif ( event.keyName == "a" and player.isMovingX < 0 ) then
+            player.isMovingX = 0
+            player.thisDirectionAngle = math.floor( player.calculateAngle(player.isMovingX, player.isMovingY, player.thisDirectionAngle) )
+        elseif ( event.keyName == "d" and player.isMovingX > 0 ) then
+            player.isMovingX = 0
+            player.thisDirectionAngle = math.floor( player.calculateAngle(player.isMovingX, player.isMovingY, player.thisDirectionAngle) )
+        elseif ( event.keyName == "up" and player.isRotatingY < 0 ) then
+            player.isRotatingY = 0
+            player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
+        elseif ( event.keyName == "down" and player.isRotatingY > 0 ) then
+            player.isRotatingY = 0
+            player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
+        elseif ( event.keyName == "left" and player.isRotatingX < 0 ) then
+            player.isRotatingX = 0
+            player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
+        elseif ( event.keyName == "right" and player.isRotatingX > 0 ) then
+            player.isRotatingX = 0
+            player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
         end
     end
 
