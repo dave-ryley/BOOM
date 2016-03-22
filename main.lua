@@ -1,3 +1,7 @@
+local perspective = require("perspective")
+
+local camera = perspective.createView()
+
 -- Map the names to identify an axis with a device's physical inputs
 local axisMap = {}
 axisMap["OUYA Game Controller"] = {}
@@ -19,8 +23,20 @@ axis["Gamepad 1"]["right_y"] = 4
 axis["Gamepad 1"]["right_trigger"] = 6
 
 -- Determines which input is used for the controller
-
+local tempFloor = display.newRect( display.contentCenterX, display.contentCenterY, 5000, 5000 )
+display.setDefault( "textureWrapX", "repeat" )
+display.setDefault( "textureWrapY", "repeat" )
+tempFloor.fill = { type="image", filename="Graphics/Temp/dungeonFloor.png" }
+tempFloor.fill.scaleX = 0.1
+tempFloor.fill.scaleY = 0.1
 local player = require "player"
+camera:add(player.parent, 1)
+camera:add(tempFloor, 2)
+
+camera:prependLayer()
+camera.damping = 5
+camera:setFocus(player.parent)
+camera:track()
 
 -- Setting up display thumbsticks
 
@@ -108,56 +124,48 @@ local function moveplayer()
             reverse = true
         end
         if player.thisDirectionAngle > 337 or player.thisDirectionAngle < 23 then
-            -- direction upAhead or downBack
             if reverse then
                 lowerBodyAnim = "downBack"
             else
                 lowerBodyAnim = "upAhead"
             end
         elseif player.thisDirectionAngle < 68 then
-            -- direction upRightAhead or downLeftBack
             if reverse then
                 lowerBodyAnim = "downLeftBack"
             else
                 lowerBodyAnim = "upRightAhead"
             end
         elseif player.thisDirectionAngle < 113 then
-            -- direction rightAhead or leftBack
             if reverse then
                 lowerBodyAnim = "leftBack"
             else
                 lowerBodyAnim = "rightAhead"                
             end
         elseif player.thisDirectionAngle < 158 then
-            -- direction downRightAhead or upLeftBack
             if reverse then
                 lowerBodyAnim = "upLeftBack"
             else
                 lowerBodyAnim = "downRightAhead"                
             end
         elseif player.thisDirectionAngle < 203 then
-            -- direction downAhead or upBack
             if reverse then
                 lowerBodyAnim = "upBack"
             else
                 lowerBodyAnim = "downAhead"                
             end
         elseif player.thisDirectionAngle < 248 then
-            -- direction downLeftAhead or upRightBack
             if reverse then
                 lowerBodyAnim = "upRightBack"
             else
                 lowerBodyAnim = "downLeftAhead"                
             end
         elseif player.thisDirectionAngle < 293 then
-            -- direction leftAhead or rightBack
             if reverse then
                 lowerBodyAnim = "rightBack"
             else
                 lowerBodyAnim = "leftAhead"                
             end
         else
-            -- direction upLeftAhead or downRightBack
             if reverse then
                 lowerBodyAnim = "downRightBack"
             else
@@ -165,7 +173,6 @@ local function moveplayer()
             end
         end
     else
-        --Optional, indlude standing animation.
     end
 
     if player.lowerBodyAnim ~= lowerBodyAnim then
@@ -233,8 +240,8 @@ local function onAxisEvent( event )
         print(player.isRotatingX .. player.isRotatingY)
         player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
 
-        -- Draw the blue dot around the center to show how far you actually moved the stick
-       thumbsticks.rightThumbstickHead.x = event.normalizedValue * 10
+        -- Move the thumbstick
+        thumbsticks.rightThumbstickHead.x = event.normalizedValue * 10
 
     elseif ( axis[controller]["right_y"] == thisAxis ) then
 
@@ -242,8 +249,8 @@ local function onAxisEvent( event )
         player.isRotatingY = event.normalizedValue
         player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
 
-        -- Move the blue dot
-       thumbsticks.rightThumbstickHead.y = event.normalizedValue * 10
+        -- Move the thumbstick
+        thumbsticks.rightThumbstickHead.y = event.normalizedValue * 10
 
     elseif ( axis[controller]["left_trigger"] or axis[controller]["right_trigger"] == thisAxis ) then
 
