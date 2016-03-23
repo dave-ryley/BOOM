@@ -52,6 +52,27 @@ local myAxisDisplayText = display.newText( "", 0, 0, 300, 0, native.systemFont, 
 myAxisDisplayText.x = display.contentWidth / 2
 myAxisDisplayText.y = 100
 
+--Sound Stuff
+local stepCount = 0
+local Torchidle = audio.loadSound( "/Sounds/Player/Torchidle.ogg" )
+local Step1 = audio.loadSound( "Sounds/Player/Step1.ogg" )
+local Step2 = audio.loadSound( "Sounds/Player/Step2.ogg" )
+local BoomStick = audio.loadSound("Sounds/Player/BOOMSTICK.ogg")
+
+local function sounds()
+    if(player.isAlive)then audio.play(Torchidle, { channel = 2, loops = -1, fadein = 0}) end
+    currentFrame = player.lowerBodyRun_sprite.frame
+    --print("frame: ",currentFrame)
+    if(player.isMovingX ~= 0 or player.isMovingY ~=0) then
+        if(currentFrame == 3)then
+            audio.play( Step1, { channel = 1, loops=0})
+        elseif(currentFrame == 7)then
+            audio.play( Step2, { channel = 1, loops=0})
+        end
+    end
+end
+
+
 -- Since controllers don't generate constant values, but simply events when
 -- the values change, we need to set a movement amount when the event happens,
 -- and also have the game loop continuously apply it
@@ -359,6 +380,9 @@ local function onKeyEvent( event )
         elseif ( event.keyName == "right") then
             player.isRotatingX = 1
             player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
+        elseif ( event.keyName == "space") then
+            audio.play(BoomStick,{channel = 3})
+            --code for shooting
         end
     else
         -- WASD and Arrow keys pressed up
@@ -407,3 +431,5 @@ Runtime:addEventListener( "key", onKeyEvent )
 Runtime:addEventListener( "axis", onAxisEvent )
 
 Runtime:addEventListener( "enterFrame", moveplayer )
+
+Runtime:addEventListener( "enterFrame", sounds )
