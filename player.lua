@@ -12,6 +12,7 @@ P.thisDirectionAngle = 0
 P.velocity = 10
 P.lowerBodyAnim = ""
 P.upperBodyAnim = ""
+P.isAlive = true
 
 -- Setting up the lower body animation
 P.lowerBody = display.newGroup()
@@ -66,7 +67,6 @@ torch_sequences =
 
 P.torch_sprite = display.newSprite( P.torch, P.torch_sheet, torch_sequences )
 P.torch_sprite:play()
-
 -- Test image
 
 -- Calculate the angle to rotate. Using simple right angle math, we can
