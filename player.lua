@@ -13,6 +13,10 @@ P.velocity = 10
 P.lowerBodyAnim = ""
 P.upperBodyAnim = ""
 P.isAlive = true
+P.shooting = 0
+P.shotgunPower = 50
+P.lookDirection = display.newGroup()
+P.parent:insert ( P.lookDirection )
 
 -- Setting up the lower body animation
 P.lowerBody = display.newGroup()
@@ -67,6 +71,22 @@ torch_sequences =
 
 P.torch_sprite = display.newSprite( P.torch, P.torch_sheet, torch_sequences )
 P.torch_sprite:play()
+
+
+-- Collision object setup
+P.bodyCollision = display.newRect(0,0,150,170)
+P.bodyCollision.alpha = 0.5
+physics.addBody( P.bodyCollision, "dynamic", {density=0.5, friction=1.0, bounce=0.0})
+P.bodyCollision.isFixedRotation=true
+P.bodyCollision.x = display.contentCenterX
+P.bodyCollision.y = display.contentCenterY + 20
+
+-- Camera lock object setup
+P.cameraLock = display.newRect(0,-200,50,50)
+P.cameraLock.alpha = 0.0
+P.cameraLock.x = P.parent.x
+P.cameraLock.y = P.parent.y
+
 -- Test image
 
 -- Calculate the angle to rotate. Using simple right angle math, we can

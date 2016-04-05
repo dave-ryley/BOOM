@@ -2,6 +2,10 @@ local perspective = require("perspective")
 
 local camera = perspective.createView()
 
+local physics = require "physics"
+physics.start()
+physics.setGravity(0,0)
+
 -- Map the names to identify an axis with a device's physical inputs
 local axisMap = {}
 axisMap["OUYA Game Controller"] = {}
@@ -30,12 +34,18 @@ tempFloor.fill = { type="image", filename="Graphics/Temp/dungeonFloor.png" }
 tempFloor.fill.scaleX = 0.1
 tempFloor.fill.scaleY = 0.1
 local player = require "player"
+
+local block = require "collisionTest"
+
 camera:add(player.parent, 1)
+camera:add(player.cameraLock, 1)
 camera:add(tempFloor, 2)
+camera:add(block.collisionBody, 2)
+camera:add(player.bodyCollision, 1)
 
 camera:prependLayer()
-camera.damping = 5
-camera:setFocus(player.parent)
+camera.damping = 10
+camera:setFocus(player.cameraLock)
 camera:track()
 
 -- Setting up display thumbsticks
@@ -83,11 +93,25 @@ local function moveplayer()
 
     -- Set the .isMovingX and .isMovingY values in our event handler
     -- If this number isn't 0 (stopped moving), move the player
+    if (player.shooting > 0) then
+        -- need to change to player aim direction
+        player.isMovingX = -player.shooting
+        player.isMovingY = player.shooting
+        player.shooting = player.shooting - (player.shooting/15 + 1)
+    end
     if ( player.isMovingX ~= 0 ) then
-        player.parent.x = player.parent.x + player.isMovingX
+        player.bodyCollision.x = player.bodyCollision.x + player.isMovingX
+        player.parent.x = player.bodyCollision.x
+        player.cameraLock.x = player.parent.x + player.isMovingX*10
+    else
+        player.cameraLock.x = player.parent.x
     end
     if ( player.isMovingY ~= 0 ) then
-        player.parent.y = player.parent.y + player.isMovingY
+        player.bodyCollision.y = player.bodyCollision.y + player.isMovingY
+        player.parent.y = player.bodyCollision.y - 20
+        player.cameraLock.y = player.parent.y + player.isMovingY*10
+    else
+        player.cameraLock.y = player.parent.y
     end
 
     -- Animate Upper Body
@@ -381,6 +405,7 @@ local function onKeyEvent( event )
             player.isRotatingX = 1
             player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
         elseif ( event.keyName == "space") then
+            player.bodyCollision:applyLinearImpulse()
             audio.play(BoomStick,{channel = 3})
             --code for shooting
         end
