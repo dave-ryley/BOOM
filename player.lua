@@ -1,8 +1,10 @@
 local P = {}
 
+P.shotgun = require("shotgun")
 P.parent = display.newGroup()
 P.parent.x = display.contentCenterX
 P.parent.y = display.contentCenterY
+P.canShoot = true
 P.isMovingX = 0
 P.isMovingY = 0
 P.isRotatingX = 0
@@ -76,6 +78,7 @@ P.torch_sprite:play()
 -- Collision object setup
 P.bodyCollision = display.newRect(0,0,150,170)
 P.bodyCollision.alpha = 0.0
+P.bodyCollision.myName = "player"
 physics.addBody( P.bodyCollision, "dynamic", {density=0.5, friction=1.0, bounce=0.0})
 P.bodyCollision.isFixedRotation=true
 P.bodyCollision.x = display.contentCenterX
@@ -87,6 +90,26 @@ P.cameraLock.alpha = 0.0
 P.cameraLock.x = P.parent.x
 P.cameraLock.y = P.parent.y
 
+--Test shotgun
+local function shootDelay( event )
+    P.canShoot = true;
+    print("can shoot: " ..  tostring(P.canShoot))
+end
+
+local shoot = function( event )
+    if (event.phase == "down" and event.keyName == "space" and P.canShoot == true) then
+        P.shotgun.collisionBody.alpha = 1
+        P.shotgun.collisionBody.isAwake = true
+        P.shotgun.collisionBody.x = P.bodyCollision.x
+        P.shotgun.collisionBody.y = P.bodyCollision.y
+        --print("Shot: " ..P.shotgun.collisionBody.x .. " : " .. P.shotgun.collisionBody.y)
+        P.canShoot = false
+
+        timer.performWithDelay( 1800, shootDelay )
+        print("can shoot: " .. tostring(P.canShoot))
+    end
+end
+Runtime:addEventListener( "key" , shoot)
 -- Test image
 
 -- Calculate the angle to rotate. Using simple right angle math, we can

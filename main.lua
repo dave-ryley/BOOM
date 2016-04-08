@@ -5,6 +5,7 @@ local camera = perspective.createView()
 local physics = require "physics"
 physics.start()
 physics.setGravity(0,0)
+physics.setDrawMode( "hybrid" )
 
 -- Map the names to identify an axis with a device's physical inputs
 local axisMap = {}
@@ -28,21 +29,26 @@ axis["Gamepad 1"]["right_trigger"] = 6
 
 -- Determines which input is used for the controller
 local tempFloor = display.newRect( display.contentCenterX, display.contentCenterY, 5000, 5000 )
+tempFloor.myName = "floor"
 display.setDefault( "textureWrapX", "repeat" )
 display.setDefault( "textureWrapY", "repeat" )
 tempFloor.fill = { type="image", filename="Graphics/Temp/dungeonFloor.png" }
 tempFloor.fill.scaleX = 0.1
 tempFloor.fill.scaleY = 0.1
 local player = require "player"
-
 local block = require "collisionTest"
+--local blast = require "shotgun"
+--blast.name = "blast"
+
+
 
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
 camera:add(tempFloor, 2)
 camera:add(block.collisionBody, 2)
 camera:add(player.bodyCollision, 1)
-
+camera:add(player.shotgun.collisionBody, 1)
+--camera:add(blast.collisionBody, 1)
 camera:prependLayer()
 camera.damping = 10
 camera:setFocus(player.cameraLock)
@@ -81,6 +87,7 @@ local function sounds()
         end
     end
 end
+
 
 
 -- Since controllers don't generate constant values, but simply events when
@@ -317,7 +324,7 @@ local inputDevices = system.getInputDevices()
 for deviceIndex = 1, #inputDevices do
 
     -- Fetch the input device's axes
-    print( deviceIndex, "andoridDeviceid", inputDevices[deviceIndex].androidDeviceId )
+    print( deviceIndex, "androidDeviceid", inputDevices[deviceIndex].androidDeviceId )
     print( deviceIndex, "canVibrate", inputDevices[deviceIndex].canVibrate )
     print( deviceIndex, "connectionState", inputDevices[deviceIndex].connectionState )
     print( deviceIndex, "descriptor", inputDevices[deviceIndex].descriptor )
@@ -448,6 +455,8 @@ local function onInputDeviceStatusChanged( event )
         print( event.device.displayName .. ": " .. event.device.connectionState, event.device.descriptor, event.device.type, event.device.canVibrate )
     end
 end
+
+
 
 Runtime:addEventListener( "inputDeviceStatus", onInputDeviceStatusChanged )
 
