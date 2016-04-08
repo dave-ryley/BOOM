@@ -31,7 +31,7 @@ local runSheetOptions =
 {
     width = 140,
     height = 110,
-    numFrames = 64
+    numFrames = 152
 }
 P.lowerBodyRun_sheet = graphics.newImageSheet( "Graphics/Animation/RunnerLegs.png", runSheetOptions )
 lowerBodyRun_sequences = require "runnerLegsSeq"
@@ -46,7 +46,7 @@ local runUpperSheetOptions =
 {
     width = 210,
     height = 220,
-    numFrames = 64
+    numFrames = 88
 }
 P.upperBodyRun_sheet = graphics.newImageSheet( "Graphics/Animation/RunnerTorso.png", runUpperSheetOptions )
 upperBodyRun_sequences = require "runnerTorsoSeq"
