@@ -2,8 +2,8 @@ application =
 {
 	content = 
 	{
-		width = 720,
-		height = 1280,
+		width = 1080,
+		height = 1920,
 		scale = "zoomEven",
 		xAlign = "center",
 		yAlign = "center"
