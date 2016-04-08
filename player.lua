@@ -75,7 +75,7 @@ P.torch_sprite:play()
 
 -- Collision object setup
 P.bodyCollision = display.newRect(0,0,150,170)
-P.bodyCollision.alpha = 0.5
+P.bodyCollision.alpha = 0.0
 physics.addBody( P.bodyCollision, "dynamic", {density=0.5, friction=1.0, bounce=0.0})
 P.bodyCollision.isFixedRotation=true
 P.bodyCollision.x = display.contentCenterX
