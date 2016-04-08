@@ -14,21 +14,11 @@ local C = {}
 							320	-C.collisionBody.width/2 , 40 -C.collisionBody.height/2, 
 							320	-C.collisionBody.width/2 , 80 -C.collisionBody.height/2, 
 							0	-C.collisionBody.width/2 , 120 -C.collisionBody.height/2}
-	physics.addBody( C.collisionBody, "static", { density=0.0, friction=0.0, bounce=0.0, shape=blastShape, isSensor=true } )
-
-	local function onCollision( self, event )
-		if ( event.phase == "began" ) then
-
-			print( self.myName .. ": collision began with " .. event.other.myName )
-
-		elseif ( event.phase == "ended" ) then
-
-			print( self.myName .. ": collision ended with " .. event.other.myName )
-
-		end
-	end
-
-	C.collisionBody.collision = onCollision
-	C.collisionBody:addEventListener( "collision" )
+	physics.addBody( C.collisionBody, "static", { 	density=0.0, 
+													friction=0.0, 
+													bounce=0.0, 
+													shape=blastShape, 
+													isSensor=true 
+												} )
 
 return C

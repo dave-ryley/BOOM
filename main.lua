@@ -70,9 +70,8 @@ myAxisDisplayText.y = 100
 
 --Sound Stuff
 local stepCount = 0
-local Torchidle = audio.loadSound( "/Sounds/Player/Torchidle.ogg" )
-local Step1 = audio.loadSound( "Sounds/Player/Step1.ogg" )
-local Step2 = audio.loadSound( "Sounds/Player/Step2.ogg" )
+
+
 
 
 
@@ -306,7 +305,20 @@ local function onInputDeviceStatusChanged( event )
     end
 end
 
+local function onCollision(  event )
+  --  if(event.myName !~ "player" and event.other.myName ~= "shotgun")
+        if ( event.phase == "began" ) then
 
+            print( event.object1.myName .. ": collision began with " .. event.object2.myName )
+
+        elseif ( event.phase == "ended" ) then
+
+            print( event.object1.myName .. ": collision ended with " .. event.object2.myName )
+
+        end
+end
+
+Runtime:addEventListener( "collision", onCollision )
 
 Runtime:addEventListener( "inputDeviceStatus", onInputDeviceStatusChanged )
 

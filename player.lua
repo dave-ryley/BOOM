@@ -23,6 +23,7 @@ P.parent:insert ( P.lookDirection )
 P.boomStick = audio.loadSound("Sounds/Player/BOOMSTICK.ogg")
 P.step1 = audio.loadSound( "Sounds/Player/Step1.ogg" )
 P.step2 = audio.loadSound( "Sounds/Player/Step2.ogg" )
+P.torchIdle = audio.loadSound( "/Sounds/Player/Torchidle.ogg" )
 -- Setting up the lower body animation
 P.lowerBody = display.newGroup()
 P.parent:insert( P.lowerBody )
@@ -93,11 +94,7 @@ P.cameraLock.alpha = 0.0
 P.cameraLock.x = P.parent.x
 P.cameraLock.y = P.parent.y
 
---Test shotgun
-local function shootDelay( event )
-    P.canShoot = true;
-    print("can shoot: " ..  tostring(P.canShoot))
-end
+
 
 local sounds = function( event )
     if(P.isAlive)then audio.play(Torchidle, { channel = 2, loops = -1, fadein = 0}) end
@@ -261,12 +258,19 @@ local movePlayer = function( event)
 end
 Runtime:addEventListener( "enterFrame", movePlayer )
 
+--Test shotgun
+local function shootDelay( event )
+    P.canShoot = true;
+    P.shotgun.collisionBody.isAwake = false
+    print("can shoot: " ..  tostring(P.canShoot))
+end
+
 local shoot = function( event )
     if (event.phase == "down" and event.keyName == "space" and P.canShoot == true) then
         P.shotgun.collisionBody.alpha = 1
         P.shotgun.collisionBody.isAwake = true
-        P.shotgun.collisionBody.x = P.bodyCollision.x
-        P.shotgun.collisionBody.y = P.bodyCollision.y
+        P.shotgun.collisionBody.x = P.bodyCollision.x - 200
+        P.shotgun.collisionBody.y = P.bodyCollision.y - 200
         --print("Shot: " ..P.shotgun.collisionBody.x .. " : " .. P.shotgun.collisionBody.y)
         P.canShoot = false
         --P.bodyCollision:applyLinearImpulse(50, 0, 0, 0)
