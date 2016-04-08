@@ -73,20 +73,9 @@ local stepCount = 0
 local Torchidle = audio.loadSound( "/Sounds/Player/Torchidle.ogg" )
 local Step1 = audio.loadSound( "Sounds/Player/Step1.ogg" )
 local Step2 = audio.loadSound( "Sounds/Player/Step2.ogg" )
-local BoomStick = audio.loadSound("Sounds/Player/BOOMSTICK.ogg")
 
-local function sounds()
-    if(player.isAlive)then audio.play(Torchidle, { channel = 2, loops = -1, fadein = 0}) end
-    currentFrame = player.lowerBodyRun_sprite.frame
-    --print("frame: ",currentFrame)
-    if(player.isMovingX ~= 0 or player.isMovingY ~=0) then
-        if(currentFrame == 3)then
-            audio.play( Step1, { channel = 1, loops=0})
-        elseif(currentFrame == 7)then
-            audio.play( Step2, { channel = 1, loops=0})
-        end
-    end
-end
+
+
 
 
 
@@ -96,145 +85,7 @@ end
 
 -- We can also calculate our rotation angle here
 
-local function moveplayer()
 
-    -- Set the .isMovingX and .isMovingY values in our event handler
-    -- If this number isn't 0 (stopped moving), move the player
-    if (player.shooting > 0) then
-        -- need to change to player aim direction
-        player.isMovingX = -player.shooting
-        player.isMovingY = player.shooting
-        player.shooting = player.shooting - (player.shooting/15 + 1)
-    end
-    if ( player.isMovingX ~= 0 ) then
-        player.bodyCollision.x = player.bodyCollision.x + player.isMovingX
-        player.parent.x = player.bodyCollision.x
-        player.cameraLock.x = player.parent.x + player.isMovingX*10
-    else
-        player.cameraLock.x = player.parent.x
-    end
-    if ( player.isMovingY ~= 0 ) then
-        player.bodyCollision.y = player.bodyCollision.y + player.isMovingY
-        player.parent.y = player.bodyCollision.y - 20
-        player.cameraLock.y = player.parent.y + player.isMovingY*10
-    else
-        player.cameraLock.y = player.parent.y
-    end
-
-    -- Animate Upper Body
-    local upperBodyAnim = ""
-    if player.thisAimAngle > 337 or player.thisAimAngle < 23 then
-        upperBodyAnim = "up"
-        player.torch.x = -70
-        player.torch.y = -100
-    elseif player.thisAimAngle < 68 then
-        upperBodyAnim = "upRight"
-        player.torch.x = -65
-        player.torch.y = -120
-    elseif player.thisAimAngle < 113 then
-        upperBodyAnim = "right"
-        player.torch.x = 65
-        player.torch.y = -135
-    elseif player.thisAimAngle < 158 then
-        upperBodyAnim = "downRight"
-        player.torch.x = 65
-        player.torch.y = -125
-    elseif player.thisAimAngle < 203 then
-        upperBodyAnim = "down"
-        player.torch.x = 60
-        player.torch.y = -105
-    elseif player.thisAimAngle < 248 then
-        upperBodyAnim = "downLeft"
-        player.torch.x = 30
-        player.torch.y = -120
-    elseif player.thisAimAngle < 293 then
-        upperBodyAnim = "left"
-        player.torch.x = -10
-        player.torch.y = -115
-    else
-        upperBodyAnim = "upLeft"
-        player.torch.x = -45
-        player.torch.y = -105
-    end
-
-    if player.upperBodyAnim ~= upperBodyAnim then
-        player.upperBodyRun_sprite:setSequence(upperBodyAnim)
-        player.upperBodyRun_sprite:play()
-        player.upperBodyAnim = upperBodyAnim
-    end
-
-    -- Animate Lower Body
-    local lowerBodyAnim = "idle"
-    if math.abs(player.isMovingX) + math.abs(player.isMovingY) >= 0.1 then
-        
-
-        -- 1. Get the direction moving compared to the direction facing
-        -- 2. Set the animation based on the direction facing
-        local reverse = false
-        local localAngle = (player.thisAimAngle+360 - player.thisDirectionAngle) % 360
-        if localAngle > 110 and localAngle < 250 then
-            reverse = true
-        end
-        myKeyDisplayText.text = player.thisDirectionAngle
-        if player.thisDirectionAngle > 337 or player.thisDirectionAngle < 23 then
-            if reverse then
-                lowerBodyAnim = "downBack"
-            else
-                lowerBodyAnim = "upAhead"
-            end
-        elseif player.thisDirectionAngle < 68 then
-            if reverse then
-                lowerBodyAnim = "downLeftBack"
-            else
-                lowerBodyAnim = "upRightAhead"
-            end
-        elseif player.thisDirectionAngle < 113 then
-            if reverse then
-                lowerBodyAnim = "leftBack"
-            else
-                lowerBodyAnim = "rightAhead"                
-            end
-        elseif player.thisDirectionAngle < 158 then
-            if reverse then
-                lowerBodyAnim = "upLeftBack"
-            else
-                lowerBodyAnim = "downRightAhead"                
-            end
-        elseif player.thisDirectionAngle < 203 then
-            if reverse then
-                lowerBodyAnim = "upBack"
-            else
-                lowerBodyAnim = "downAhead"                
-            end
-        elseif player.thisDirectionAngle < 248 then
-            if reverse then
-                lowerBodyAnim = "upRightBack"
-            else
-                lowerBodyAnim = "downLeftAhead"                
-            end
-        elseif player.thisDirectionAngle < 293 then
-            if reverse then
-                lowerBodyAnim = "rightBack"
-            else
-                lowerBodyAnim = "leftAhead"                
-            end
-        else
-            if reverse then
-                lowerBodyAnim = "downRightBack"
-            else
-                lowerBodyAnim = "upLeftAhead"                
-            end
-        end
-    else
-    end
-
-    if player.lowerBodyAnim ~= lowerBodyAnim then
-        player.lowerBodyRun_sprite:setSequence(lowerBodyAnim)
-        player.lowerBodyRun_sprite:play()
-        player.lowerBodyAnim = lowerBodyAnim
-    end
-
-end
 
 local function onAxisEvent( event )
 
@@ -412,8 +263,7 @@ local function onKeyEvent( event )
             player.isRotatingX = 1
             player.thisAimAngle = math.floor( player.calculateAngle(player.isRotatingX, player.isRotatingY, player.thisAimAngle) )
         elseif ( event.keyName == "space") then
-            player.bodyCollision:applyLinearImpulse()
-            audio.play(BoomStick,{channel = 3})
+            
             --code for shooting
         end
     else
@@ -464,6 +314,3 @@ Runtime:addEventListener( "key", onKeyEvent )
 
 Runtime:addEventListener( "axis", onAxisEvent )
 
-Runtime:addEventListener( "enterFrame", moveplayer )
-
-Runtime:addEventListener( "enterFrame", sounds )
