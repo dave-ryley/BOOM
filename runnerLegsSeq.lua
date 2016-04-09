@@ -1,3 +1,4 @@
+local shootSpeed = 150
 local lowerBody_sequences = 
 {
     {
@@ -188,7 +189,7 @@ local lowerBody_sequences =
         name = "upShoot",
         start = 9,
         count = 3,
-        time = 300,
+        time = shootSpeed,
         loopCount = 1,
         loopDirection = "bounce"
     },
@@ -196,7 +197,7 @@ local lowerBody_sequences =
         name = "upRightShoot",
         start = 28,
         count = 8,
-        time = 300,
+        time = shootSpeed,
         loopCount = 1,
         loopDirection = "bounce"
     },
@@ -204,7 +205,7 @@ local lowerBody_sequences =
         name = "rightShoot",
         start = 47,
         count = 3,
-        time = 300,
+        time = shootSpeed,
         loopCount = 1,
         loopDirection = "bounce"
     },
@@ -212,7 +213,7 @@ local lowerBody_sequences =
         name = "downRightShoot",
         start = 66,
         count = 3,
-        time = 300,
+        time = shootSpeed,
         loopCount = 1,
         loopDirection = "bounce"
     },
@@ -220,7 +221,7 @@ local lowerBody_sequences =
         name = "downShoot",
         start = 85,
         count = 3,
-        time = 300,
+        time = shootSpeed,
         loopCount = 1,
         loopDirection = "bounce"
     },
@@ -228,7 +229,7 @@ local lowerBody_sequences =
         name = "upLeftShoot",
         start = 104,
         count = 3,
-        time = 300,
+        time = shootSpeed,
         loopCount = 1,
         loopDirection = "bounce"
     },
@@ -236,7 +237,7 @@ local lowerBody_sequences =
         name = "leftShoot",
         start = 123,
         count = 3,
-        time = 300,
+        time = shootSpeed,
         loopCount = 1,
         loopDirection = "bounce"
     },
@@ -244,7 +245,7 @@ local lowerBody_sequences =
         name = "downLeftShoot",
         start = 142,
         count = 3,
-        time = 300,
+        time = shootSpeed,
         loopCount = 1,
         loopDirection = "bounce"
     }

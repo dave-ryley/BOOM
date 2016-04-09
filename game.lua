@@ -3,8 +3,10 @@
    local globals = require "globals"
    local scene = composer.newScene()
 
+
    local joysticks = require "joystick"
    local hellPup = require("hellPup")
+
 
    local perspective = require("perspective")
 
@@ -19,10 +21,12 @@
    local level = display.newGroup( )
    local map = {}
 
-   local physics = require "physics"
-   physics.start()
-   physics.setGravity(0,0)
-   physics.setDrawMode( "hybrid" )
+
+  local physics = require "physics"
+  physics.start()
+  physics.setGravity(0,0)
+  physics.setDrawMode( "hybrid" )
+
 
    -----Map-----
    local path = system.pathForFile(levelName,system.ResourceDirectory)
@@ -127,10 +131,16 @@
          return true
       end
    end
-   rightJoystick = joysticks.joystick(sceneGroup, "Graphics/Animation/analogStickHead.png", 200, 200, "Graphics/Animation/analogStickBase.png", 280, 280)
-   rightJoystick.x = display.actualContentWidth -250
-   rightJoystick.y = display.actualContentHeight -250
-   rightJoystick.activate()
+   --if(system.getInfo("platformName") == "Android") then
+      rightJoystick = joysticks.joystick(sceneGroup, "Graphics/Animation/analogStickHead.png", 200, 200, "Graphics/Animation/analogStickBase.png", 280, 280)
+      rightJoystick.x = display.actualContentWidth -250
+      rightJoystick.y = display.actualContentHeight -250
+      rightJoystick.activate()
+      leftJoystick = joysticks.joystick(sceneGroup, "Graphics/Animation/analogStickHead.png", 200, 200, "Graphics/Animation/analogStickBase.png", 280, 280)
+      leftJoystick.x = 250
+      leftJoystick.y = display.actualContentHeight -250
+      leftJoystick.activate()
+   --end
    --[[buttons = {}
    for i=1,1 do 
       buttons[i] = display.newRect(display.contentCenterX,display.contentCenterY+(i-1)*200,500,150)
@@ -289,9 +299,12 @@
    return false
    end
 
-   local function gameLoop( event )
-   -- Map event data to simple variables
+
+local function gameLoop( event )
    if globals.pause == false and axis ~= "" then
+      if(system.getInfo("platformName") == "Android") then
+         player.virtualJoystickInput(leftJoystick.angle, leftJoystick.xLoc/70, leftJoystick.yLoc/70, rightJoystick.angle, rightJoystick.distance/70, rightJoystick.xLoc/70, rightJoystick.yLoc/70)
+      end
       player.movePlayer()
    end
    return true
@@ -308,5 +321,6 @@
    Runtime:addEventListener( "axis", onAxisEvent )
    Runtime:addEventListener( "enterFrame", gameLoop )
    ---------------------------------------------------------------------------------
+end
 
 return scene

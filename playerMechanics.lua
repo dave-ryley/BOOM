@@ -150,27 +150,28 @@ local P = {}
     local function playerAxis( axis, value )
         -- Map event data to simple variables
         local abs = math.abs
+        local floor = math.floor
 
         if ( "left_x" == axis ) then
            if ( abs(value) > 0.15 ) then
                P.isMovingX = value * P.velocity
-               P.thisDirectionAngle = math.floor( P.movementFunctions.calculateAngle(P.isMovingX, P.isMovingY, P.thisDirectionAngle) )
+               P.thisDirectionAngle = floor( P.movementFunctions.calculateAngle(P.isMovingX, P.isMovingY, P.thisDirectionAngle) )
            else
                P.isMovingX = 0
            end
         elseif ( "left_y" == axis ) then
            if ( abs(value) > 0.15 ) then
                P.isMovingY = value * P.velocity
-               P.thisDirectionAngle = math.floor( P.movementFunctions.calculateAngle(P.isMovingX, P.isMovingY, P.thisDirectionAngle) )
+               P.thisDirectionAngle = floor( P.movementFunctions.calculateAngle(P.isMovingX, P.isMovingY, P.thisDirectionAngle) )
            else
                P.isMovingY = 0
            end
         elseif ( "right_x" == axis ) then
             P.isRotatingX = value
-            P.thisAimAngle = math.floor( P.movementFunctions.calculateAngle(P.isRotatingX, P.isRotatingY, P.thisAimAngle) )
+            P.thisAimAngle = floor( P.movementFunctions.calculateAngle(P.isRotatingX, P.isRotatingY, P.thisAimAngle) )
         elseif ( "right_y" == axis ) then
             P.isRotatingY = value
-            P.thisAimAngle = math.floor( P.movementFunctions.calculateAngle(P.isRotatingX, P.isRotatingY, P.thisAimAngle) )
+            P.thisAimAngle = floor( P.movementFunctions.calculateAngle(P.isRotatingX, P.isRotatingY, P.thisAimAngle) )
         elseif ( "left_trigger" or "right_trigger" == axis ) then
             if(P.canShoot) then
                 P.shoot()
@@ -193,5 +194,22 @@ local P = {}
     P.bounds:addEventListener( "collision", P.onCollision )
 
     P.playerAxis = playerAxis
+
+    function virtualJoystickInput(ljsAngle, ljsX, ljsY, rjsAngle, rjsDistance, rjsX, rjsY)
+        if rjsDistance > 0.9 and P.canShoot then
+            P.shoot()
+        end
+        P.isMovingX = ljsX * P.velocity
+        P.isMovingY = ljsY * P.velocity
+        P.isRotatingX = rjsX
+        P.isRotatingY = rjsY
+        P.thisDirectionAngle = (720-(ljsAngle-90)) % 360
+        P.thisAimAngle = (720-(rjsAngle-90)) % 360
+        P.myText = "" .. rjsDistance
+    end
+
+    P.virtualJoystickInput = virtualJoystickInput
+
+    P.myText = display.newText( "", display.contentCenterX, display.contentCenterY, native.systemFont, 60 )
 
 return P
