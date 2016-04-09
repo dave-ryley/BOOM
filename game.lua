@@ -28,7 +28,7 @@ fireTrap.bounds:translate( 1000, 500)
 -- SETTING UP OBJECTS IN THE CAMERA
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
-camera:add(player.shotgun.bounds, 1)
+camera:add(player.shotgun.blast, 1)
 camera:add(tempFloor, 2)
 camera:add(player.bounds, 1)
 camera:add(fireTrap.bounds, 2)

@@ -20,9 +20,6 @@ local P = {}
     P.parent:insert( P.visuals.lowerBody )
     P.parent:insert( P.visuals.upperBody )
 
-    --TEMP
-    P.shotgun.bounds.alpha = 0.5
-
     -- Collision object setup
     P.bounds = display.newRect(0,0,150,170)
     P.bounds.alpha = 0.0
@@ -34,7 +31,7 @@ local P = {}
 
     -- Camera lock object setup
     P.cameraLock = display.newRect(0,-200,50,50)
-    P.cameraLock.alpha = 0.50
+    P.cameraLock.alpha = 0.00
     P.cameraLock.x = P.parent.x
     P.cameraLock.y = P.parent.y
     
@@ -78,9 +75,7 @@ local P = {}
         P.cameraLock.y = P.parent.y + P.isRotatingY*250
 
         -- placing the shotgun
-        P.shotgun.place(P.thisAimAngle)
-        P.shotgun.bounds.x = (P.parent.x + P.shotgun.bounds.x)
-        P.shotgun.bounds.y = (P.parent.y + P.shotgun.bounds.y)
+        P.shotgun.place(P.thisAimAngle, P.parent.x, P.parent.y)
 
         P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity)
     end
