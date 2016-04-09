@@ -80,9 +80,7 @@ local C = {}
 		return temp
 		
 	end
-	C[0] = spawn(0)
-	C[1] = spawn(1)
-	--print(C[0].Name)
+	C.spawn = spawn
 
 	
 return C
