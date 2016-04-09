@@ -24,6 +24,9 @@ controllerMapping = require "controllerMapping"
 player = require "playerMechanics"
 fireTrap = require "fireTrap"
 fireTrap.bounds:translate( 1000, 500)
+hellPuppies = require "hellPup"
+enemies = {}
+enemies[0] = hellPuppies.spawn(0)
 
 -- SETTING UP OBJECTS IN THE CAMERA
 camera:add(player.parent, 1)
@@ -32,6 +35,7 @@ camera:add(player.shotgun.bounds, 1)
 camera:add(tempFloor, 2)
 camera:add(player.bounds, 1)
 camera:add(fireTrap.bounds, 2)
+camera:add(enemies[0].bounds, 1) 
 
 -- INITIALIZING CAMERA
 camera:prependLayer()
@@ -126,6 +130,7 @@ end
 
 local function onAxisEvent( event )
    -- Map event data to simple variables
+   print("axis")
    if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
       local axis = controllerMapping.axis[event.axis.number]
       --if globals.pause then print("globals.pause = true") else print("globals.pause = false") end
@@ -181,6 +186,8 @@ local function onKeyEvent( event )
             axis = "right_x"
         elseif ( event.keyName == "space") then
             value = 1
+            print("hereshoot")
+            player.shoot()
             axis = "left_trigger"
         end
     else

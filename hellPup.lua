@@ -5,12 +5,13 @@ local C = {}
 		local temp = {}
 			--temp.collisionFilter = { categoryBits = 4, maskBits = 3}
 			--temp.sensorCollFilter = { categoryBits = 8, maskBits = 1}
-		--setup variables
+			--setup variables
 			temp.physics = require ("physics")
+			temp.health = 2
 			--enemyID
 			temp.myName = "hellPup" .. tostring(id)
 			--setting up collision bounds
-			temp.bounds = display.newImageRect( "Graphics/Temp/TestFace.png", 100, 100)
+			temp.bounds = display.newImageRect( "Graphics/Temp/TestFace.png", 100, 100 )
 			temp.bounds.id = id
 			temp.bounds.myName = "hellPup"
 			temp.physics.addBody( 	temp.bounds, 
@@ -24,7 +25,6 @@ local C = {}
 								} )
 			--hellPup detection area
 			temp.bounds.filter = temp.collisionFilter
-			
 			temp.sensorRadius = 500
 			temp.sensorArea = display.newCircle( temp.bounds.x, temp.bounds.y, temp.sensorRadius )
 			temp.sensorArea.myName = "hellPupSensor"
@@ -67,9 +67,14 @@ local C = {}
 					if (event.other.myName == "shotgun"
 						and event.other.reloading == true) then
 							--print("reloading: "..event.object1.reloading)
-						print("Killed by: " .. event.other.myName) 
-						temp.bounds:applyLinearImpulse( 2000, 0, 50, 50 )
-							--C[event.object2.id].parent:removeSelf( )
+							if(temp.health > 0) then
+								temp.bounds:applyLinearImpulse( 2000, 0, 50, 50 )
+							else
+								print("Killed by: " .. event.other.myName) 
+								temp.parent:removeSelf()
+							end
+						--C[event.object2.id].parent:removeSelf( )
+
 					end
 				end
 				return true
@@ -80,8 +85,9 @@ local C = {}
 		return temp
 		
 	end
-	C[0] = spawn(0)
-	C[1] = spawn(1)
+	C.spawn = spawn
+	--C[0] = spawn(0)
+	--C[1] = spawn(1)
 	--print(C[0].Name)
 
 	

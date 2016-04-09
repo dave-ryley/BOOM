@@ -102,7 +102,7 @@ local P = {}
         --print(Shot: " ..P.shotgun.bounds.x .. " : " .. P.shotgun.bounds.y)
         P.canShoot = false
         --P.bounds:applyLinearImpulse(50, 0, 0, 0)
-        audio.play(P.boomStick,{channel = 3})
+        audio.play(P.visuals.sounds.boomStick,{channel = 3})
         timer.performWithDelay( 1800, shootDelay )
 
         print("can shoot: " .. tostring(P.canShoot))
@@ -150,14 +150,14 @@ local P = {}
                 if (event.other.myName == "fireTrap") then
                         --print("reloading: "..event.object1.reloading)
                     print("Killed by: " .. event.other.myName) 
+                    P.bounds:removeSelf()
                     --P.bounds:applyLinearImpulse( 2000, 0, 50, 50 )
-                        --C[event.object2.id].parent:removeSelf( )
+                    --C[event.object2.id].parent:removeSelf( )
                 end
             end
             return true
         end
     P.bounds:addEventListener( "collision", P.onCollision )
-
 
     P.playerAxis = playerAxis
 
