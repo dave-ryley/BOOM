@@ -1,28 +1,32 @@
 local C = {}
-	--C.collisionFilter = {categoryBits = 2, maskBits = 4}
+	--C.col = require "collisionFilters"
 	local vertices = { -20,0, -100,-300, 100,-300, 20,0, }
 	C.bounds = display.newPolygon( 0, 0, vertices )
 
-	C.bounds.anchorY = 1.0
+
 	C.bounds.alpha = 0.0
 	C.power = 1
 	C.force = 500
 	C.bounds.reloading = false
 	C.bounds.myName = "shotgun"
-	local blastShape = { 	0 	-C.bounds.width/2 ,0 -C.bounds.height/2, 
-							320	-C.bounds.width/2 , 40 -C.bounds.height/2, 
-							320	-C.bounds.width/2 , 80 -C.bounds.height/2, 
-							0	-C.bounds.width/2 , 120 -C.bounds.height/2}
+	C.bounds.anchorX = 0.3
+	C.bounds.anchorY = 1
+	
+	local blastShape = { 	80 	-C.bounds.width/2,	320	-C.bounds.height/2,
+							120 -C.bounds.width/2,	0	-C.bounds.height/2,
+							0 	-C.bounds.width/2,	0 	-C.bounds.height/2,
+							40 	-C.bounds.width/2,	320	-C.bounds.height/2}
 
-	C.bounds.isSensor = true
+	physics.addBody( C.bounds, "dynamic", 	{ 	density=0.0, 
+												friction=0.0, 
+												bounce=0.0,
+												--filter=C.col.shotgunCol,
+												shape=blastShape, 
+												isSensor=true
+										})
 	C.bounds.isAwake = false
-	physics.addBody( C.bounds, "dynamic", { 	density=0.0, 
-													friction=0.0, 
-													bounce=0.0, 
-													shape=blastShape, 
-													isSensor=true 
-												} )
 
+	--C.bounds.filter=C.col.shotgunCol
 	-- Setting up the blast Animation
     C.blast = display.newGroup()
     C.blast:insert(C.bounds)
@@ -86,6 +90,12 @@ local C = {}
 			C.blast.y = y - 50
         end
     end
-
+    C.onCollision = function( event ) 
+		print("shotgun collision with: " ..event.other.myName)
+		if (event.phase == "began") then
+		
+		end
+	end
+	C.bounds:addEventListener( "collision", C.onCollision )
     C.place = place
 return C
