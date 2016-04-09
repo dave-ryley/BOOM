@@ -14,7 +14,7 @@ local P = {}
     P.isRotatingY = 0
     P.thisAimAngle = 0
     P.thisDirectionAngle = 0
-    P.velocity = 10
+    P.velocity = 20
     P.isAlive = true
     P.shotgunPower = 50
     P.lookDirection = display.newGroup()
@@ -44,7 +44,7 @@ local P = {}
             if(currentFrame == 3)then
                 audio.play( P.visuals.sounds.step1, { channel = 1, loops=0})
             elseif(currentFrame == 7)then
-                audio.play( P.visuals.sounds.step2, { channel = 1, loops=0})
+                audio.play( P.visuals.sounds.step2, { channel = 3, loops=0})
             end
         end
     end
@@ -65,20 +65,17 @@ local P = {}
         if ( P.isMovingX ~= 0 ) then
             P.bounds.x = P.bounds.x + P.isMovingX
             P.parent.x = P.bounds.x
-            P.cameraLock.x = P.parent.x + P.isMovingX*10
-        else
-            P.cameraLock.x = P.parent.x
         end
 
         if ( P.isMovingY ~= 0 ) then
             P.bounds.y = P.bounds.y + P.isMovingY
             P.parent.y = P.bounds.y - 20
             P.cameraLock.y = P.parent.y + P.isMovingY*10
-        else
-            P.cameraLock.y = P.parent.y
         end
 
-        P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY))
+        P.cameraLock.x = P.parent.x + P.isRotatingX*250
+        P.cameraLock.y = P.parent.y + P.isRotatingY*250
+        P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity)
     end
 
     P.movePlayer = movePlayer

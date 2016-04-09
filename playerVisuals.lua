@@ -62,7 +62,7 @@ V = {}
     V.torch_sprite = display.newSprite( V.torch, V.torch_sheet, torch_sequences )
     V.torch_sprite:play()
 
-    local function animate(aimAngle, directionAngle, moving)
+    local function animate(aimAngle, directionAngle, moving, velocity)
         -- Animate Upper Body
         local upperBodyAnim = ""
         local lowerBodyAnim = ""
@@ -126,8 +126,9 @@ V = {}
         end
 
         if moving < 0.1 then
-            lowerBodyAnim = lowerBodyAnim .. "Stand"
+            --lowerBodyAnim = lowerBodyAnim .. "Stand"
             upperBodyAnim = upperBodyAnim .. "Stand"
+            lowerBodyAnim = upperBodyAnim
         elseif reverse then
             lowerBodyAnim = lowerBodyAnim .. "Back"
         end
@@ -141,6 +142,13 @@ V = {}
             V.lowerBodyRun_sprite:setSequence(lowerBodyAnim)
             V.lowerBodyRun_sprite:play()
             V.lowerBodyAnim = lowerBodyAnim
+        end
+        if moving >= 0.1 then
+            V.upperBodyRun_sprite.timeScale = math.min(velocity*moving/200.0, 2.0)
+            V.lowerBodyRun_sprite.timeScale = math.min(velocity*moving/200.0, 2.0)
+        else
+            V.upperBodyRun_sprite.timeScale = 1.0
+            V.lowerBodyRun_sprite.timeScale = 1.0
         end
     end
 
