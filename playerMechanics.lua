@@ -17,10 +17,11 @@ local P = {}
     P.velocity = 20
     P.isAlive = true
     P.shotgunPower = 50
-    P.lookDirection = display.newGroup()
-    P.parent:insert ( P.lookDirection )
     P.parent:insert( P.visuals.lowerBody )
     P.parent:insert( P.visuals.upperBody )
+
+    --TEMP
+    P.shotgun.bounds.alpha = 0.5
 
     -- Collision object setup
     P.bounds = display.newRect(0,0,150,170)
@@ -50,12 +51,12 @@ local P = {}
     end
     Runtime:addEventListener( "enterFrame", sounds )
 
-    local update = function( event )
+    --[[local update = function( event )
         --if(P.bounds.velocity > 0) then
 
         --end
     end
-    Runtime:addEventListener( "enterFrame", update )
+    Runtime:addEventListener( "enterFrame", update )]]
     
     local function movePlayer()
 
@@ -75,37 +76,43 @@ local P = {}
 
         P.cameraLock.x = P.parent.x + P.isRotatingX*250
         P.cameraLock.y = P.parent.y + P.isRotatingY*250
+
+        -- placing the shotgun
+        P.shotgun.place(P.thisAimAngle)
+        P.shotgun.bounds.x = (P.parent.x + P.shotgun.bounds.x)
+        P.shotgun.bounds.y = (P.parent.y + P.shotgun.bounds.y)
+
         P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity)
     end
 
     P.movePlayer = movePlayer
 
     --Test shotgun
-    local function shootDelay( event )
+    local function shootDelay()
         P.canShoot = true;
         P.shotgun.bounds.isAwake = false
-        print("can shoot: " ..  tostring(P.canShoot))
     end
 
-    local shoot = function( event )
-        if (event.phase == "down" and event.keyName == "space" and P.canShoot == true) then
-            P.shotgun.bounds.alpha = 1
-            P.shotgun.bounds.isAwake = true
-            P.shotgun.bounds.x = P.bounds.x
-            P.shotgun.bounds.y = P.bounds.y
-            P.shotgun.bounds.rotation = P.thisAimAngle
-            print(P.thisAimAngle)
-            --print(Shot: " ..P.shotgun.bounds.x .. " : " .. P.shotgun.bounds.y)
-            P.canShoot = false
-            --P.bounds:applyLinearImpulse(50, 0, 0, 0)
-            audio.play(P.boomStick,{channel = 3})
-            timer.performWithDelay( 1800, shootDelay )
+    local function shoot()
+        P.shotgun.bounds.isAwake = true
+        P.shotgun.bounds.x = P.bounds.x
+        P.shotgun.bounds.y = P.bounds.y
+        P.shotgun.bounds.rotation = P.thisAimAngle
+        print(P.thisAimAngle)
+        --print(Shot: " ..P.shotgun.bounds.x .. " : " .. P.shotgun.bounds.y)
+        P.canShoot = false
+        --P.bounds:applyLinearImpulse(50, 0, 0, 0)
+        audio.play(P.boomStick,{channel = 3})
+        timer.performWithDelay( 1800, shootDelay )
 
-            print("can shoot: " .. tostring(P.canShoot))
-        end
+        print("can shoot: " .. tostring(P.canShoot))
     end
-    Runtime:addEventListener( "key" , shoot)
 
+    local function shotgunBlast()
+
+    end
+
+    P.shoot = shoot
     ----- Started adding in functions
 
     local function playerAxis( axis, value )

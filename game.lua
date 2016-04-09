@@ -26,6 +26,7 @@ player = require "playerMechanics"
 -- SETTING UP OBJECTS IN THE CAMERA
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
+camera:add(player.shotgun.bounds, 1)
 camera:add(tempFloor, 2)
 camera:add(player.bounds, 1)
 

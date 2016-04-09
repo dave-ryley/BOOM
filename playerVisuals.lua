@@ -154,4 +154,50 @@ V = {}
 
     V.animate = animate
 
+    function animateShotgunBlast(aimAngle)
+        local anim = ""
+        if aimAngle > 337 or aimAngle < 23 then
+            anim = "up"
+            V.torch.x = -70
+            V.torch.y = -100
+        elseif aimAngle < 68 then
+            anim = "upRight"
+            V.torch.x = -65
+            V.torch.y = -120
+        elseif aimAngle < 113 then
+            anim = "right"
+            V.torch.x = 65
+            V.torch.y = -135
+        elseif aimAngle < 158 then
+            anim = "downRight"
+            V.torch.x = 65
+            V.torch.y = -125
+        elseif aimAngle < 203 then
+            anim = "down"
+            V.torch.x = 60
+            V.torch.y = -105
+        elseif aimAngle < 248 then
+            anim = "downLeft"
+            V.torch.x = 30
+            V.torch.y = -120
+        elseif aimAngle < 293 then
+            anim = "left"
+            V.torch.x = -10
+            V.torch.y = -115
+        else
+            anim = "upLeft"
+            V.torch.x = -45
+            V.torch.y = -105
+        end
+        anim = anim .. "Shoot"
+        V.upperBodyRun_sprite:setSequence(anim)
+        V.lowerBodyRun_sprite:setSequence(anim)
+        V.upperBodyRun_sprite:play()
+        V.lowerBodyRun_sprite:play()
+        V.upperBodyAnim = anim
+        V.lowerBodyAnim = anim
+    end
+
+    V.animateShotgunBlast = animateShotgunBlast
+
 return V
