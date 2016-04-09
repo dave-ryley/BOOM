@@ -124,8 +124,8 @@ end
 
 local function onAxisEvent( event )
    -- Map event data to simple variables
-   if event.device.descriptor == "Gamepad 1" then
-      local axis = controllerMapping.axis["Gamepad 1"][event.axis.number]
+   if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
+      local axis = controllerMapping.axis[event.axis.number]
       --if globals.pause then print("globals.pause = true") else print("globals.pause = false") end
       if(globals.pause == false) then
          player.playerAxis(axis, event.normalizedValue)
