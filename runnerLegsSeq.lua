@@ -1,7 +1,7 @@
 local lowerBody_sequences = 
 {
     {
-        name = "upAhead",
+        name = "up",
         start = 1,
         count = 8,
         time = 800,
@@ -9,7 +9,7 @@ local lowerBody_sequences =
         loopDirection = "forward"
     },
     {
-        name = "upRightAhead",
+        name = "upRight",
         start = 20,
         count = 8,
         time = 800,
@@ -17,7 +17,7 @@ local lowerBody_sequences =
         loopDirection = "forward"
     },
     {
-        name = "rightAhead",
+        name = "right",
         start = 39,
         count = 8,
         time = 800,
@@ -25,7 +25,7 @@ local lowerBody_sequences =
         loopDirection = "forward"
     },
     {
-        name = "downRightAhead",
+        name = "downRight",
         start = 58,
         count = 8,
         time = 800,
@@ -33,7 +33,7 @@ local lowerBody_sequences =
         loopDirection = "forward"
     },
     {
-        name = "downAhead",
+        name = "down",
         start = 77,
         count = 8,
         time = 800,
@@ -41,7 +41,7 @@ local lowerBody_sequences =
         loopDirection = "forward"
     },
     {
-        name = "upLeftAhead",
+        name = "upLeft",
         start = 96,
         count = 8,
         time = 800,
@@ -49,7 +49,7 @@ local lowerBody_sequences =
         loopDirection = "forward"
     },
     {
-        name = "leftAhead",
+        name = "left",
         start = 115,
         count = 8,
         time = 800,
@@ -57,7 +57,7 @@ local lowerBody_sequences =
         loopDirection = "forward"
     },
     {
-        name = "downLeftAhead",
+        name = "downLeft",
         start = 134,
         count = 8,
         time = 800,
@@ -65,56 +65,56 @@ local lowerBody_sequences =
         loopDirection = "forward"
     },
     {
-        name = "upBack",
+        name = "downBack",
         frames = { 8,7,6,5,4,3,2,1 },
         time = 800,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
-        name = "upRightBack",
+        name = "downLeftBack",
         frames = { 27,26,25,24,23,22,21,20 },
         time = 800,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
-        name = "rightBack",
+        name = "leftBack",
         frames = { 46,45,44,43,42,41,40,39 },
         time = 800,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
-        name = "downRightBack",
+        name = "upLeftBack",
         frames = { 65,64,63,62,61,60,59,58 },
         time = 800,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
-        name = "downBack",
+        name = "upBack",
         frames = { 84,83,82,81,80,79,78,77 },
         time = 800,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
-        name = "upLeftBack",
+        name = "downRightBack",
         frames = { 103,102,101,100,99,98,97,96 },
         time = 800,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
-        name = "leftBack",
+        name = "rightBack",
         frames = { 122,121,120,119,118,117,116,115 },
         time = 800,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
-        name = "downLeftBack",
+        name = "upRightBack",
         frames = { 141,140,139,138,137,136,135,134 },
         time = 800,
         loopCount = 0,

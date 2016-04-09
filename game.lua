@@ -47,9 +47,7 @@ camera:track()
 function scene:create( event )
  
    local sceneGroup = self.view
-   myText = display.newText( "Game Scene", display.contentCenterX, display.contentCenterY, native.systemFont, 80 )
    sceneGroup:insert(camera)
-   sceneGroup:insert(myText)
    function buttonPress( self, event )
       if event.phase == "began" then
          audio.play(press, {channel = 31})

@@ -16,7 +16,6 @@ local P = {}
     P.thisDirectionAngle = 0
     P.velocity = 10
     P.isAlive = true
-    P.shooting = 0
     P.shotgunPower = 50
     P.lookDirection = display.newGroup()
     P.parent:insert ( P.lookDirection )
@@ -37,15 +36,15 @@ local P = {}
     P.cameraLock.alpha = 0.50
     P.cameraLock.x = P.parent.x
     P.cameraLock.y = P.parent.y
-    --[[
+    
     local sounds = function( event )
-        currentFrame = P.lowerBodyRun_sprite.frame
+        currentFrame = P.visuals.lowerBodyRun_sprite.frame
         --print("frame: ",currentFrame)
         if(P.isMovingX ~= 0 or P.isMovingY ~=0) then
             if(currentFrame == 3)then
-                audio.play( P.step1, { channel = 1, loops=0})
+                audio.play( P.visuals.sounds.step1, { channel = 1, loops=0})
             elseif(currentFrame == 7)then
-                audio.play( P.step2, { channel = 1, loops=0})
+                audio.play( P.visuals.sounds.step2, { channel = 1, loops=0})
             end
         end
     end
@@ -57,7 +56,7 @@ local P = {}
         --end
     end
     Runtime:addEventListener( "enterFrame", update )
-    ]]
+    
     local function movePlayer()
 
         -- Set the .isMovingX and .isMovingY values in our event handler

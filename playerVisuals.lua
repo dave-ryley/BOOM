@@ -65,6 +65,7 @@ V = {}
     local function animate(aimAngle, directionAngle, moving)
         -- Animate Upper Body
         local upperBodyAnim = ""
+        local lowerBodyAnim = ""
         if aimAngle > 337 or aimAngle < 23 then
             upperBodyAnim = "up"
             V.torch.x = -70
@@ -98,77 +99,44 @@ V = {}
             V.torch.x = -45
             V.torch.y = -105
         end
+        -- Animate Lower Body
+        -- 1. Get the direction moving compared to the direction facing
+        -- 2. Set the animation based on the direction facing
+        local reverse = false
+        local localAngle = (aimAngle+360 - directionAngle) % 360
+        if localAngle > 110 and localAngle < 250 and moving >= 0.1 then
+            reverse = true
+        end
+        if directionAngle > 337 or directionAngle < 23 then
+            lowerBodyAnim = "up"
+        elseif directionAngle < 68 then
+            lowerBodyAnim = "upRight"
+        elseif directionAngle < 113 then
+            lowerBodyAnim = "right"
+        elseif directionAngle < 158 then
+            lowerBodyAnim = "downRight"
+        elseif directionAngle < 203 then
+            lowerBodyAnim = "down"
+        elseif directionAngle < 248 then
+            lowerBodyAnim = "downLeft"
+        elseif directionAngle < 293 then
+            lowerBodyAnim = "left"   
+        else
+            lowerBodyAnim = "upLeft" 
+        end
+
+        if moving < 0.1 then
+            lowerBodyAnim = lowerBodyAnim .. "Stand"
+            upperBodyAnim = upperBodyAnim .. "Stand"
+        elseif reverse then
+            lowerBodyAnim = lowerBodyAnim .. "Back"
+        end
 
         if V.upperBodyAnim ~= upperBodyAnim then
             V.upperBodyRun_sprite:setSequence(upperBodyAnim)
             V.upperBodyRun_sprite:play()
             V.upperBodyAnim = upperBodyAnim
         end
-
-        -- Animate Lower Body
-        local lowerBodyAnim = "idle"
-        if moving >= 0.1 then
-            
-            -- 1. Get the direction moving compared to the direction facing
-            -- 2. Set the animation based on the direction facing
-            local reverse = false
-            local localAngle = (aimAngle+360 - directionAngle) % 360
-            if localAngle > 110 and localAngle < 250 then
-                reverse = true
-            end
-            if directionAngle > 337 or directionAngle < 23 then
-                if reverse then
-                    lowerBodyAnim = "downBack"
-                else
-                    lowerBodyAnim = "upAhead"
-                end
-            elseif directionAngle < 68 then
-                if reverse then
-                    lowerBodyAnim = "downLeftBack"
-                else
-                    lowerBodyAnim = "upRightAhead"
-                end
-            elseif directionAngle < 113 then
-                if reverse then
-                    lowerBodyAnim = "leftBack"
-                else
-                    lowerBodyAnim = "rightAhead"                
-                end
-            elseif directionAngle < 158 then
-                if reverse then
-                    lowerBodyAnim = "upLeftBack"
-                else
-                    lowerBodyAnim = "downRightAhead"                
-                end
-            elseif directionAngle < 203 then
-                if reverse then
-                    lowerBodyAnim = "upBack"
-                else
-                    lowerBodyAnim = "downAhead"                
-                end
-            elseif directionAngle < 248 then
-                if reverse then
-                    lowerBodyAnim = "upRightBack"
-                else
-                    lowerBodyAnim = "downLeftAhead"                
-                end
-            elseif directionAngle < 293 then
-                if reverse then
-                    lowerBodyAnim = "rightBack"
-                else
-                    lowerBodyAnim = "leftAhead"                
-                end
-            else
-                if reverse then
-                    lowerBodyAnim = "downRightBack"
-                else
-                    lowerBodyAnim = "upLeftAhead"                
-                end
-            end
-        else
-            -- Code for standing
-        end
-
         if V.lowerBodyAnim ~= lowerBodyAnim then
             V.lowerBodyRun_sprite:setSequence(lowerBodyAnim)
             V.lowerBodyRun_sprite:play()
