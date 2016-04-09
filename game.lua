@@ -2,14 +2,67 @@ local composer = require( "composer" )
 local globals = require "globals"
 local scene = composer.newScene()
 
+local hellPup = require("hellPup")
+
 local perspective = require("perspective")
 
 local camera = perspective.createView()
+
+local levelName = "level.BOOMMAP"
+
+local imps = display.newGroup()
+local hellPups = display.newGroup()
+local minotaurs = display.newGroup()
+
+local level = display.newGroup( )
+local map = {}
 
 local physics = require "physics"
 physics.start()
 physics.setGravity(0,0)
 physics.setDrawMode( "normal" )
+
+-----Map-----
+local path = system.pathForFile(levelName,system.ResourceDirectory)
+local file = io.open(path,"r")
+i = 1
+
+function explode(div,str)
+    if (div=='') then return false end
+    local pos,arr = 0,{}
+    for st,sp in function() return string.find(str,div,pos,true) end do
+        table.insert(arr,string.sub(str,pos,st-1))
+        pos = sp + 1
+    end
+    table.insert(arr,string.sub(str,pos))
+    return arr
+end
+
+for line in file:lines()do
+  map[i] = explode(",",line)
+  i = i + 1
+end
+io.close(file)
+
+size = 5
+
+for i=2,table.getn(map),1 do
+  if(tonumber(map[i][3])==10)then
+    lineWall = display.newLine(level,tonumber(map[i-1][1])*size,tonumber(map[i-1][2])*size,tonumber(map[i][1])*size,tonumber(map[i][2])*size )
+    lineWall.strokeWidth = 20
+    physics.addBody( lineWall, "static", {chain= tonumber(map[i][1])*size,tonumber(map[i][2])*size} )
+  elseif(tonumber(map[i][3])==1)then--imp
+    imp = display.newRect(imps,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
+    imp:setFillColor(0,0,1,1)
+  elseif(tonumber(map[i][3])==2)then--hellPup
+    hellPup = display.newRect(hellPups,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
+    hellPup:setFillColor(0,1,0,1)
+  elseif(tonumber(map[i][3])==3)then--rosy
+    minotaur = display.newRect(minotaurs,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
+    minotaur:setFillColor(0,1,1,1)
+  end
+end
+
 
 ------TEMPORARY! TO BE DELETED!-----------
 local tempFloor = display.newRect( display.contentCenterX, display.contentCenterY, 5000, 5000 )
@@ -32,6 +85,11 @@ camera:add(player.shotgun.blast, 1)
 camera:add(tempFloor, 2)
 camera:add(player.bounds, 1)
 camera:add(fireTrap.bounds, 2)
+
+camera:add(level, 2)
+camera:add(imps, 1)
+camera:add(hellPups, 1)
+camera:add(minotaurs, 1)
 
 -- INITIALIZING CAMERA
 camera:prependLayer()
