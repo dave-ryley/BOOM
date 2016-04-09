@@ -123,6 +123,7 @@ end
 
 local function onAxisEvent( event )
    -- Map event data to simple variables
+   print(event.device.descriptor .. " + " .. event.axis.number)
    if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
       local axis = controllerMapping.axis[event.axis.number]
       --if globals.pause then print("globals.pause = true") else print("globals.pause = false") end
@@ -133,9 +134,92 @@ local function onAxisEvent( event )
    return true
 end
 
+local function onKeyEvent( event )
+   local phase = event.phase
+   local keyName = event.keyName
+   local axis = ""
+   local value = 0
+
+   print (event.keyName)
+
+   if (event.phase == "down") then
+
+        -- Adjust velocity for testing, remove for final game        
+        if ( event.keyName == "[" or event.keyName == "rightShoulderButton1" ) then
+            if (player.velocity > 0 ) then
+                player.velocity = player.velocity - 1
+            end
+        elseif ( event.keyName == "]" or event.keyName == "leftShoulderButton1" ) then
+            player.velocity = player.velocity + 1
+        end
+        -- WASD and ArrowKeys pressed down
+        if ( event.keyName == "w" ) then
+            value = -1.0
+            axis = "left_y"
+        elseif ( event.keyName == "s") then
+            value = 1
+            axis = "left_y"
+        elseif ( event.keyName == "a") then
+            value = -1
+            axis = "left_x"
+        elseif ( event.keyName == "d") then
+            value = 1
+            axis = "left_x"
+        elseif ( event.keyName == "up") then
+            value = -1
+            axis = "right_y"
+        elseif ( event.keyName == "down") then
+            value = 1
+            axis = "right_y"
+        elseif ( event.keyName == "left") then
+            value = -1
+            axis = "right_x"
+        elseif ( event.keyName == "right") then
+            value = 1
+            axis = "right_x"
+        elseif ( event.keyName == "space") then
+            value = 1
+            axis = "left_trigger"
+        end
+    else
+        -- WASD and Arrow keys pressed up
+        if ( event.keyName == "w" ) then
+            value = 0
+            axis = "left_y"
+        elseif ( event.keyName == "s") then
+            value = 0
+            axis = "left_y"
+        elseif ( event.keyName == "a") then
+            value = 0
+            axis = "left_x"
+        elseif ( event.keyName == "d") then
+            value = 0
+            axis = "left_x"
+        elseif ( event.keyName == "up") then
+            value = 0
+            axis = "right_y"
+        elseif ( event.keyName == "down") then
+            value = 0
+            axis = "right_y"
+        elseif ( event.keyName == "left") then
+            value = 0
+            axis = "right_x"
+        elseif ( event.keyName == "right") then
+            value = 0
+            axis = "right_x"
+         end
+    end
+
+   if (globals.pause == false) then 
+      player.playerAxis(axis, value) 
+   end
+
+   return false
+end
+
 local function gameLoop( event )
    -- Map event data to simple variables
-   if globals.pause == false then
+   if globals.pause == false and axis ~= "" then
       player.movePlayer()
    end
    return true
@@ -148,7 +232,7 @@ scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
---Runtime:addEventListener( "key", onKeyEvent )
+Runtime:addEventListener( "key", onKeyEvent )
 Runtime:addEventListener( "axis", onAxisEvent )
 Runtime:addEventListener( "enterFrame", gameLoop )
 ---------------------------------------------------------------------------------

@@ -14,7 +14,7 @@ local P = {}
     P.isRotatingY = 0
     P.thisAimAngle = 0
     P.thisDirectionAngle = 0
-    P.velocity = 20
+    P.velocity = 10
     P.isAlive = true
     P.shotgunPower = 50
     P.parent:insert( P.visuals.lowerBody )
