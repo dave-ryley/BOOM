@@ -1,9 +1,7 @@
 grid = display.newGroup()
-
 map = {}
 local mapSize = 0
-
-
+selectedImage = ""
 --modifiers
 ----enemies
 impPlace = 				false
@@ -16,22 +14,17 @@ flameThrowerTrapPlace = false
 ----checkpoints and finish line
 checkPoint = 			false
 finishLine =			false
-
 mapDone = false
-
 point1 = 0
 point2 = 0
-
 point3 = 0
 point4 = 0
-
+----Constants
 local top = 0
 local bottom = display.contentHeight
 local left = 0
 local right = display.contentWidth
-
 local squareSize = 128
-
 initPosX = 0
 initPosY = 0
 
@@ -91,10 +84,16 @@ local function onMouseEvent( event )
 	    		
 	    		if(point3 == map[1].x and point4 == map[1].y and mapSize > 1)then 
 					print("done")
+					local path = system.pathForFile( "level.BOOMMAP", system.ResourceDirectory )
+					local file = io.open(path, "w")
 					for i= 1,mapSize,1 do
-						print(map[i].x..":"..map[i].y..":"..map[i].object)
+						file:write(map[i].x,map[i].y,map[i].object.."\n")
+						print(map[i].x,map[i].y,map[i].object)
 						mapDone = true
 					end
+					io.close(file)
+					file = nil
+					print("Written")
 				end
 	    		
 	    		if(mathToSquare(point1, point3) >1 or mathToSquare(point2, point4) >1)then
@@ -122,6 +121,7 @@ local function onMouseEvent( event )
 					point4 = 0
 				end
 	    	end
+	    
 	    elseif(impPlace==true)then 
 	    	mapSize = mapSize+1
 	    	point(localX,localY,1)
@@ -129,6 +129,7 @@ local function onMouseEvent( event )
 	    	local impPaint = {0,0,1}
 	    	imp = display.newRect( grid, map[mapSize].x, map[mapSize].y, 10, 10 )
 	    	imp.fill = impPaint
+	    
 	    elseif(spotPlace==true)then
 	    	mapSize = mapSize+1
 	    	point(localX,localY,2)
@@ -136,6 +137,7 @@ local function onMouseEvent( event )
 	    	local spotPaint = {0,1,0}
 	    	spot = display.newRect( grid, map[mapSize].x, map[mapSize].y, 10, 10 )
 	    	spot.fill = spotPaint
+	    
 	    elseif(rosyPlace==true)then
 	    	mapSize = mapSize+1
 	    	point(localX,localY,3)
@@ -143,6 +145,7 @@ local function onMouseEvent( event )
 	    	local rosyPaint = {0,1,1}
 	    	rosy = display.newRect( grid, map[mapSize].x, map[mapSize].y, 10, 10 )
 	    	rosy.fill = rosyPaint
+	    
 	    elseif(staticFireTrapPlace==true)then 
 			mapSize = mapSize+1
 	    	point(localX,localY,4)
@@ -150,6 +153,7 @@ local function onMouseEvent( event )
 	    	local firePaint = {1,0,0}
 	    	fire = display.newRect( grid, map[mapSize].x, map[mapSize].y, 10, 10 )
 	    	fire.fill = firePaint
+	    
 	    elseif(slowTrapPlace==true)then 
 	    	mapSize = mapSize+1
 	    	point(localX,localY,5)
@@ -157,6 +161,7 @@ local function onMouseEvent( event )
 	    	local slowPaint = {1,1,1}
 	    	slow = display.newRect( grid, map[mapSize].x, map[mapSize].y, 10, 10 )
 	   		slow.fill = slowPaint
+	    
 	    elseif(flameThrowerTrapPlace==true)then 
 	    	mapSize = mapSize+1
 	    	point(localX,localY,6)
@@ -164,6 +169,7 @@ local function onMouseEvent( event )
 	    	local flamePaint = {0.5,0.5,0.5}
 	    	flame = display.newRect( grid, map[mapSize].x, map[mapSize].y, 10, 10 )
 	    	flame.fill = flamePaint
+	    
 	    elseif(checkPoint==true)then 
 	    	mapSize = mapSize+1
 	    	point(localX,localY,7)
@@ -171,6 +177,7 @@ local function onMouseEvent( event )
 	    	local cPPaint = {0.5,1,0.5}
 	    	checkPoint = display.newRect( grid, map[mapSize].x, map[mapSize].y, 10, 10 )
 	    	checkPoint.fill = cPPaint
+	    
 	    elseif(finishLine==true)then 
 	    	mapSize = mapSize+1
 	    	point(localX,localY,8)
@@ -232,6 +239,9 @@ local function onKeyEvent( event )
     	staticFireTrapPlace = false
     	slowTrapPlace = false
     	flameThrowerTrapPlace = false
+
+    	checkPoint = false
+    	finishLine = false
     end
     return false
 end
