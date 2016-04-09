@@ -197,7 +197,7 @@ local lowerBody_sequences =
         start = 28,
         count = 8,
         time = 300,
-        loopCount = 0,
+        loopCount = 1,
         loopDirection = "bounce"
     },
     {

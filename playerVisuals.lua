@@ -61,7 +61,6 @@ V = {}
 
     V.torch_sprite = display.newSprite( V.torch, V.torch_sheet, torch_sequences )
     V.torch_sprite:play()
-    V.torch_sprite.alpha = 0.0
 
     local function animate(aimAngle, directionAngle, moving, velocity)
         -- Animate Upper Body

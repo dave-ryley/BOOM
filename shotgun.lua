@@ -5,7 +5,8 @@ local C = {}
 
 	C.bounds.anchorY = 1.0
 	C.bounds.alpha = 0.0
-	
+	C.power = 1
+	C.force = 500
 	C.bounds.reloading = false
 	C.bounds.myName = "shotgun"
 	local blastShape = { 	0 	-C.bounds.width/2 ,0 -C.bounds.height/2, 
@@ -14,7 +15,7 @@ local C = {}
 							0	-C.bounds.width/2 , 120 -C.bounds.height/2}
 
 	C.bounds.isSensor = true
-	C.bounds.isAwake = false;
+	C.bounds.isAwake = false
 	physics.addBody( C.bounds, "dynamic", { 	density=0.0, 
 													friction=0.0, 
 													bounce=0.0, 
@@ -39,15 +40,16 @@ local C = {}
             start = 1,
             count = 5,
             time = 250,
-            loopCount = 0,
+            loopCount = 1,
             loopDirection = "forward"
         }
     }
 
     C.blast_sprite = display.newSprite( C.blast, C.blast_sheet, blast_sequences )
-    C.blast_sprite:play()
+
     C.blast_sprite.anchorY = 1.0
-    C.blast.alpha = 1.0
+    C.blast.alpha = 0.0
+    C.blast_sprite:play()
 
 	function place(aimAngle, x, y)
         if aimAngle > 337 or aimAngle < 23 then

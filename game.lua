@@ -186,8 +186,6 @@ local function onKeyEvent( event )
             axis = "right_x"
         elseif ( event.keyName == "space") then
             value = 1
-            print("hereshoot")
-            player.shoot()
             axis = "left_trigger"
         end
     else

@@ -16,7 +16,7 @@ local P = {}
     P.thisDirectionAngle = 0
     P.velocity = 10
     P.isAlive = true
-    P.shotgunPower = 50
+   
     P.parent:insert( P.visuals.lowerBody )
     P.parent:insert( P.visuals.upperBody )
 
@@ -24,11 +24,14 @@ local P = {}
     P.bounds = display.newRect(0,0,150,170)
     P.bounds.alpha = 0.0
     P.bounds.myName = "P"
-    physics.addBody( P.bounds, "dynamic", {density=0.5, friction=1.0, bounce=0.0})
+    physics.addBody( P.bounds, "dynamic", {
+                                density=0.5, 
+                                friction=0.3, 
+                                bounce=0.0})
     P.bounds.isFixedRotation=true
     P.bounds.x = display.contentCenterX
     P.bounds.y = display.contentCenterY + 20
-
+    P.bounds.linearDamping = 5
     -- Camera lock object setup
     P.cameraLock = display.newRect(0,-200,50,50)
     P.cameraLock.alpha = 0.00
@@ -46,14 +49,18 @@ local P = {}
             end
         end
     end
-    Runtime:addEventListener( "enterFrame", sounds )
+    P.sounds = sounds
 
-    --[[local update = function( event )
+    local update = function( event )
         --if(P.bounds.velocity > 0) then
-
+        P.sounds(event)
         --end
+        P.parent.x = P.bounds.x
+        P.parent.y = P.bounds.y
+        P.cameraLock.x = P.parent.x + P.isRotatingX*250
+        P.cameraLock.y = P.parent.y + P.isRotatingY*250
     end
-    Runtime:addEventListener( "enterFrame", update )]]
+    Runtime:addEventListener( "enterFrame", update )
     
     local function movePlayer()
 
@@ -71,43 +78,73 @@ local P = {}
             P.cameraLock.y = P.parent.y + P.isMovingY*10
         end
 
-        P.cameraLock.x = P.parent.x + P.isRotatingX*250
-        P.cameraLock.y = P.parent.y + P.isRotatingY*250
-
         -- placing the shotgun
-        P.shotgun.place(P.thisAimAngle, P.parent.x, P.parent.y)
-
-        P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity)
+        
+        if(P.shotgun.bounds.shooting == false) then
+            P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity)
+            P.shotgun.place(P.thisAimAngle, P.parent.x, P.parent.y)
+        else
+            P.shotgun.place( P.shotgun.blast.rotation , P.parent.x, P.parent.y)
+        end
     end
 
     P.movePlayer = movePlayer
 
     --Test shotgun
-    local function shootDelay()
+
+
+    local function blastDisppear( event )
+        P.shotgun.isAwake = false
+        P.shotgun.bounds.alpha = 0
+        P.shotgun.blast.alpha = 0
+        P.shotgun.bounds.shooting = false
+        print("blastDisppear")
+    end
+
+    local function shootDelay( event )
         P.canShoot = true;
-        P.shotgun.bounds.isAwake = false
+        P.shotgun.bounds.reloading = false
+        P.shotgun.isAwake = false
+       
+        print("blastDisppear")
+        --P.shotgun.bounds:removeSelf( )
+        -- P.shotgun.bounds.isAwake = false
+        print(event.name)
+        print("can shoot: " ..  tostring(P.canShoot))
+        
     end
 
     local function shoot()
         P.shotgun.bounds.isAwake = true
         P.shotgun.bounds.x = P.bounds.x
         P.shotgun.bounds.y = P.bounds.y
-        P.shotgun.bounds.rotation = P.thisAimAngle
+        --P.shotgun.bounds.rotation = P.thisAimAngle
         print(P.thisAimAngle)
-        --print(Shot: " ..P.shotgun.bounds.x .. " : " .. P.shotgun.bounds.y)
+
         P.canShoot = false
-        --P.bounds:applyLinearImpulse(50, 0, 0, 0)
+
+        P.bounds:applyLinearImpulse(    
+                    math.cos(math.rad(P.thisAimAngle + 90))*P.shotgun.power*P.shotgun.force, 
+                    math.sin(math.rad(P.thisAimAngle + 90))*P.shotgun.power*P.shotgun.force, 
+                    0, 0)
+        audio.stop(3)
         audio.play(P.visuals.sounds.boomStick,{channel = 3})
-        timer.performWithDelay( 1800, shootDelay )
-
+        P.shotgun.blast_sprite:play()
+        P.shotgun.blast.alpha = 1
+        P.shotgun.blast_sprite.alpha = 1
+        P.shotgun.bounds.shooting = true
+        P.visuals.animateShotgunBlast(P.thisAimAngle )
         print("can shoot: " .. tostring(P.canShoot))
-    end
+        --timer.performWithDelay( 250, blastDisappear )
+        timer.performWithDelay(400, blastDisppear)
+        timer.performWithDelay(800, shootDelay, P.shotgun.bounds)
 
-    local function shotgunBlast()
 
     end
 
     P.shoot = shoot
+
+   
     ----- Started adding in functions
     
     local function playerAxis( axis, value )
@@ -135,7 +172,9 @@ local P = {}
             P.isRotatingY = value
             P.thisAimAngle = math.floor( P.movementFunctions.calculateAngle(P.isRotatingX, P.isRotatingY, P.thisAimAngle) )
         elseif ( "left_trigger" or "right_trigger" == axis ) then
-            -- call the shoot function
+            if(P.canShoot) then
+                P.shoot()
+            end
         end
         return true
     end
