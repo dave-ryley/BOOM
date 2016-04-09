@@ -2,6 +2,7 @@ local composer = require( "composer" )
 local globals = require "globals"
 local scene = composer.newScene()
 
+local joysticks = require "joystick"
 local perspective = require("perspective")
 
 local camera = perspective.createView()
@@ -62,6 +63,10 @@ function scene:create( event )
          return true
       end
    end
+   rightJoystick = joysticks.joystick(sceneGroup, "Graphics/Animation/analogStickHead.png", 200, 200, "Graphics/Animation/analogStickBase.png", 280, 280)
+   rightJoystick.x = display.actualContentWidth -250
+   rightJoystick.y = display.actualContentHeight -250
+   rightJoystick.activate()
    --[[buttons = {}
    for i=1,1 do 
       buttons[i] = display.newRect(display.contentCenterX,display.contentCenterY+(i-1)*200,500,150)
