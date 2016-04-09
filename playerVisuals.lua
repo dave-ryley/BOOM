@@ -1,0 +1,181 @@
+V = {}
+
+    V.lowerBodyAnim = ""
+    V.upperBodyAnim = ""
+    V.sounds = {}
+    V.sounds.boomStick = audio.loadSound("Sounds/Player/BOOMSTICK.ogg")
+    V.sounds.step1 = audio.loadSound( "Sounds/Player/Step1.ogg" )
+    V.sounds.step2 = audio.loadSound( "Sounds/Player/Step2.ogg" )
+    V.sounds.torchIdle = audio.loadSound( "/Sounds/Player/Torchidle.ogg" )
+    audio.play(V.sounds.torchIdle, { channel = 2, loops = -1, fadein = 0})
+
+    -- Setting up the lower body animation
+    V.lowerBody = display.newGroup()
+
+    local runSheetOptions =
+    {
+        width = 140,
+        height = 110,
+        numFrames = 152
+    }
+    V.lowerBodyRun_sheet = graphics.newImageSheet( "Graphics/Animation/RunnerLegs.png", runSheetOptions )
+    lowerBodyRun_sequences = require "runnerLegsSeq"
+    V.lowerBodyRun_sprite = display.newSprite( V.lowerBody, V.lowerBodyRun_sheet, lowerBodyRun_sequences )
+    V.lowerBodyRun_sprite.y = 50
+
+    -- Setting up the upper Body Animation
+    V.upperBody = display.newGroup()
+
+    local runUpperSheetOptions =
+    {
+        width = 210,
+        height = 220,
+        numFrames = 88
+    }
+    V.upperBodyRun_sheet = graphics.newImageSheet( "Graphics/Animation/RunnerTorso.png", runUpperSheetOptions )
+    upperBodyRun_sequences = require "runnerTorsoSeq"
+
+    V.upperBodyRun_sprite = display.newSprite( V.upperBody, V.upperBodyRun_sheet, upperBodyRun_sequences )
+
+    -- Setting up the torch Animation
+    V.torch = display.newGroup()
+    V.upperBody:insert( V.torch )
+    local torchSheetOptions =
+    {
+        width = 120,
+        height = 220,
+        numFrames = 8
+    }
+    V.torch_sheet = graphics.newImageSheet( "Graphics/Animation/torch.png", torchSheetOptions )
+    torch_sequences =
+    {
+        {
+            name = "default",
+            start = 1,
+            count = 8,
+            time = 800,
+            loopCount = 0,
+            loopDirection = "forward"
+        }
+    }
+
+    V.torch_sprite = display.newSprite( V.torch, V.torch_sheet, torch_sequences )
+    V.torch_sprite:play()
+
+    local function animate(aimAngle, directionAngle, moving)
+        -- Animate Upper Body
+        local upperBodyAnim = ""
+        if aimAngle > 337 or aimAngle < 23 then
+            upperBodyAnim = "up"
+            V.torch.x = -70
+            V.torch.y = -100
+        elseif aimAngle < 68 then
+            upperBodyAnim = "upRight"
+            V.torch.x = -65
+            V.torch.y = -120
+        elseif aimAngle < 113 then
+            upperBodyAnim = "right"
+            V.torch.x = 65
+            V.torch.y = -135
+        elseif aimAngle < 158 then
+            upperBodyAnim = "downRight"
+            V.torch.x = 65
+            V.torch.y = -125
+        elseif aimAngle < 203 then
+            upperBodyAnim = "down"
+            V.torch.x = 60
+            V.torch.y = -105
+        elseif aimAngle < 248 then
+            upperBodyAnim = "downLeft"
+            V.torch.x = 30
+            V.torch.y = -120
+        elseif aimAngle < 293 then
+            upperBodyAnim = "left"
+            V.torch.x = -10
+            V.torch.y = -115
+        else
+            upperBodyAnim = "upLeft"
+            V.torch.x = -45
+            V.torch.y = -105
+        end
+
+        if V.upperBodyAnim ~= upperBodyAnim then
+            V.upperBodyRun_sprite:setSequence(upperBodyAnim)
+            V.upperBodyRun_sprite:play()
+            V.upperBodyAnim = upperBodyAnim
+        end
+
+        -- Animate Lower Body
+        local lowerBodyAnim = "idle"
+        if moving >= 0.1 then
+            
+            -- 1. Get the direction moving compared to the direction facing
+            -- 2. Set the animation based on the direction facing
+            local reverse = false
+            local localAngle = (aimAngle+360 - directionAngle) % 360
+            if localAngle > 110 and localAngle < 250 then
+                reverse = true
+            end
+            if directionAngle > 337 or directionAngle < 23 then
+                if reverse then
+                    lowerBodyAnim = "downBack"
+                else
+                    lowerBodyAnim = "upAhead"
+                end
+            elseif directionAngle < 68 then
+                if reverse then
+                    lowerBodyAnim = "downLeftBack"
+                else
+                    lowerBodyAnim = "upRightAhead"
+                end
+            elseif directionAngle < 113 then
+                if reverse then
+                    lowerBodyAnim = "leftBack"
+                else
+                    lowerBodyAnim = "rightAhead"                
+                end
+            elseif directionAngle < 158 then
+                if reverse then
+                    lowerBodyAnim = "upLeftBack"
+                else
+                    lowerBodyAnim = "downRightAhead"                
+                end
+            elseif directionAngle < 203 then
+                if reverse then
+                    lowerBodyAnim = "upBack"
+                else
+                    lowerBodyAnim = "downAhead"                
+                end
+            elseif directionAngle < 248 then
+                if reverse then
+                    lowerBodyAnim = "upRightBack"
+                else
+                    lowerBodyAnim = "downLeftAhead"                
+                end
+            elseif directionAngle < 293 then
+                if reverse then
+                    lowerBodyAnim = "rightBack"
+                else
+                    lowerBodyAnim = "leftAhead"                
+                end
+            else
+                if reverse then
+                    lowerBodyAnim = "downRightBack"
+                else
+                    lowerBodyAnim = "upLeftAhead"                
+                end
+            end
+        else
+            -- Code for standing
+        end
+
+        if V.lowerBodyAnim ~= lowerBodyAnim then
+            V.lowerBodyRun_sprite:setSequence(lowerBodyAnim)
+            V.lowerBodyRun_sprite:play()
+            V.lowerBodyAnim = lowerBodyAnim
+        end
+    end
+
+    V.animate = animate
+
+return V
