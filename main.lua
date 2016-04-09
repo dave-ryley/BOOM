@@ -37,18 +37,21 @@ tempFloor.fill.scaleX = 0.1
 tempFloor.fill.scaleY = 0.1
 local player = require "player"
 local block = require "collisionTest"
+local hellPup = display.newImage( "Graphics/Temp/TestFace.png", 500, 500)
+hellPup.myName = "hellPup"
+physics.addBody( hellPup, "dynamic", {isAwake = true, })
+hellPup.isSleepingAllowed = true
 --local blast = require "shotgun"
 --blast.name = "blast"
-
-
 
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
 camera:add(tempFloor, 2)
-camera:add(block.collisionBody, 2)
-camera:add(player.bodyCollision, 1)
-camera:add(player.shotgun.collisionBody, 1)
---camera:add(blast.collisionBody, 1)
+camera:add(block.bounds, 2)
+camera:add(player.bounds, 1)
+camera:add(player.shotgun.bounds, 1)
+camera:add(hellPup, 1)
+--camera:add(blast.bounds, 1)
 camera:prependLayer()
 camera.damping = 10
 camera:setFocus(player.cameraLock)
@@ -70,13 +73,6 @@ myAxisDisplayText.y = 100
 
 --Sound Stuff
 local stepCount = 0
-
-
-
-
-
-
-
 
 -- Since controllers don't generate constant values, but simply events when
 -- the values change, we need to set a movement amount when the event happens,
@@ -306,11 +302,19 @@ local function onInputDeviceStatusChanged( event )
 end
 
 local function onCollision(  event )
-  --  if(event.myName !~ "player" and event.other.myName ~= "shotgun")
+    --  if(event.myName !~ "player" and event.other.myName ~= "shotgun")
+     print( event.object1.myName .. ": collision began with " .. event.object2.myName )
         if ( event.phase == "began" ) then
+            if(event.object1.myName == "shotgun") then
+                if(event.object2.myName == "hellPup") then
+                    print("hit hellPup")
+                    hellPup:removeSelf()
+                end
+                print( event.object1.myName .. ": collision began with " .. event.object2.myName )
+            end
+            if(event.object1.myName == "player") then
 
-            print( event.object1.myName .. ": collision began with " .. event.object2.myName )
-
+            end
         elseif ( event.phase == "ended" ) then
 
             print( event.object1.myName .. ": collision ended with " .. event.object2.myName )

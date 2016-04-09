@@ -26,7 +26,6 @@ T.leftThumbstickBase.alpha = 0.5
 T.leftThumbstick:insert( T.leftThumbstickBase )
 T.leftThumbstick:insert( T.leftThumbstickHead )
 
-
 T.rightThumbstick.x = display.contentWidth/2 + 50
 T.rightThumbstick.y = display.contentHeight - 200
 T.leftThumbstick.x = display.contentWidth/2 - 50

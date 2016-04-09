@@ -1,14 +1,12 @@
 local C = {}
 
-	C.bounds = display.newImage( "Graphics/Temp/TestBlast.png", 
-										display.contentCenterX/2,
-										display.contentCenterY/2)
+	C.bounds = display.newImage( "Graphics/Temp/TestFace.png")
 	--C.bounds.alpha = 1.0
-	C.bounds.anchorX = 0
-	C.bounds.anchorY = 0.5
+	C.anchorX = 0
+	C.anchorY = 0.5
 	C.bounds.alpha = 0
 	C.bounds.isAwake = false;
-	C.name = "shotgun"
+	--C.name = "shotgun"
 	C.bounds.myName = "shotgun"
 	local blastShape = { 	0 	-C.bounds.width/2 ,0 -C.bounds.height/2, 
 							320	-C.bounds.width/2 , 40 -C.bounds.height/2, 

@@ -1,5 +1,6 @@
 local P = {}
 
+P.myName = "player"
 P.shotgun = require("shotgun")
 P.parent = display.newGroup()
 P.parent.x = display.contentCenterX
@@ -80,13 +81,13 @@ P.torch_sprite:play()
 
 
 -- Collision object setup
-P.bodyCollision = display.newRect(0,0,150,170)
-P.bodyCollision.alpha = 0.0
-P.bodyCollision.myName = "P"
-physics.addBody( P.bodyCollision, "dynamic", {density=0.5, friction=1.0, bounce=0.0})
-P.bodyCollision.isFixedRotation=true
-P.bodyCollision.x = display.contentCenterX
-P.bodyCollision.y = display.contentCenterY + 20
+P.bounds = display.newRect(0,0,150,170)
+P.bounds.alpha = 0.0
+P.bounds.myName = "P"
+physics.addBody( P.bounds, "dynamic", {density=0.5, friction=1.0, bounce=0.0})
+P.bounds.isFixedRotation=true
+P.bounds.x = display.contentCenterX
+P.bounds.y = display.contentCenterY + 20
 
 -- Camera lock object setup
 P.cameraLock = display.newRect(0,-200,50,50)
@@ -111,7 +112,7 @@ end
 Runtime:addEventListener( "enterFrame", sounds )
 
 local update = function( event )
-    --if(P.bodyCollision.velocity > 0) then
+    --if(P.bounds.velocity > 0) then
 
     --end
 end
@@ -128,15 +129,15 @@ local movePlayer = function( event)
         P.shooting = P.shooting - (P.shooting/15 + 1)
     end
     if ( P.isMovingX ~= 0 ) then
-        P.bodyCollision.x = P.bodyCollision.x + P.isMovingX
-        P.parent.x = P.bodyCollision.x
+        P.bounds.x = P.bounds.x + P.isMovingX
+        P.parent.x = P.bounds.x
         P.cameraLock.x = P.parent.x + P.isMovingX*10
     else
         P.cameraLock.x = P.parent.x
     end
     if ( P.isMovingY ~= 0 ) then
-        P.bodyCollision.y = P.bodyCollision.y + P.isMovingY
-        P.parent.y = P.bodyCollision.y - 20
+        P.bounds.y = P.bounds.y + P.isMovingY
+        P.parent.y = P.bounds.y - 20
         P.cameraLock.y = P.parent.y + P.isMovingY*10
     else
         P.cameraLock.y = P.parent.y
@@ -261,19 +262,21 @@ Runtime:addEventListener( "enterFrame", movePlayer )
 --Test shotgun
 local function shootDelay( event )
     P.canShoot = true;
-    P.shotgun.collisionBody.isAwake = false
+    P.shotgun.bounds.isAwake = false
     print("can shoot: " ..  tostring(P.canShoot))
 end
 
 local shoot = function( event )
     if (event.phase == "down" and event.keyName == "space" and P.canShoot == true) then
-        P.shotgun.collisionBody.alpha = 1
-        P.shotgun.collisionBody.isAwake = true
-        P.shotgun.collisionBody.x = P.bodyCollision.x - 200
-        P.shotgun.collisionBody.y = P.bodyCollision.y - 200
-        --print("Shot: " ..P.shotgun.collisionBody.x .. " : " .. P.shotgun.collisionBody.y)
+        P.shotgun.bounds.alpha = 1
+        P.shotgun.bounds.isAwake = true
+        P.shotgun.bounds.x = P.bounds.x
+        P.shotgun.bounds.y = P.bounds.y
+        P.shotgun.bounds.rotation = P.thisAimAngle
+        print(P.thisAimAngle)
+        --print(Shot: " ..P.shotgun.bounds.x .. " : " .. P.shotgun.bounds.y)
         P.canShoot = false
-        --P.bodyCollision:applyLinearImpulse(50, 0, 0, 0)
+        --P.bounds:applyLinearImpulse(50, 0, 0, 0)
         audio.play(P.boomStick,{channel = 3})
         timer.performWithDelay( 1800, shootDelay )
 

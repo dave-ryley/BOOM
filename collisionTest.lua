@@ -1,7 +1,7 @@
 local C = {}
 
-C.collisionBody = display.newRect(0,0,200,200)
-physics.addBody( C.collisionBody, "static", {friction=0.5, bounce=0.3})
-C.collisionBody.myName = "testBlock"
+C.bounds = display.newRect(0,0,200,200)
+physics.addBody( C.bounds, "static", {friction=0.5, bounce=0.3})
+C.bounds.myName = "testBlock"
 
 return C
