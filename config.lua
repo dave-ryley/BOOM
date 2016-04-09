@@ -6,6 +6,7 @@ application =
 		height = 1920,
 		scale = "zoomEven",
 		xAlign = "center",
-		yAlign = "center"
+		yAlign = "center",
+		fps=60
 	}
 }

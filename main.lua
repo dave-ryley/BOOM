@@ -2,8 +2,9 @@ local perspective = require("perspective")
 
 local camera = perspective.createView()
 
-local physics = require "physics"
+physics = require "physics"
 physics.start()
+physics.setContinuous( true )
 physics.setGravity(0,0)
 physics.setDrawMode( "hybrid" )
 
@@ -36,21 +37,28 @@ tempFloor.fill = { type="image", filename="Graphics/Temp/dungeonFloor.png" }
 tempFloor.fill.scaleX = 0.1
 tempFloor.fill.scaleY = 0.1
 local player = require "player"
-local block = require "collisionTest"
-local hellPup = display.newImage( "Graphics/Temp/TestFace.png", 500, 500)
-hellPup.myName = "hellPup"
-physics.addBody( hellPup, "dynamic", {isAwake = true, })
-hellPup.isSleepingAllowed = true
+local sausage = require "sausage"
+--local block = require "collisionTest"
+local hellPup = require "hellPup"
 --local blast = require "shotgun"
 --blast.name = "blast"
+local enemies = display.newGroup( )
 
+enemies:insert(hellPup[0].parent)
+enemies:insert(hellPup[1].parent)
+hellPup[0].bounds.x = 1500
+hellPup[0].bounds.y = 1500
+hellPup[1].bounds.x = -500
+hellPup[1].bounds.y = -500
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
 camera:add(tempFloor, 2)
-camera:add(block.bounds, 2)
+--camera:add(block.bounds, 2)
 camera:add(player.bounds, 1)
 camera:add(player.shotgun.bounds, 1)
-camera:add(hellPup, 1)
+camera:add(enemies, 1)
+camera:add(sausage.parent)
+--camera:add(hellPup.sensorArea, 1)
 --camera:add(blast.bounds, 1)
 camera:prependLayer()
 camera.damping = 10
@@ -308,7 +316,7 @@ local function onCollision(  event )
             if(event.object1.myName == "shotgun") then
                 if(event.object2.myName == "hellPup") then
                     print("hit hellPup")
-                    hellPup:removeSelf()
+                    hellPup.bounds:removeSelf()
                 end
                 print( event.object1.myName .. ": collision began with " .. event.object2.myName )
             end
@@ -322,7 +330,7 @@ local function onCollision(  event )
         end
 end
 
-Runtime:addEventListener( "collision", onCollision )
+--Runtime:addEventListener( "collision", onCollision )
 
 Runtime:addEventListener( "inputDeviceStatus", onInputDeviceStatusChanged )
 
