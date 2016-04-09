@@ -7,6 +7,7 @@ application =
 		fps = 60,
 		scale = "zoomEven",
 		xAlign = "center",
-		yAlign = "center"
+		yAlign = "center",
+		fps=60
 	}
 }

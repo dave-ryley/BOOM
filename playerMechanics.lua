@@ -114,7 +114,7 @@ local P = {}
 
     P.shoot = shoot
     ----- Started adding in functions
-
+    
     local function playerAxis( axis, value )
         -- Map event data to simple variables
         local abs = math.abs
@@ -144,6 +144,20 @@ local P = {}
         end
         return true
     end
+    P.onCollision = function( event )
+            print(event.other.myName)
+            if (event.phase == "began") then
+                if (event.other.myName == "fireTrap") then
+                        --print("reloading: "..event.object1.reloading)
+                    print("Killed by: " .. event.other.myName) 
+                    --P.bounds:applyLinearImpulse( 2000, 0, 50, 50 )
+                        --C[event.object2.id].parent:removeSelf( )
+                end
+            end
+            return true
+        end
+    P.bounds:addEventListener( "collision", P.onCollision )
+
 
     P.playerAxis = playerAxis
 
