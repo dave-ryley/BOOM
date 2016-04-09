@@ -1,8 +1,29 @@
 settings =
 {
-    orientation =
-    {
-    	default = "landscapeRight",
-    	supported = { "landscapeLeft", "landscapeRight" },
-    }
+	
+	orientation =
+	{
+		-- Supported values for orientation:
+		-- portrait, portraitUpsideDown, landscapeLeft, landscapeRight
+
+		default = "landscapeRight",
+		supported = { "landscapeRight", }
+	},
+	
+	excludeFiles =
+	{
+		-- Include only the necessary icon files on each platform
+		android = { "Icon.png", "Icon-Small-*.png", "Icon*@2x.png", },
+	},
+
+	--
+	-- Android Section
+	--
+	android =
+	{
+		usesPermissions =
+		{
+			"android.permission.INTERNET",
+		},
+	},
 }
