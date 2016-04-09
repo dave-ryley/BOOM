@@ -1,4 +1,5 @@
 J = {}
+
 function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidth, bgHeight)
     local stage = display.getCurrentStage();
     local mMin = math.min;
@@ -35,12 +36,14 @@ function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidt
                 else
                     self.x, self.y = posX, posY;
                 end
-                parent.angle = angle;
+                if distance > 1 then parent.angle = angle end;
                 parent.distance = distance;
+                parent.xLoc, parent.yLoc = self.x, self.y;
             else
                 stage:setFocus(event.target, event.id);
                 self.isFocus = true;
-                self.parent.state = true; 
+                self.parent.state = true;
+                self.parent.xLoc, self.parent.yLoc = 0, 0;
             end
         elseif phase == "began" then
             stage:setFocus(event.target, event.id);
@@ -59,15 +62,16 @@ function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidt
             else
                 self.x, self.y = posX, posY;
             end
-            parent.angle = angle;
+            if distance > 1 then parent.angle = angle end;
             parent.distance = distance;
+            parent.xLoc, parent.yLoc = self.x, self.y;
         else
             self.isFocus = false;
             self.parent.state = false;
             self.x, self.y = 0, 0;
             self.parent.distance = 0;
-            self.parent.angle = 0;
             stage:setFocus(nil, event.id);
+            self.parent.xLoc, self.parent.yLoc = 0, 0;
         end
         return true;
     end
@@ -75,12 +79,17 @@ function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidt
     joyGroup.activate = function()
         joyGroup[1]:addEventListener("touch", joyGroup[2]);
         joyGroup.angle, joyGroup.distance = 0, 0;
+        joyGroup.xLoc, joyGroup.yLoc = 0, 0;
     end
     joyGroup.deactivate = function()
         joyGroup[1]:removeEventListener("touch", joyGroup[2]);
         joyGroup.angle, joyGroup.distance = 0, 0;
+        joyGroup.xLoc, joyGroup.yLoc = 0, 0;
     end
     joyGroup.x, joyGroup.y = joyGroup.contentWidth*0.5, display.contentHeight-joyGroup.contentHeight*0.5;
+    --joyGroup:rotate(-90)
+    --joyGroup:scale( 1, -1 )
+
     return (joyGroup);
 end
 
