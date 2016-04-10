@@ -25,7 +25,7 @@
   local physics = require "physics"
   physics.start()
   physics.setGravity(0,0)
-  physics.setDrawMode( "hybrid" )
+  physics.setDrawMode( "normal" )
 
 
    -----Map-----
@@ -141,7 +141,7 @@ function scene:create( event )
          return true
       end
    end
-   if(system.getInfo("platformName") == "Android") then
+   if(globals.android) then
       rightJoystick = joysticks.joystick(sceneGroup, "Graphics/Animation/analogStickHead.png", 200, 200, "Graphics/Animation/analogStickBase.png", 280, 280)
       rightJoystick.x = display.actualContentWidth -250
       rightJoystick.y = display.actualContentHeight -250
@@ -311,7 +311,7 @@ function scene:create( event )
 
 local function gameLoop( event )
    if globals.pause == false and axis ~= "" then
-      if(system.getInfo("platformName") == "Android") then
+      if(globals.android) then
          player.virtualJoystickInput(leftJoystick.angle, leftJoystick.xLoc/70, leftJoystick.yLoc/70, rightJoystick.angle, rightJoystick.distance/70, rightJoystick.xLoc/70, rightJoystick.yLoc/70)
       end
       player.movePlayer()
