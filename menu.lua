@@ -1,4 +1,5 @@
 local composer = require( "composer" )
+local globals = require "globals"
 
 local scene = composer.newScene()
 
@@ -8,7 +9,7 @@ function scene:create( event )
 	-- INSERT code here to initialize the scene
 	local background = display.newImageRect( "Graphics/Art/Boom.jpg", display.contentWidth, display.contentHeight )
 	numOfButtons = 5
-	if(system.getInfo("platformName") == "Android") then
+	if(globals.android) then
     	numOfButtons = 4
     else
     	-- code in here to highlight the first button

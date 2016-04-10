@@ -20,7 +20,7 @@ function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidt
     local degToRad = mPi/180;
     local joystick = display.newImageRect(joyGroup, imgJoystick, joyWidth, joyHeight );
     
-    function joystick:multitouch(event)
+    function joystick:touch(event)
         local phase = event.phase;
         if phase == "moved" then
             if self.isFocus then

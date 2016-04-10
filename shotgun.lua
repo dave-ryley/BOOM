@@ -4,7 +4,7 @@ local C = {}
 	--C.collisionFilter = {categoryBits = 2, maskBits = 4}
 	local vertices = { -20,0, -100,-300, 100,-300, 20,0 }
 	C.bounds = display.newPolygon( 0, 0, vertices )
-	C.bounds.alpha = 1.0
+	C.bounds.alpha = 0.0
 	C.max = 20
 	C.min = 5
 	C.power = 10 --Default
