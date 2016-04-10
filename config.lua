@@ -8,6 +8,5 @@ application =
 		scale = "zoomEven",
 		xAlign = "center",
 		yAlign = "center",
-		fps=60
 	}
 }

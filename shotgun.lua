@@ -3,13 +3,13 @@ local C = {}
 	C.shooting = false
 	--C.collisionFilter = {categoryBits = 2, maskBits = 4}
 	local vertices = { -20,0, -100,-300, 100,-300, 20,0 }
-	local vertices2 = { -40,90, -100,-150, 100,-150, 40,90 }
 	C.bounds = display.newPolygon( 0, 0, vertices )
 	C.bounds.alpha = 1.0
 	C.max = 20
 	C.min = 5
 	C.power = 10 --Default
-	C.force = 10 --
+	C.force = 10
+	C.vertices = { -40,90, -100,-150, 100,-150, 40,90 }
 	-- Blast animation and bounds Scale = 1/10 power
 	C.bounds.myName = "shotgun"
 	--[[local blastShape = { 	0 	-C.bounds.width/2 ,0 -C.bounds.height/2, 
@@ -20,13 +20,12 @@ local C = {}
 	C.bounds.isSensor = true
 	C.bounds.anchorY = 1.0
 	physics.addBody( C.bounds, "dynamic", { 	
-												density=0.0, 
-												friction=0.0, 
-												bounce=0.0, 
-												shape=vertices2, 
-												isSensor=true 
+												density = 0.0, 
+												friction = 0.0, 
+												bounce = 0.0, 
+												shape = C.vertices, 
+												isSensor = true 
 										} )
-	C.bounds.isFixedRotation = false
 	C.bounds.isAwake = false
 
 	-- Setting up the blast Animation
@@ -128,6 +127,7 @@ local C = {}
 			--end
 		end
 	end
+
 	C.bounds:addEventListener( "collision", C.onCollision )
 
     function powerUp( value )
@@ -149,6 +149,15 @@ local C = {}
     	C.bounds.yScale = C.power/10
     	C.blast.xScale = C.power/10
     	C.blast.yScale = C.power/10
+    	physics.removeBody( C.bounds )
+    	C.vertices = { -40,90, C.power*-10,C.power*-15, C.power*10,C.power*-15, 40,90 }
+    	physics.addBody( C.bounds, "dynamic", { 	
+												density=0.0, 
+												friction=0.0, 
+												bounce=0.0, 
+												shape=C.vertices, 
+												isSensor=true 
+										} )
     end
 
     C.powerUp = powerUp
