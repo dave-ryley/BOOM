@@ -118,14 +118,17 @@ local C = {}
 			C.bounds.y = y - 50
         end
     end
-    C.onCollision = function( event ) 
-		print("shotgun collision with: " ..event.other.myName)
-		if (event.phase == "began") then
-		
+    C.place = place
+
+    C.onCollision = function( event )
+    if event.other.myName ~= nil then
+		print("shotgun collision with: " .. event.other.myName)
+			--if (event.phase == "began") then
+			
+			--end
 		end
 	end
 	C.bounds:addEventListener( "collision", C.onCollision )
-    C.place = place
 
     function powerUp( value )
     	if value > 0 then
