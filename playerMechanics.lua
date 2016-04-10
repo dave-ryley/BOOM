@@ -23,7 +23,7 @@ local P = {}
     -- Collision object setup
     P.bounds = display.newRect(0,0,150,170)
     P.bounds.alpha = 0.0
-    P.bounds.myName = "P"
+    P.bounds.myName = "player"
     physics.addBody( P.bounds, "dynamic", {
                                 density=0.5, 
                                 friction=0.3, 
@@ -64,9 +64,6 @@ local P = {}
     
     local function movePlayer()
 
-        -- Set the .isMovingX and .isMovingY values in our event handler
-        -- If this number isn't 0 (stopped moving), move the 
-
         if ( P.isMovingX ~= 0 ) then
             P.bounds.x = P.bounds.x + P.isMovingX
             P.parent.x = P.bounds.x
@@ -75,12 +72,10 @@ local P = {}
         if ( P.isMovingY ~= 0 ) then
             P.bounds.y = P.bounds.y + P.isMovingY
             P.parent.y = P.bounds.y - 20
-            P.cameraLock.y = P.parent.y + P.isMovingY*10
         end
 
         -- placing the shotgun
-        
-        if(P.shotgun.bounds.shooting == false) then
+        if(P.shotgun.shooting == false) then
             P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity)
             P.shotgun.place(P.thisAimAngle, P.parent.x, P.parent.y)
         else
@@ -95,49 +90,48 @@ local P = {}
 
     local function blastDisppear( event )
         P.shotgun.isAwake = false
-        P.shotgun.bounds.alpha = 0
+        --P.shotgun.bounds.alpha = 0
         P.shotgun.blast.alpha = 0
-        P.shotgun.bounds.shooting = false
-        print("blastDisppear")
+        P.shotgun.shooting = false
+        --print("blastDisppear")
     end
 
     local function shootDelay( event )
         P.canShoot = true;
-        P.shotgun.bounds.reloading = false
         P.shotgun.isAwake = false
        
-        print("blastDisppear")
+        --print("blastDisppear")
         --P.shotgun.bounds:removeSelf( )
         -- P.shotgun.bounds.isAwake = false
-        print(event.name)
-        print("can shoot: " ..  tostring(P.canShoot))
+        --print(event.name)
+        --print("can shoot: " ..  tostring(P.canShoot))
         
     end
 
     local function shoot()
         P.shotgun.bounds.isAwake = true
-        P.shotgun.bounds.x = P.bounds.x
-        P.shotgun.bounds.y = P.bounds.y
+        --P.shotgun.bounds.x = P.bounds.x
+        --P.shotgun.bounds.y = P.bounds.y
         --P.shotgun.bounds.rotation = P.thisAimAngle
-        print(P.thisAimAngle)
+        --print(P.thisAimAngle)
 
         P.canShoot = false
 
         P.bounds:applyLinearImpulse(    
-                    math.cos(math.rad(P.thisAimAngle + 90))*P.shotgun.power*P.shotgun.force, 
-                    math.sin(math.rad(P.thisAimAngle + 90))*P.shotgun.power*P.shotgun.force, 
+                    math.cos(math.rad(P.thisAimAngle + 90))*P.shotgun.force, 
+                    math.sin(math.rad(P.thisAimAngle + 90))*P.shotgun.force, 
                     0, 0)
         audio.stop(3)
         audio.play(P.visuals.sounds.boomStick,{channel = 3})
         P.shotgun.blast_sprite:play()
         P.shotgun.blast.alpha = 1
         P.shotgun.blast_sprite.alpha = 1
-        P.shotgun.bounds.shooting = true
+        P.shotgun.shooting = true
         P.visuals.animateShotgunBlast(P.thisAimAngle )
-        print("can shoot: " .. tostring(P.canShoot))
+        --print("can shoot: " .. tostring(P.canShoot))
         --timer.performWithDelay( 250, blastDisappear )
         timer.performWithDelay(400, blastDisppear)
-        timer.performWithDelay(800, shootDelay, P.shotgun.bounds)
+        timer.performWithDelay(800, shootDelay)
 
 
     end
@@ -172,15 +166,19 @@ local P = {}
         elseif ( "right_y" == axis ) then
             P.isRotatingY = value
             P.thisAimAngle = floor( P.movementFunctions.calculateAngle(P.isRotatingX, P.isRotatingY, P.thisAimAngle) )
-        elseif ( "left_trigger" or "right_trigger" == axis ) then
+        elseif ( "left_trigger" == axis or "right_trigger" == axis ) then
             if(P.canShoot) then
                 P.shoot()
             end
         end
         return true
     end
+
+    P.playerAxis = playerAxis
+
+    --[[
     P.onCollision = function( event )
-            print(event.other.myName)
+            --print(event.other.myName)
             if (event.phase == "began") then
                 if (event.other.myName == "fireTrap") then
                         --print("reloading: "..event.object1.reloading)
@@ -193,8 +191,7 @@ local P = {}
             return true
         end
     P.bounds:addEventListener( "collision", P.onCollision )
-
-    P.playerAxis = playerAxis
+    ]]
 
     function virtualJoystickInput(ljsAngle, ljsX, ljsY, rjsAngle, rjsDistance, rjsX, rjsY)
         if rjsDistance > 0.9 and P.canShoot then

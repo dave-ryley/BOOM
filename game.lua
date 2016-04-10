@@ -87,6 +87,7 @@ enemies[0] = hellPuppies.spawn(0)
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
 camera:add(player.shotgun.blast, 1)
+camera:add(player.shotgun.bounds, 1)
 camera:add(tempFloor, 2)
 camera:add(player.bounds, 1)
 camera:add(fireTrap.bounds, 2)
@@ -126,7 +127,7 @@ function scene:create( event )
          return true
       end
    end
-   --if(system.getInfo("platformName") == "Android") then
+   if(system.getInfo("platformName") == "Android") then
       rightJoystick = joysticks.joystick(sceneGroup, "Graphics/Animation/analogStickHead.png", 200, 200, "Graphics/Animation/analogStickBase.png", 280, 280)
       rightJoystick.x = display.actualContentWidth -250
       rightJoystick.y = display.actualContentHeight -250
@@ -135,7 +136,7 @@ function scene:create( event )
       leftJoystick.x = 250
       leftJoystick.y = display.actualContentHeight -250
       leftJoystick.activate()
-   --end
+   end
    --[[buttons = {}
    for i=1,1 do 
       buttons[i] = display.newRect(display.contentCenterX,display.contentCenterY+(i-1)*200,500,150)
@@ -200,7 +201,6 @@ end
 
 local function onAxisEvent( event )
    -- Map event data to simple variables
-   print("axis")
    if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
       local axis = controllerMapping.axis[event.axis.number]
       --if globals.pause then print("globals.pause = true") else print("globals.pause = false") end
@@ -217,17 +217,17 @@ local function onKeyEvent( event )
    local axis = ""
    local value = 0
 
-   print (event.keyName)
-
    if (event.phase == "down") then
 
         -- Adjust velocity for testing, remove for final game        
         if ( event.keyName == "[" or event.keyName == "rightShoulderButton1" ) then
             if (player.velocity > 0 ) then
                 player.velocity = player.velocity - 1
+                player.shotgun.powerUp(-1)
             end
         elseif ( event.keyName == "]" or event.keyName == "leftShoulderButton1" ) then
             player.velocity = player.velocity + 1
+            player.shotgun.powerUp(1)
         end
         -- WASD and ArrowKeys pressed down
         if ( event.keyName == "w" ) then
@@ -296,9 +296,9 @@ end
 
 local function gameLoop( event )
    if globals.pause == false and axis ~= "" then
-      --if(system.getInfo("platformName") == "Android") then
+      if(system.getInfo("platformName") == "Android") then
          player.virtualJoystickInput(leftJoystick.angle, leftJoystick.xLoc/70, leftJoystick.yLoc/70, rightJoystick.angle, rightJoystick.distance/70, rightJoystick.xLoc/70, rightJoystick.yLoc/70)
-      --end
+      end
       player.movePlayer()
    end
    return true
@@ -312,7 +312,7 @@ scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
 Runtime:addEventListener( "key", onKeyEvent )
---Runtime:addEventListener( "axis", onAxisEvent )
+Runtime:addEventListener( "axis", onAxisEvent )
 Runtime:addEventListener( "enterFrame", gameLoop )
 ---------------------------------------------------------------------------------
  
