@@ -50,27 +50,6 @@
    end
    io.close(file)
 
-<<<<<<< HEAD
-   size = 5
-
-   for i=2,table.getn(map),1 do
-  if(tonumber(map[i][3])==10)then
-    lineWall = display.newLine(level,tonumber(map[i-1][1])*size,tonumber(map[i-1][2])*size,tonumber(map[i][1])*size,tonumber(map[i][2])*size )
-    lineWall.myName = "wall"
-    lineWall.strokeWidth = 20
-  physics.addBody( lineWall, "static", {chain= tonumber(map[i][1])*size,tonumber(map[i][2])*size} )
-  elseif(tonumber(map[i][3])==1)then--imp
-  imp = display.newRect(imps,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
-  imp:setFillColor(0,0,1,1)
-  elseif(tonumber(map[i][3])==2)then--hellPup
-  hellPup = display.newRect(hellPups,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
-  hellPup:setFillColor(0,1,0,1)
-  elseif(tonumber(map[i][3])==3)then--rosy
-  minotaur = display.newRect(minotaurs,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
-  minotaur:setFillColor(0,1,1,1)
-  end
-   end
-=======
   size = 5
   for i=2,table.getn(map),1 do
     if(tonumber(map[i][3])==10)then
@@ -92,7 +71,7 @@
       minotaur:setFillColor(0,1,1,1)
     end
   end
->>>>>>> d39d260baa70a57509d08926a5714a30b49754b2
+
 
 
    ------TEMPORARY! TO BE DELETED!-----------

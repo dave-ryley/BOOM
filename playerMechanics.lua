@@ -80,14 +80,9 @@ local P = {}
         end
 
         -- placing the shotgun
-<<<<<<< HEAD
-        
-        if(P.shotgun.bounds.shooting == false) then
-            P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity*P.maxSpeed)
-=======
+
         if(P.shotgun.shooting == false) then
-            P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity)
->>>>>>> d39d260baa70a57509d08926a5714a30b49754b2
+            P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity*P.maxSpeed)
             P.shotgun.place(P.thisAimAngle, P.parent.x, P.parent.y)
         else
             P.shotgun.place( P.shotgun.blast.rotation , P.parent.x, P.parent.y)
@@ -176,7 +171,6 @@ local P = {}
     --[[
     P.onCollision = function( event )
             if (event.phase == "began") then
-                --[[
                 if (event.other.myName == "trap_fire") then
                         --print("reloading: "..event.object1.reloading)
                     print("Killed by: " .. event.other.myName) 
@@ -184,7 +178,7 @@ local P = {}
                     --P.bounds:applyLinearImpulse( 2000, 0, 50, 50 )
                     --C[event.object2.id].parent:removeSelf( )
                 end
-                --]]
+                
                 if(event.other.myName == "trap_slow") then
                     print("Slowed by: " .. event.other.myName)
                     P.maxSpeed = P.maxSpeed/2
