@@ -75,13 +75,13 @@
 
 
    ------TEMPORARY! TO BE DELETED!-----------
-   local tempFloor = display.newRect( display.contentCenterX, display.contentCenterY, 5000, 5000 )
-   tempFloor.myName = "floor"
+   local tempfloor = display.newRect( display.contentCenterX, display.contentCenterY, 5000, 5000 )
+   tempfloor.myName = "floor"
    display.setDefault( "textureWrapX", "repeat" )
    display.setDefault( "textureWrapY", "repeat" )
-   tempFloor.fill = { type="image", filename="Graphics/Temp/dungeonFloor.png" }
-   tempFloor.fill.scaleX = 0.1
-   tempFloor.fill.scaleY = 0.1
+   tempfloor.fill = { type="image", filename="Graphics/Temp/dungeonFloor.png" }
+   tempfloor.fill.scaleX = 0.1
+   tempfloor.fill.scaleY = 0.1
    -------------------------------------------
    controllerMapping = require "controllerMapping"
    player = require "playerMechanics"
@@ -93,21 +93,21 @@
    traps[1] = slowTrap.spawn(1)
    hellPuppies = require "hellPup"
    enemies = {}
-   enemies[0] = hellPuppies.spawn(0)
-  enemies[1] = hellPuppies.spawn(1)
+   enemies[1] = hellPuppies.spawn(1)
+  enemies[2] = hellPuppies.spawn(2)
    enemies[1].bounds:translate(800, 800)
-  enemies[1].bounds:translate(500, 500)
+  enemies[2].bounds:translate(500, 500)
    -- SETTING UP OBJECTS IN THE CAMERA
    camera:add(player.parent, 1)
    camera:add(player.cameraLock, 1)
    camera:add(player.shotgun.blast, 1)
    camera:add(player.shotgun.bounds, 1)
-   camera:add(tempFloor, 2)
+   camera:add(tempfloor, 2)
    camera:add(player.bounds, 1)
    --camera:add(traps[0].bounds, 2)
    camera:add(traps[1].bounds, 2)
-   camera:add(enemies[0].parent, 1)
    camera:add(enemies[1].parent, 1)
+   camera:add(enemies[2].parent, 1)
 
    camera:add(level, 2)
    camera:add(imps, 1)
@@ -316,12 +316,16 @@ local function gameLoop( event )
       end
       player.movePlayer()
       for k,v in pairs(enemies) do
-        if(v.health <= 0) then
-          table.remove( v )
-        end
-        v.updatePlayerLocation(player.bounds.x, player.bounds.y)
-      end
-   end
+        if(v.health <= 0 ) then
+            print("killing: "..v.myName)
+            local gore = v.splatter()
+            camera:add(gore, 1)
+            v.parent:removeSelf( )
+            table.remove( enemies, k )
+            end
+            v.updatePlayerLocation(player.bounds.x, player.bounds.y)
+          end
+       end
    return true
    end
 

@@ -14,6 +14,10 @@ local C = {}
 			temp.targetY = 0
 			temp.moveAngle = 0
 			temp.speed = 10
+			temp.isDead = false
+			temp.parent = display.newGroup()
+			
+
 			--enemyID
 			temp.myName = "hellPup" .. tostring(id)
 			--setting up collision bounds
@@ -31,7 +35,7 @@ local C = {}
 								} )
 			--hellPup detection area
 			temp.bounds.filter = temp.collisionFilter
-			temp.sensorRadius = 1000
+			temp.sensorRadius = 500
 			temp.sensorArea = display.newCircle( temp.bounds.x, temp.bounds.y, temp.sensorRadius )
 			temp.sensorArea.myName = "hellPupSensor"
 			temp.physics.addBody( 	temp.sensorArea, 
@@ -43,8 +47,9 @@ local C = {}
 			--temp.sensorArea.filter = temp.sensorCollFilter
 			temp.bounds.isFixedRotation = true
 			temp.bounds.linearDamping = 7
+			--face smash
 			
-			temp.parent = display.newGroup()
+			
 			temp.parent:insert(temp.bounds)
 			temp.parent:insert(temp.sensorArea)
 			temp.sensorArea.alpha = 0.0
@@ -54,13 +59,99 @@ local C = {}
 				temp.targetY = y
 			end
 			temp.updatePlayerLocation = updatePlayerLocation
+
+			function splatter()
+				
+				print("making face: " .. temp.myName)
+				local xPos = temp.bounds.x
+				local yPos = temp.bounds.y 
+				local face1 = display.newImageRect( "Graphics/Temp/TestFaceShattered/facePiece1.png",
+				                      66, 49)
+				local face2 = display.newImageRect( "Graphics/Temp/TestFaceShattered/facePiece2.png",
+				              54, 60)
+				local face3 = display.newImageRect( "Graphics/Temp/TestFaceShattered/facePiece3.png",
+				              59, 51)
+				local face4 = display.newImageRect( "Graphics/Temp/TestFaceShattered/facePiece4.png",
+				              50, 66)
+				face1.x = xPos
+				face1.y = yPos
+				--face1:translate( xPos, yPos )
+				face2.x = xPos
+				face2.y = yPos
+
+				face3.x = xPos
+				face3.y= yPos
+
+				face4.x = xPos
+				face4.y = yPos
+				
+				physics.addBody(  face1,
+				          "dynamic",
+				        {   density = 0.5,
+				          friction = 0.5,
+				          bounce = 0.9})
+				physics.addBody(  face2,
+				          "dynamic",
+				        {   density = 0.5,
+				          friction = 0.5,
+				          bounce = 0.9})
+				physics.addBody(  face3,
+				          "dynamic",
+				        {   density = 0.5,
+				          friction = 0.5,
+				          bounce = 0.9})
+				physics.addBody(  face4,
+				          "dynamic",
+				        {   density = 0.5,
+				          friction = 0.5,
+				          bounce = 0.9})
+
+				face1.linearDamping = 3
+				face2.linearDamping = 3
+				face3.linearDamping = 3
+				face4.linearDamping = 3
+
+				face1.angularDamping = 3
+				face2.angularDamping = 3
+				face3.angularDamping = 3
+				face4.angularDamping = 3
+
+	         face1:applyLinearImpulse(  
+	                 math.cos(player.thisAimAngle)*500, 
+	                 math.sin(player.thisAimAngle)*500, 
+	                 50, 
+	                 50 )
+	         face2:applyLinearImpulse(  
+	                 math.cos(player.thisAimAngle)*500, 
+	                 math.sin(player.thisAimAngle)*500, 
+	                 50, 
+	                 50 )
+	         face3:applyLinearImpulse(  
+	                 math.cos(player.thisAimAngle)*500, 
+	                 math.sin(player.thisAimAngle)*500, 
+	                 50, 
+	                 50 )
+	         face4:applyLinearImpulse(  
+	                 math.cos(player.thisAimAngle)*500, 
+	                 math.sin(player.thisAimAngle)*500, 
+	                 50, 
+	                 50 )
+				local gore = display.newGroup( )
+				gore:insert(face1)
+				gore:insert(face2)
+				gore:insert(face3)
+				gore:insert(face4)
+
+			return gore
+		end
+			temp.splatter = splatter
 			temp.update = function( event )
 				temp.sensorArea.x = temp.bounds.x
 				temp.sensorArea.y = temp.bounds.y
 				if(temp.hasTarget == true) then
 					temp.moveAngle = temp.move.calculateLineAngle(	
-												temp.bounds.x,
-												temp.bounds.y,
+												temp.parent.x,
+												temp.parent.y,
 												temp.targetX,
 												temp.targetY)
 					local xMove = 
@@ -70,7 +161,7 @@ local C = {}
 
 					temp.bounds.x = temp.bounds.x + xMove * temp.speed
 					temp.bounds.y = temp.bounds.y + yMove * temp.speed
-					print(xMove .. " : " ..yMove)
+					--print(xMove .. " : " ..yMove)
 				end
 			end
 			Runtime:addEventListener( "enterFrame", temp.update )
@@ -108,24 +199,25 @@ local C = {}
 				if (event.phase == "began") then
 					if (event.other.myName == "shotgun") then
 							--print("reloaawding: "..event.object1.reloading)
-							if(temp.health > 0) then
-								temp.bounds:applyLinearImpulse( 	
-												math.cos(math.pi/2 - temp.moveAngle)*2000, 
-												math.sin(math.pi/2 - temp.moveAngle)*2000, 
-												50, 
-												50 
-											)
-								temp.health = temp.health - 1
-								print("puppy health: " .. temp.health)
-							else
-								print("Killed by: " .. event.other.myName) 
-								temp.parent:removeSelf()
-							end
+						if(temp.health > 0) then
+							temp.bounds:applyLinearImpulse( 	
+											math.cos(math.pi/2 - temp.moveAngle)*2000, 
+											math.sin(math.pi/2 - temp.moveAngle)*2000, 
+											50, 
+											50 
+										)
+							temp.health = temp.health - 1
+							print("puppy health: " .. temp.health)
+						else
+							print("Killed by: " .. event.other.myName)
+						end
 						--C[event.object2.id].parent:removeSelf( )
 
 					end
 				end
 			end
+
+
 		
 		temp.sensorArea:addEventListener( "collision", temp.detectPlayer )
 		temp.bounds:addEventListener( "collision", temp.onCollision )
