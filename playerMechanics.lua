@@ -59,8 +59,8 @@ local P = {}
         --if(P.bounds.velocity > 0) then
         P.sounds(event)
         --end
-        --P.parent.x = P.bounds.x
-        --P.parent.y = P.bounds.y
+        P.parent.x = P.bounds.x
+        P.parent.y = P.bounds.y
         P.cameraLock.x = P.parent.x + P.isRotatingX*250
         P.cameraLock.y = P.parent.y + P.isRotatingY*250
     end
@@ -90,9 +90,6 @@ local P = {}
 
     P.movePlayer = movePlayer
 
-    --Test shotgun
-
-
     local function blastDisppear( event )
         P.shotgun.isAwake = false
         --P.shotgun.bounds.alpha = 0
@@ -108,11 +105,9 @@ local P = {}
 
     local function shoot()
         P.shotgun.bounds.isAwake = true
-
         --P.shotgun.bounds.rotation = P.shotgun.blast.rotation
         --P.shotgun.bounds.x = P.bounds.anchorX + 50*math.cos(math.rad(P.thisAimAngle))
         --P.shotgun.bounds.y = P.bounds.anchorY + 50*math.sin(math.rad(P.thisAimAngle))
-
         P.canShoot = false
 
         P.bounds:applyLinearImpulse(    
@@ -128,8 +123,6 @@ local P = {}
         P.visuals.animateShotgunBlast(P.thisAimAngle )
         timer.performWithDelay(400, blastDisppear)
         timer.performWithDelay(800, shootDelay)
-
-
     end
 
     P.shoot = shoot
@@ -197,11 +190,8 @@ local P = {}
         P.isRotatingY = rjsY
         P.thisDirectionAngle = (720-(ljsAngle-90)) % 360
         P.thisAimAngle = (720-(rjsAngle-90)) % 360
-        P.myText = "" .. rjsDistance
     end
 
     P.virtualJoystickInput = virtualJoystickInput
-
-    P.myText = display.newText( "", display.contentCenterX, display.contentCenterY, native.systemFont, 60 )
 
 return P

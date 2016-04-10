@@ -92,6 +92,7 @@
    camera:add(player.parent, 1)
    camera:add(player.cameraLock, 1)
    camera:add(player.shotgun.blast, 1)
+   camera:add(player.shotgun.bounds, 1)
    camera:add(tempFloor, 2)
    camera:add(player.bounds, 1)
    camera:add(fireTrap.bounds, 2)
@@ -99,7 +100,7 @@
 
    camera:add(level, 2)
    camera:add(imps, 1)
-   --camera:add(hellPups, 1)
+   camera:add(hellPups, 1)
    camera:add(minotaurs, 1)
 
    -- INITIALIZING CAMERA
@@ -114,57 +115,6 @@
    ---------------------------------------------------------------------------------
 
    -- local forward references should go here
-
-   ---------------------------------------------------------------------------------
-   -- "scene:create()"
-   function scene:create( event )
-
-------TEMPORARY! TO BE DELETED!-----------
-local tempFloor = display.newRect( display.contentCenterX, display.contentCenterY, 5000, 5000 )
-tempFloor.myName = "floor"
-display.setDefault( "textureWrapX", "repeat" )
-display.setDefault( "textureWrapY", "repeat" )
-tempFloor.fill = { type="image", filename="Graphics/Temp/dungeonFloor.png" }
-tempFloor.fill.scaleX = 0.1
-tempFloor.fill.scaleY = 0.1
--------------------------------------------
-controllerMapping = require "controllerMapping"
-player = require "playerMechanics"
-fireTrap = require "fireTrap"
-fireTrap.bounds:translate( 1000, 500)
-hellPuppies = require "hellPup"
-enemies = {}
-enemies[0] = hellPuppies.spawn(0)
-
--- SETTING UP OBJECTS IN THE CAMERA
-camera:add(player.parent, 1)
-camera:add(player.cameraLock, 1)
-camera:add(player.shotgun.blast, 1)
-camera:add(player.shotgun.bounds, 1)
-camera:add(tempFloor, 2)
-camera:add(player.bounds, 1)
-camera:add(fireTrap.bounds, 2)
-camera:add(enemies[0].bounds, 1) 
-
-camera:add(level, 2)
-camera:add(imps, 1)
-camera:add(hellPups, 1)
-camera:add(minotaurs, 1)
-
--- INITIALIZING CAMERA
-camera:prependLayer()
-camera.damping = 10
-camera:setFocus(player.cameraLock)
-camera:track()
-
----------------------------------------------------------------------------------
--- All code outside of the listener functions will only be executed ONCE
--- unless "composer.removeScene()" is called.
----------------------------------------------------------------------------------
- 
--- local forward references should go here
- 
----------------------------------------------------------------------------------
 -- "scene:create()"
 function scene:create( event )
  
@@ -369,6 +319,5 @@ local function gameLoop( event )
    Runtime:addEventListener( "axis", onAxisEvent )
    Runtime:addEventListener( "enterFrame", gameLoop )
    ---------------------------------------------------------------------------------
-end
 
 return scene
