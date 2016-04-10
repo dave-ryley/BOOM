@@ -7,14 +7,40 @@ local scene = composer.newScene()
 ---------------------------------------------------------------------------------
  
 -- local forward references should go here
- 
+Leaderboard = {}
 ---------------------------------------------------------------------------------
  
 -- "scene:create()"
 function scene:create( event )
- 
+   -----Map-----
+   local path = system.pathForFile("leaderBoard.BOOMFILE",system.ResourceDirectory)
+   local file = io.open(path,"r")
+   i = 1
+
+   function explode(div,str)
+      if (div=='') then return false end
+      local pos,arr = 0,{}
+      for st,sp in function() return string.find(str,div,pos,true) end do
+         table.insert(arr,string.sub(str,pos,st-1))
+         pos = sp + 1
+      end
+      table.insert(arr,string.sub(str,pos))
+      return arr
+   end
+
+   for line in file:lines()do
+      Leaderboard[i] = explode(",",line)
+      i = i + 1
+   end
+
+   io.close(file)
    local sceneGroup = self.view
-   myText = display.newText( "Leaderboard", display.contentCenterX, display.contentCenterY, native.systemFont, 80 )
+   local leaderBoardString = "Medal | Name Hrs : Mins : Secs Kills | Deaths\n\n"
+   for i=1,table.getn(Leaderboard) do
+      leaderBoardString = leaderBoardString..Leaderboard[i][1].." | "..Leaderboard[i][2].." ["..Leaderboard[i][3].." : "..Leaderboard[i][4].." : "..Leaderboard[i][5].."] "..Leaderboard[i][6].." | "..Leaderboard[i][7].."\n"
+   end
+   myText = display.newText( leaderBoardString, display.contentCenterX, display.contentCenterY, "BLOODY.ttf", 50 )
+   myText:setFillColor(1,0,0)
    sceneGroup:insert(myText)
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.

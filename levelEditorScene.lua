@@ -6,7 +6,7 @@ grid = display.newGroup()
 -- "scene:create()"
 function scene:create( event )
   local sceneGroup = self.view
-  myText = display.newText(grid, "Level Editor", display.contentCenterX, display.contentCenterY, native.systemFont, 80 )
+  myText = display.newText(grid, "LEVEL EDITOR", display.contentCenterX, display.contentCenterY, "Curse of the Zombie.ttf", 80 )
   sceneGroup:insert(grid)
   map = {}
   mapSize = 0
