@@ -19,25 +19,23 @@ local C = {}
 			
 
 			--enemyID
-			temp.myName = "hellPup" .. tostring(id)
+			temp.myName = "spot" .. tostring(id)
 			--setting up collision bounds
 			temp.bounds = display.newImageRect( "Graphics/Temp/TestFace.png", 100, 100 )
 			temp.bounds.id = id
-			temp.bounds.myName = "hellPup"
+			temp.bounds.myName = "spot"
 			temp.physics.addBody( 	temp.bounds, 
 									"dynamic", 	
 								{	density=3.0, 
 									friction=1.0, 
 									bounce=0.0,
-									--filter=temp.collisionFilter,
-									{isSensor=true, 
-									isFixedRotation=true}
+									isFixedRotation=true
 								} )
-			--hellPup detection area
+			--spot detection area
 			temp.bounds.filter = temp.collisionFilter
 			temp.sensorRadius = 500
 			temp.sensorArea = display.newCircle( temp.bounds.x, temp.bounds.y, temp.sensorRadius )
-			temp.sensorArea.myName = "hellPupSensor"
+			temp.sensorArea.myName = "spotSensor"
 			temp.physics.addBody( 	temp.sensorArea, 
 									"dynamic", 
 									{isSensor = true, 
@@ -144,78 +142,90 @@ local C = {}
 
 			return gore
 		end
-			temp.splatter = splatter
-			temp.update = function( event )
-				temp.sensorArea.x = temp.bounds.x
-				temp.sensorArea.y = temp.bounds.y
-				if(temp.hasTarget == true) then
-					temp.moveAngle = temp.move.calculateLineAngle(	
-												temp.parent.x,
-												temp.parent.y,
-												temp.targetX,
-												temp.targetY)
+		local function die()
+			temp.isDead = true
+			temp.hasTarget = false
+
+		end
+		temp.die = die
+
+		temp.splatter = splatter
+		temp.update = function( event )
+			if(temp.health <= 0) then
+				temp.die()
+			end
+			temp.sensorArea.x = temp.bounds.x
+			temp.sensorArea.y = temp.bounds.y
+			if(temp.hasTarget == true and temp.bounds ~= nil) then
+				temp.moveAngle = temp.move.calculateLineAngle(	
+									temp.bounds.x,
+									temp.bounds.y,
+									temp.targetX,
+									temp.targetY)
+				if(temp.isDead == false) then
 					local xMove = 
 							math.cos(temp.moveAngle)
 					local yMove =
-							math.sin(temp.moveAngle)
-
+								math.sin(temp.moveAngle)
 					temp.bounds.x = temp.bounds.x + xMove * temp.speed
 					temp.bounds.y = temp.bounds.y + yMove * temp.speed
-					--print(xMove .. " : " ..yMove)
 				end
 			end
-			Runtime:addEventListener( "enterFrame", temp.update )
+				--print(xMove .. " : " ..yMove)
+		end
+		Runtime:addEventListener( "enterFrame", temp.update )
 
-			temp.detectPlayer = function( event )
+		temp.detectPlayer = function( event )
 
-				if (temp.hasTarget == true and event.other.myName == "player") then
-					print("updating target: "..event.other.x .. " : " .. event.other.y)
+			if (temp.hasTarget == true and event.other.myName == "player") then
+				print("updating target: "..event.other.x .. " : " .. event.other.y)
+				temp.targetX = event.other.x
+				temp.targetY = event.other.y
+			end
+
+			if (event.phase == "began") then
+
+				--print( event.myName .. ": collision began with " .. event.other.myName )
+				--print("Killed by: " .. event.object1.myName)
+					--event.object2:applyLinearImpulse( 3000, 0, 50, 50 )
+				if(event.other.myName == "player") then
+					print("Target acquired!: " .. event.other.y)
+					temp.hasTarget = true
 					temp.targetX = event.other.x
 					temp.targetY = event.other.y
+
 				end
-
-				if (event.phase == "began") then
-
-					--print( event.myName .. ": collision began with " .. event.other.myName )
-					--print("Killed by: " .. event.object1.myName)
-						--event.object2:applyLinearImpulse( 3000, 0, 50, 50 )
-					if(event.other.myName == "player") then
-						print("Target acquired!: " .. event.other.y)
-						temp.hasTarget = true
-						temp.targetX = event.other.x
-						temp.targetY = event.other.y
-
-					end
-				elseif (event.phase == "ended") then
-					print("Target lost!")
-					temp.hasTarget = false
-				end
+			elseif (event.phase == "ended") then
+				print("Target lost!")
+				temp.hasTarget = false
 			end
+		end
 			
-			temp.onCollision = function( event )
-				if(event.other.myName ~= nil)then
-					print("from hellpup: " .. event.other.myName)
-				end
-				if (event.phase == "began") then
-					if (event.other.myName == "shotgun") then
-							--print("reloaawding: "..event.object1.reloading)
-						if(temp.health > 0) then
-							temp.bounds:applyLinearImpulse( 	
-											math.cos(math.pi/2 - temp.moveAngle)*2000, 
-											math.sin(math.pi/2 - temp.moveAngle)*2000, 
-											50, 
-											50 
-										)
-							temp.health = temp.health - 1
-							print("puppy health: " .. temp.health)
-						else
-							print("Killed by: " .. event.other.myName)
-						end
-						--C[event.object2.id].parent:removeSelf( )
-
+		temp.onCollision = function( event )
+			print("from spot: " .. event.other.myName)
+			if (event.phase == "began") then
+				if (event.other.myName == "shotgun") then
+						--print("reloaawding: "..event.object1.reloading)
+					if(temp.health > 0) then
+						temp.bounds:applyLinearImpulse( 	
+										math.cos(math.mod(
+											temp.moveAngle+math.pi, math.pi))*2000, 
+										math.sin(math.mod(
+											temp.moveAngle+math.pi, math.pi))*2000, 
+										50, 
+										50 
+									)
+						temp.health = temp.health - 1
+						print("puppy health: " .. temp.health)
+					else
+						temp.die()
+						print("Killed by: " .. event.other.myName)
 					end
+					--C[event.object2.id].parent:removeSelf( )
+
 				end
 			end
+		end
 
 
 		
@@ -224,10 +234,5 @@ local C = {}
 		return temp
 		
 	end
-	C.spawn = spawn
-	--C[0] = spawn(0)
-	--C[1] = spawn(1)
-	--print(C[0].Name)
-
-	
+	C.spawn = spawn	
 return C

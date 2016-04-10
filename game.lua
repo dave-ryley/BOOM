@@ -5,7 +5,7 @@
 
 
    local joysticks = require "joystick"
-   local hellPup = require("hellPup")
+   local spot = require("spot")
 
 
    local perspective = require("perspective")
@@ -15,7 +15,7 @@
    local levelName = "level.BOOMMAP"
 
    local imps = display.newGroup()
-   local hellPups = display.newGroup()
+   local spots = display.newGroup()
    local minotaurs = display.newGroup()
 
    local level = display.newGroup( )
@@ -25,7 +25,7 @@
   local physics = require "physics"
   physics.start()
   physics.setGravity(0,0)
-  physics.setDrawMode( "normal" )
+  physics.setDrawMode( "hybrid" )
 
 
    -----Map-----
@@ -63,9 +63,9 @@
     elseif(tonumber(map[i][3])==1)then--imp
       imp = display.newRect(imps,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
       imp:setFillColor(0,0,1,1)
-    elseif(tonumber(map[i][3])==2)then--hellPup
-      hellPup = display.newRect(hellPups,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
-      hellPup:setFillColor(0,1,0,1)
+    elseif(tonumber(map[i][3])==2)then--spot
+      spot = display.newRect(spots,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
+      spot:setFillColor(0,1,0,1)
     elseif(tonumber(map[i][3])==3)then--rosy
       minotaur = display.newRect(minotaurs,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
       minotaur:setFillColor(0,1,1,1)
@@ -87,31 +87,43 @@
    player = require "playerMechanics"
    fireTrap = require ("Traps.fireTrap")
    slowTrap = require("Traps.slowTrap")
-   traps = {}
+   --traps = {}
    --traps[0] = fireTrap.spawn(0)
    --traps[0].bounds:translate( 1000, 500)
-   traps[1] = slowTrap.spawn(1)
-   hellPuppies = require "hellPup"
-   enemies = {}
-   enemies[1] = hellPuppies.spawn(1)
-  enemies[2] = hellPuppies.spawn(2)
+   --traps[1] = slowTrap.spawn(1)
+   --[[
+   spot = require "spot"
+   
+   enemies[1] = spotpies.spawn(1)
+  enemies[2] = spotpies.spawn(2)
    enemies[1].bounds:translate(800, 800)
   enemies[2].bounds:translate(500, 500)
+     camera:add(enemies[1].parent, 1)
+   camera:add(enemies[2].parent, 1)
+  ]]
+  --local win = require "win"
+  local imptest = require "imp"
+  --local wintile = win.spawn(1)
+  player.parent:translate(500, 500)
+  enemies = {}
+  enemies[1] = imptest.spawn(1, 0, 0)
+  --enemies[1].parent:translate( 1000, -500 )
+  --enemies[1].parent:translate(500, 500)
    -- SETTING UP OBJECTS IN THE CAMERA
    camera:add(player.parent, 1)
    camera:add(player.cameraLock, 1)
    camera:add(player.shotgun.blast, 1)
    camera:add(player.shotgun.bounds, 1)
-   camera:add(tempfloor, 2)
+   camera:add(tempfloor, 3)
    camera:add(player.bounds, 1)
-   --camera:add(traps[0].bounds, 2)
-   camera:add(traps[1].bounds, 2)
    camera:add(enemies[1].parent, 1)
-   camera:add(enemies[2].parent, 1)
+   --camera:add(wintile.bounds, 2)
+   --camera:add(traps[0].bounds, 2)
+   --camera:add(traps[1].bounds, 2)
 
    camera:add(level, 2)
    camera:add(imps, 1)
-   camera:add(hellPups, 1)
+   camera:add(spots, 1)
    camera:add(minotaurs, 1)
 
    -- INITIALIZING CAMERA
@@ -236,11 +248,11 @@ function scene:create( event )
         -- Adjust velocity for testing, remove for final game        
         if ( event.keyName == "[" or event.keyName == "rightShoulderButton1" ) then
             if (player.velocity > 0 ) then
-                player.velocity = player.velocity - 1
+                --player.velocity = player.velocity - 1
                 player.shotgun.powerUp(-1)
             end
         elseif ( event.keyName == "]" or event.keyName == "leftShoulderButton1" ) then
-            player.velocity = player.velocity + 1
+            --player.velocity = player.velocity + 1
             player.shotgun.powerUp(1)
         end
         -- WASD and ArrowKeys pressed down
@@ -315,16 +327,21 @@ local function gameLoop( event )
          player.virtualJoystickInput(leftJoystick.angle, leftJoystick.xLoc/70, leftJoystick.yLoc/70, rightJoystick.angle, rightJoystick.distance/70, rightJoystick.xLoc/70, rightJoystick.yLoc/70)
       end
       player.movePlayer()
+
+
+--[[
       for k,v in pairs(enemies) do
-        if(v.health <= 0 ) then
-            print("killing: "..v.myName)
-            local gore = v.splatter()
-            camera:add(gore, 1)
-            v.parent:removeSelf( )
+        if(v.bounds.health <= 0 ) then
+            print("killing: "..v.bounds.myName)
+            --local gore = v.splatter()
+            v.bounds.die()
+            --camera:add(gore, 1)
+            v.bounds.parent:removeSelf( )
             table.remove( enemies, k )
             end
-            v.updatePlayerLocation(player.bounds.x, player.bounds.y)
+            v.bounds.updatePlayerLocation(player.bounds.x, player.bounds.y)
           end
+-]]
        end
    return true
    end

@@ -14,6 +14,7 @@ local C = {}
 	C.bounds.myName = "shotgun"
 	C.bounds.isSensor = true
 	C.bounds.anchorY = 1.0
+    C.bounds.aimAngle = 0
     --[[
 	physics.addBody( C.bounds, "dynamic", { 	
 												density = 0.0, 
@@ -55,6 +56,7 @@ local C = {}
     C.blast_sprite:play()
 
 	function place(aimAngle, x, y)
+        C.bounds.aimAngle = aimAngle
         if aimAngle > 337 or aimAngle < 23 then
             C.blast.rotation = 0
             C.blast.x = x + 30
@@ -118,9 +120,26 @@ local C = {}
     C.onCollision = function( event )
     if event.other.myName ~= nil then
 		print("from shotgun collision with: " .. event.other.myName)
-			--if (event.phase == "began") then
-			
-			--end
+            if (event.phase == "began") then
+                print("substring: "..string.sub(event.other.myName, 1, 2))
+                if (string.sub(event.other.myName, 1, 2) == "e_") then
+                    if(event.other.health > 0) then
+                        event.other:applyLinearImpulse(    
+                                math.cos(
+                                    (C.bounds.aimAngle - 90)*math.pi/180)*2000, 
+                                math.sin(
+                                    (C.bounds.aimAngle - 90)*math.pi/180)*2000, 
+                                50, 
+                                50 
+                            )
+                        event.other.health = event.other.health - 1
+                        print(event.other.myName.." health: " .. event.other.health)
+                    else
+                        event.other.die()
+                        print("Killed by: " .. event.other.myName)
+                    end
+                end
+            end
 		end
 	end
 

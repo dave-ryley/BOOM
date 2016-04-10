@@ -120,7 +120,7 @@ local P = {}
         P.shotgun.blast_sprite.alpha = 1
         P.shotgun.shooting = true
         P.visuals.animateShotgunBlast(P.thisAimAngle )
-        timer.performWithDelay(400, blastDisppear)
+        timer.performWithDelay(200, blastDisppear)
         timer.performWithDelay(800, shootDelay)
     end
 
@@ -164,8 +164,9 @@ local P = {}
 
     P.playerAxis = playerAxis
 
-    --[[
+    
     P.onCollision = function( event )
+        print("player collided with: ".. event.other.myName)
             if (event.phase == "began") then
                 if (event.other.myName == "trap_fire") then
                         --print("reloading: "..event.object1.reloading)
@@ -173,6 +174,8 @@ local P = {}
                     --P.bounds:removeSelf()
                     --P.bounds:applyLinearImpulse( 2000, 0, 50, 50 )
                     --C[event.object2.id].parent:removeSelf( )
+                elseif (event.other.myName == "trap_win") then
+                    print("GOOD JOB CHRIS THAT WAS GOOD WELL DONE")
                 end
                 
                 if(event.other.myName == "trap_slow") then
@@ -183,7 +186,7 @@ local P = {}
             end
         end
     P.bounds:addEventListener( "collision", P.onCollision )
-    ]]
+    
 
     function virtualJoystickInput(ljsAngle, ljsX, ljsY, rjsAngle, rjsDistance, rjsX, rjsY)
         if rjsDistance > 0.9 and P.canShoot then
