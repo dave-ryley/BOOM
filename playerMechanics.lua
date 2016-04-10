@@ -15,6 +15,7 @@ local P = {}
     P.thisAimAngle = 0
     P.thisDirectionAngle = 0
     P.velocity = 10
+    P.maxSpeed = 1
     P.isAlive = true
    
     P.parent:insert( P.visuals.lowerBody )
@@ -79,8 +80,14 @@ local P = {}
         end
 
         -- placing the shotgun
+<<<<<<< HEAD
+        
+        if(P.shotgun.bounds.shooting == false) then
+            P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity*P.maxSpeed)
+=======
         if(P.shotgun.shooting == false) then
             P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity)
+>>>>>>> d39d260baa70a57509d08926a5714a30b49754b2
             P.shotgun.place(P.thisAimAngle, P.parent.x, P.parent.y)
         else
             P.shotgun.place( P.shotgun.blast.rotation , P.parent.x, P.parent.y)
@@ -105,6 +112,7 @@ local P = {}
 
     local function shoot()
         P.shotgun.bounds.isAwake = true
+
         --P.shotgun.bounds.rotation = P.shotgun.blast.rotation
         --P.shotgun.bounds.x = P.bounds.anchorX + 50*math.cos(math.rad(P.thisAimAngle))
         --P.shotgun.bounds.y = P.bounds.anchorY + 50*math.sin(math.rad(P.thisAimAngle))
@@ -137,14 +145,14 @@ local P = {}
 
         if ( "left_x" == axis ) then
            if ( abs(value) > 0.15 ) then
-               P.isMovingX = value * P.velocity
+               P.isMovingX = value * P.velocity*P.maxSpeed
                P.thisDirectionAngle = floor( P.movementFunctions.calculateAngle(P.isMovingX, P.isMovingY, P.thisDirectionAngle) )
            else
                P.isMovingX = 0
            end
         elseif ( "left_y" == axis ) then
            if ( abs(value) > 0.15 ) then
-               P.isMovingY = value * P.velocity
+               P.isMovingY = value * P.velocity*P.maxSpeed
                P.thisDirectionAngle = floor( P.movementFunctions.calculateAngle(P.isMovingX, P.isMovingY, P.thisDirectionAngle) )
            else
                P.isMovingY = 0
@@ -168,13 +176,20 @@ local P = {}
     --[[
     P.onCollision = function( event )
             if (event.phase == "began") then
-                if (event.other.myName == "fireTrap") then
+                --[[
+                if (event.other.myName == "trap_fire") then
                         --print("reloading: "..event.object1.reloading)
                     print("Killed by: " .. event.other.myName) 
-                    P.bounds:removeSelf()
+                    --P.bounds:removeSelf()
                     --P.bounds:applyLinearImpulse( 2000, 0, 50, 50 )
                     --C[event.object2.id].parent:removeSelf( )
                 end
+                --]]
+                if(event.other.myName == "trap_slow") then
+                    print("Slowed by: " .. event.other.myName)
+                    P.maxSpeed = P.maxSpeed/2
+                end
+
             end
         end
     P.bounds:addEventListener( "collision", P.onCollision )
@@ -184,8 +199,8 @@ local P = {}
         if rjsDistance > 0.9 and P.canShoot then
             P.shoot()
         end
-        P.isMovingX = ljsX * P.velocity
-        P.isMovingY = ljsY * P.velocity
+        P.isMovingX = ljsX * P.velocity*P.maxSpeed
+        P.isMovingY = ljsY * P.velocity*P.maxSpeed
         P.isRotatingX = rjsX
         P.isRotatingY = rjsY
         P.thisDirectionAngle = (720-(ljsAngle-90)) % 360

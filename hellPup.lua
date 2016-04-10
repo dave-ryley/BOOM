@@ -47,7 +47,7 @@ local C = {}
 				temp.sensorArea.y = temp.bounds.y
 			end
 			Runtime:addEventListener( "enterFrame", temp.update )
-			
+
 			temp.detectPlayer = function( event )
 				if (event.phase == "began") then
 

@@ -12,11 +12,6 @@ local C = {}
 	C.vertices = { -40,90, -100,-150, 100,-150, 40,90 }
 	-- Blast animation and bounds Scale = 1/10 power
 	C.bounds.myName = "shotgun"
-	--[[local blastShape = { 	0 	-C.bounds.width/2 ,0 -C.bounds.height/2, 
-							320	-C.bounds.width/2 , 40 -C.bounds.height/2, 
-							320	-C.bounds.width/2 , 80 -C.bounds.height/2, 
-							0	-C.bounds.width/2 , 120 -C.bounds.height/2}
-]]
 	C.bounds.isSensor = true
 	C.bounds.anchorY = 1.0
 	physics.addBody( C.bounds, "dynamic", { 	
@@ -27,7 +22,6 @@ local C = {}
 												isSensor = true 
 										} )
 	C.bounds.isAwake = false
-
 	-- Setting up the blast Animation
     
     C.blast = display.newGroup()
