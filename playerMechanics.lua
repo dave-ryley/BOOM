@@ -1,5 +1,5 @@
 local P = {}
-
+    --local col = require "collisionFilters"
     P.visuals = require "playerVisuals"
     P.movementFunctions = require "movementFunctions"
     P.myName = "player"
@@ -24,10 +24,14 @@ local P = {}
     P.bounds = display.newRect(0,0,150,170)
     P.bounds.alpha = 0.0
     P.bounds.myName = "player"
-    physics.addBody( P.bounds, "dynamic", {
-                                density=0.5, 
-                                friction=0.3, 
-                                bounce=0.0})
+
+    physics.addBody( P.bounds, "dynamic", 
+                                {
+                                    density=0.5, 
+                                    friction=0.3, 
+                                    bounce=0.0}
+                                )
+
     P.bounds.isFixedRotation=true
     P.bounds.x = display.contentCenterX
     P.bounds.y = display.contentCenterY + 20
@@ -55,8 +59,8 @@ local P = {}
         --if(P.bounds.velocity > 0) then
         P.sounds(event)
         --end
-        P.parent.x = P.bounds.x
-        P.parent.y = P.bounds.y
+        --P.parent.x = P.bounds.x
+        --P.parent.y = P.bounds.y
         P.cameraLock.x = P.parent.x + P.isRotatingX*250
         P.cameraLock.y = P.parent.y + P.isRotatingY*250
     end
@@ -81,6 +85,7 @@ local P = {}
         else
             P.shotgun.place( P.shotgun.blast.rotation , P.parent.x, P.parent.y)
         end
+
     end
 
     P.movePlayer = movePlayer
@@ -98,22 +103,15 @@ local P = {}
 
     local function shootDelay( event )
         P.canShoot = true;
-        P.shotgun.isAwake = false
-       
-        --print("blastDisppear")
-        --P.shotgun.bounds:removeSelf( )
-        -- P.shotgun.bounds.isAwake = false
-        --print(event.name)
-        --print("can shoot: " ..  tostring(P.canShoot))
-        
+        P.shotgun.isAwake = false    
     end
 
     local function shoot()
         P.shotgun.bounds.isAwake = true
-        --P.shotgun.bounds.x = P.bounds.x
-        --P.shotgun.bounds.y = P.bounds.y
-        --P.shotgun.bounds.rotation = P.thisAimAngle
-        --print(P.thisAimAngle)
+
+        --P.shotgun.bounds.rotation = P.shotgun.blast.rotation
+        --P.shotgun.bounds.x = P.bounds.anchorX + 50*math.cos(math.rad(P.thisAimAngle))
+        --P.shotgun.bounds.y = P.bounds.anchorY + 50*math.sin(math.rad(P.thisAimAngle))
 
         P.canShoot = false
 
@@ -128,8 +126,6 @@ local P = {}
         P.shotgun.blast_sprite.alpha = 1
         P.shotgun.shooting = true
         P.visuals.animateShotgunBlast(P.thisAimAngle )
-        --print("can shoot: " .. tostring(P.canShoot))
-        --timer.performWithDelay( 250, blastDisappear )
         timer.performWithDelay(400, blastDisppear)
         timer.performWithDelay(800, shootDelay)
 
@@ -178,7 +174,6 @@ local P = {}
 
     --[[
     P.onCollision = function( event )
-            --print(event.other.myName)
             if (event.phase == "began") then
                 if (event.other.myName == "fireTrap") then
                         --print("reloading: "..event.object1.reloading)
@@ -188,7 +183,6 @@ local P = {}
                     --C[event.object2.id].parent:removeSelf( )
                 end
             end
-            return true
         end
     P.bounds:addEventListener( "collision", P.onCollision )
     ]]

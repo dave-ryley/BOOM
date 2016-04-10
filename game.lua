@@ -1,35 +1,39 @@
-local composer = require( "composer" )
-local globals = require "globals"
-local scene = composer.newScene()
+   local col = require "collisionFilters"
+   local composer = require( "composer" )
+   local globals = require "globals"
+   local scene = composer.newScene()
 
-local joysticks = require "joystick"
 
-local hellPup = require("hellPup")
+   local joysticks = require "joystick"
+   local hellPup = require("hellPup")
 
-local perspective = require("perspective")
 
-local camera = perspective.createView()
+   local perspective = require("perspective")
 
-local levelName = "level.BOOMMAP"
+   local camera = perspective.createView()
 
-local imps = display.newGroup()
-local hellPups = display.newGroup()
-local minotaurs = display.newGroup()
+   local levelName = "level.BOOMMAP"
 
-local level = display.newGroup( )
-local map = {}
+   local imps = display.newGroup()
+   local hellPups = display.newGroup()
+   local minotaurs = display.newGroup()
 
-local physics = require "physics"
-physics.start()
-physics.setGravity(0,0)
-physics.setDrawMode( "hybrid" )
+   local level = display.newGroup( )
+   local map = {}
 
------Map-----
-local path = system.pathForFile(levelName,system.ResourceDirectory)
-local file = io.open(path,"r")
-i = 1
 
-function explode(div,str)
+  local physics = require "physics"
+  physics.start()
+  physics.setGravity(0,0)
+  physics.setDrawMode( "hybrid" )
+
+
+   -----Map-----
+   local path = system.pathForFile(levelName,system.ResourceDirectory)
+   local file = io.open(path,"r")
+   i = 1
+
+   function explode(div,str)
     if (div=='') then return false end
     local pos,arr = 0,{}
     for st,sp in function() return string.find(str,div,pos,true) end do
@@ -38,33 +42,82 @@ function explode(div,str)
     end
     table.insert(arr,string.sub(str,pos))
     return arr
-end
+   end
 
-for line in file:lines()do
-  map[i] = explode(",",line)
-  i = i + 1
-end
-io.close(file)
+   for line in file:lines()do
+   map[i] = explode(",",line)
+   i = i + 1
+   end
+   io.close(file)
 
-size = 5
+   size = 5
 
-for i=2,table.getn(map),1 do
-  if(tonumber(map[i][3])==10)then
+   for i=2,table.getn(map),1 do
+   if(tonumber(map[i][3])==10)then
     lineWall = display.newLine(level,tonumber(map[i-1][1])*size,tonumber(map[i-1][2])*size,tonumber(map[i][1])*size,tonumber(map[i][2])*size )
+    lineWall.myName = "wall"
     lineWall.strokeWidth = 20
     physics.addBody( lineWall, "static", {chain= tonumber(map[i][1])*size,tonumber(map[i][2])*size} )
-  elseif(tonumber(map[i][3])==1)then--imp
+   elseif(tonumber(map[i][3])==1)then--imp
     imp = display.newRect(imps,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
     imp:setFillColor(0,0,1,1)
-  elseif(tonumber(map[i][3])==2)then--hellPup
+   elseif(tonumber(map[i][3])==2)then--hellPup
     hellPup = display.newRect(hellPups,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
     hellPup:setFillColor(0,1,0,1)
-  elseif(tonumber(map[i][3])==3)then--rosy
+   elseif(tonumber(map[i][3])==3)then--rosy
     minotaur = display.newRect(minotaurs,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
     minotaur:setFillColor(0,1,1,1)
-  end
-end
+   end
+   end
 
+
+   ------TEMPORARY! TO BE DELETED!-----------
+   local tempFloor = display.newRect( display.contentCenterX, display.contentCenterY, 5000, 5000 )
+   tempFloor.myName = "floor"
+   display.setDefault( "textureWrapX", "repeat" )
+   display.setDefault( "textureWrapY", "repeat" )
+   tempFloor.fill = { type="image", filename="Graphics/Temp/dungeonFloor.png" }
+   tempFloor.fill.scaleX = 0.1
+   tempFloor.fill.scaleY = 0.1
+   -------------------------------------------
+   controllerMapping = require "controllerMapping"
+   player = require "playerMechanics"
+   fireTrap = require "fireTrap"
+   fireTrap.bounds:translate( 1000, 500)
+   hellPuppies = require "hellPup"
+   enemies = {}
+   enemies[0] = hellPuppies.spawn(0)
+
+   -- SETTING UP OBJECTS IN THE CAMERA
+   camera:add(player.parent, 1)
+   camera:add(player.cameraLock, 1)
+   camera:add(player.shotgun.blast, 1)
+   camera:add(tempFloor, 2)
+   camera:add(player.bounds, 1)
+   camera:add(fireTrap.bounds, 2)
+   camera:add(enemies[0].parent, 1)
+
+   camera:add(level, 2)
+   camera:add(imps, 1)
+   --camera:add(hellPups, 1)
+   camera:add(minotaurs, 1)
+
+   -- INITIALIZING CAMERA
+   camera:prependLayer()
+   camera.damping = 10
+   camera:setFocus(player.cameraLock)
+   camera:track()
+
+   ---------------------------------------------------------------------------------
+   -- All code outside of the listener functions will only be executed ONCE
+   -- unless "composer.removeScene()" is called.
+   ---------------------------------------------------------------------------------
+
+   -- local forward references should go here
+
+   ---------------------------------------------------------------------------------
+   -- "scene:create()"
+   function scene:create( event )
 
 ------TEMPORARY! TO BE DELETED!-----------
 local tempFloor = display.newRect( display.contentCenterX, display.contentCenterY, 5000, 5000 )
@@ -154,14 +207,14 @@ function scene:create( event )
    local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
-end
- 
--- "scene:show()"
-function scene:show( event )
- 
+   end
+
+   -- "scene:show()"
+   function scene:show( event )
+
    local sceneGroup = self.view
    local phase = event.phase
- 
+
    if ( phase == "will" ) then
       -- Called when the scene is still off screen (but is about to come on screen).
    elseif ( phase == "did" ) then
@@ -171,14 +224,14 @@ function scene:show( event )
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
    end
-end
- 
--- "scene:hide()"
-function scene:hide( event )
- 
+   end
+
+   -- "scene:hide()"
+   function scene:hide( event )
+
    local sceneGroup = self.view
    local phase = event.phase
- 
+
    if ( phase == "will" ) then
       -- Called when the scene is on screen (but is about to go off screen).
       -- Insert code here to "pause" the scene.
@@ -186,20 +239,20 @@ function scene:hide( event )
    elseif ( phase == "did" ) then
       -- Called immediately after scene goes off screen.
    end
-end
- 
--- "scene:destroy()"
-function scene:destroy( event )
- 
+   end
+
+   -- "scene:destroy()"
+   function scene:destroy( event )
+
    local sceneGroup = self.view
- 
+
    -- Called prior to the removal of scene's view ("sceneGroup").
    -- Insert code here to clean up the scene.
    -- Example: remove display objects, save state, etc.
-end
----------------------------------------------------------------------------------
+   end
+   ---------------------------------------------------------------------------------
 
-local function onAxisEvent( event )
+   local function onAxisEvent( event )
    -- Map event data to simple variables
    if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
       local axis = controllerMapping.axis[event.axis.number]
@@ -209,9 +262,9 @@ local function onAxisEvent( event )
       end
    end
    return true
-end
+   end
 
-local function onKeyEvent( event )
+   local function onKeyEvent( event )
    local phase = event.phase
    local keyName = event.keyName
    local axis = ""
@@ -292,7 +345,8 @@ local function onKeyEvent( event )
    end
 
    return false
-end
+   end
+
 
 local function gameLoop( event )
    if globals.pause == false and axis ~= "" then
@@ -302,18 +356,19 @@ local function gameLoop( event )
       player.movePlayer()
    end
    return true
+   end
+
+   ---------------------------------------------------------------------------------
+
+   -- Listener setup
+   scene:addEventListener( "create", scene )
+   scene:addEventListener( "show", scene )
+   scene:addEventListener( "hide", scene )
+   scene:addEventListener( "destroy", scene )
+   Runtime:addEventListener( "key", onKeyEvent )
+   Runtime:addEventListener( "axis", onAxisEvent )
+   Runtime:addEventListener( "enterFrame", gameLoop )
+   ---------------------------------------------------------------------------------
 end
 
----------------------------------------------------------------------------------
- 
--- Listener setup
-scene:addEventListener( "create", scene )
-scene:addEventListener( "show", scene )
-scene:addEventListener( "hide", scene )
-scene:addEventListener( "destroy", scene )
-Runtime:addEventListener( "key", onKeyEvent )
-Runtime:addEventListener( "axis", onAxisEvent )
-Runtime:addEventListener( "enterFrame", gameLoop )
----------------------------------------------------------------------------------
- 
 return scene

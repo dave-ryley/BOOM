@@ -4,6 +4,10 @@ local C = {}
 	--C.collisionFilter = {categoryBits = 2, maskBits = 4}
 	local vertices = { -20,0, -100,-300, 100,-300, 20,0, }
 	C.bounds = display.newPolygon( 0, 0, vertices )
+	--C.col = require "collisionFilters"
+	local vertices = { -20,0, -100,-300, 100,-300, 20,0, }
+
+	C.bounds = display.newPolygon( 0, 0, vertices )
 	C.bounds.alpha = 0.0
 	C.max = 20
 	C.min = 5
@@ -27,6 +31,8 @@ local C = {}
 										} )
 	C.bounds.isFixedRotation = false
 	C.bounds.anchorY = 1.0
+	C.bounds.isAwake = false
+
 	-- Setting up the blast Animation
     
     C.blast = display.newGroup()
@@ -116,7 +122,13 @@ local C = {}
 			C.bounds.y = y - 50
         end
     end
-
+    C.onCollision = function( event ) 
+		print("shotgun collision with: " ..event.other.myName)
+		if (event.phase == "began") then
+		
+		end
+	end
+	C.bounds:addEventListener( "collision", C.onCollision )
     C.place = place
 
     function powerUp( value )
