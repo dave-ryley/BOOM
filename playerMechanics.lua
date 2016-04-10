@@ -85,7 +85,7 @@ local P = {}
             P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity*P.maxSpeed)
             P.shotgun.place(P.thisAimAngle, P.parent.x, P.parent.y)
         else
-            P.shotgun.place( P.shotgun.blast.rotation , P.parent.x, P.parent.y)
+            P.shotgun.place( P.shotgun.bounds.rotation , P.parent.x, P.parent.y)
         end
 
     end
@@ -93,24 +93,20 @@ local P = {}
     P.movePlayer = movePlayer
 
     local function blastDisppear( event )
-        P.shotgun.isAwake = false
-        --P.shotgun.bounds.alpha = 0
+        P.shotgun.bounds.isAwake = false
         P.shotgun.blast.alpha = 0
         P.shotgun.shooting = false
-        --print("blastDisppear")
+        physics.removeBody( P.shotgun.bounds )
     end
 
     local function shootDelay( event )
         P.canShoot = true;
-        P.shotgun.isAwake = false    
+        P.shotgun.bounds.isAwake = false    
     end
 
     local function shoot()
+        P.shotgun.createBlastBounds()
         P.shotgun.bounds.isAwake = true
-
-        --P.shotgun.bounds.rotation = P.shotgun.blast.rotation
-        --P.shotgun.bounds.x = P.bounds.anchorX + 50*math.cos(math.rad(P.thisAimAngle))
-        --P.shotgun.bounds.y = P.bounds.anchorY + 50*math.sin(math.rad(P.thisAimAngle))
         P.canShoot = false
 
         P.bounds:applyLinearImpulse(    

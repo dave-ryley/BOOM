@@ -4,7 +4,7 @@ local C = {}
 	--C.collisionFilter = {categoryBits = 2, maskBits = 4}
 	local vertices = { -20,0, -100,-300, 100,-300, 20,0 }
 	C.bounds = display.newPolygon( 0, 0, vertices )
-	C.bounds.alpha = 1.0
+	C.bounds.alpha = 0.0
 	C.max = 20
 	C.min = 5
 	C.power = 10 --Default
@@ -14,6 +14,7 @@ local C = {}
 	C.bounds.myName = "shotgun"
 	C.bounds.isSensor = true
 	C.bounds.anchorY = 1.0
+    --[[
 	physics.addBody( C.bounds, "dynamic", { 	
 												density = 0.0, 
 												friction = 0.0, 
@@ -22,6 +23,7 @@ local C = {}
 												isSensor = true 
 										} )
 	C.bounds.isAwake = false
+    ]]
 	-- Setting up the blast Animation
     
     C.blast = display.newGroup()
@@ -115,7 +117,7 @@ local C = {}
 
     C.onCollision = function( event )
     if event.other.myName ~= nil then
-		print("shotgun collision with: " .. event.other.myName)
+		print("from shotgun collision with: " .. event.other.myName)
 			--if (event.phase == "began") then
 			
 			--end
@@ -143,17 +145,22 @@ local C = {}
     	C.bounds.yScale = C.power/10
     	C.blast.xScale = C.power/10
     	C.blast.yScale = C.power/10
-    	physics.removeBody( C.bounds )
+    	
     	C.vertices = { -40,90, C.power*-10,C.power*-15, C.power*10,C.power*-15, 40,90 }
-    	physics.addBody( C.bounds, "dynamic", { 	
-												density=0.0, 
-												friction=0.0, 
-												bounce=0.0, 
-												shape=C.vertices, 
-												isSensor=true 
-										} )
     end
 
     C.powerUp = powerUp
+
+    function createBlastBounds()
+        physics.addBody( C.bounds, "dynamic", {     
+                                                density=0.0, 
+                                                friction=0.0, 
+                                                bounce=0.0, 
+                                                shape=C.vertices, 
+                                                isSensor=true 
+                                        } )
+        
+    end
+    C.createBlastBounds = createBlastBounds
 
 return C

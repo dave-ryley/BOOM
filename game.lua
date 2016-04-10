@@ -92,9 +92,11 @@
    --traps[0].bounds:translate( 1000, 500)
    traps[1] = slowTrap.spawn(1)
    hellPuppies = require "hellPup"
-   --enemies = {}
-   --enemies[0] = hellPuppies.spawn(0)
-
+   enemies = {}
+   enemies[0] = hellPuppies.spawn(0)
+  enemies[1] = hellPuppies.spawn(1)
+   enemies[1].bounds:translate(800, 800)
+  enemies[1].bounds:translate(500, 500)
    -- SETTING UP OBJECTS IN THE CAMERA
    camera:add(player.parent, 1)
    camera:add(player.cameraLock, 1)
@@ -104,7 +106,8 @@
    camera:add(player.bounds, 1)
    --camera:add(traps[0].bounds, 2)
    camera:add(traps[1].bounds, 2)
-   --camera:add(enemies[0].parent, 1)
+   camera:add(enemies[0].parent, 1)
+   camera:add(enemies[1].parent, 1)
 
    camera:add(level, 2)
    camera:add(imps, 1)
@@ -312,6 +315,12 @@ local function gameLoop( event )
          player.virtualJoystickInput(leftJoystick.angle, leftJoystick.xLoc/70, leftJoystick.yLoc/70, rightJoystick.angle, rightJoystick.distance/70, rightJoystick.xLoc/70, rightJoystick.yLoc/70)
       end
       player.movePlayer()
+      for k,v in pairs(enemies) do
+        if(v.health <= 0) then
+          table.remove( v )
+        end
+        v.updatePlayerLocation(player.bounds.x, player.bounds.y)
+      end
    end
    return true
    end
