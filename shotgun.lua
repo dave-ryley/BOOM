@@ -16,7 +16,7 @@ local C = {}
 							120 -C.bounds.width/2,	0	-C.bounds.height/2,
 							0 	-C.bounds.width/2,	0 	-C.bounds.height/2,
 							40 	-C.bounds.width/2,	320	-C.bounds.height/2}
-
+--[[
 	physics.addBody( C.bounds, "dynamic", 	{ 	density=0.0, 
 												friction=0.0, 
 												bounce=0.0,
@@ -25,7 +25,7 @@ local C = {}
 												isSensor=true
 										})
 	C.bounds.isAwake = false
-
+]]
 	--C.bounds.filter=C.col.shotgunCol
 	-- Setting up the blast Animation
     C.blast = display.newGroup()

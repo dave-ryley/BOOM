@@ -48,7 +48,7 @@ local C = {}
 			
 
 			temp.onCollision = function( event ) 
-				print("hellpup collision with: ")
+				--print("hellpup collision with: ")
 				if (event.phase == "began") then
 
 					print( "hellpupsensor" .. ": collision began with " )
