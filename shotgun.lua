@@ -2,13 +2,10 @@ local C = {}
 
 	C.shooting = false
 	--C.collisionFilter = {categoryBits = 2, maskBits = 4}
-	local vertices = { -20,0, -100,-300, 100,-300, 20,0, }
+	local vertices = { -20,0, -100,-300, 100,-300, 20,0 }
+	local vertices2 = { -40,90, -100,-150, 100,-150, 40,90 }
 	C.bounds = display.newPolygon( 0, 0, vertices )
-	--C.col = require "collisionFilters"
-	local vertices = { -20,0, -100,-300, 100,-300, 20,0, }
-
-	C.bounds = display.newPolygon( 0, 0, vertices )
-	C.bounds.alpha = 0.0
+	C.bounds.alpha = 1.0
 	C.max = 20
 	C.min = 5
 	C.power = 10 --Default
@@ -21,16 +18,15 @@ local C = {}
 							0	-C.bounds.width/2 , 120 -C.bounds.height/2}
 ]]
 	C.bounds.isSensor = true
-	C.bounds.isAwake = false
+	C.bounds.anchorY = 1.0
 	physics.addBody( C.bounds, "dynamic", { 	
 												density=0.0, 
 												friction=0.0, 
 												bounce=0.0, 
-												shape=vertices, 
+												shape=vertices2, 
 												isSensor=true 
 										} )
 	C.bounds.isFixedRotation = false
-	C.bounds.anchorY = 1.0
 	C.bounds.isAwake = false
 
 	-- Setting up the blast Animation

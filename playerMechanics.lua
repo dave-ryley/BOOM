@@ -34,7 +34,7 @@ local P = {}
 
     P.bounds.isFixedRotation=true
     P.bounds.x = display.contentCenterX
-    P.bounds.y = display.contentCenterY + 20
+    P.bounds.y = display.contentCenterY
     P.bounds.linearDamping = 5
     -- Camera lock object setup
     P.cameraLock = display.newRect(0,-200,50,50)
