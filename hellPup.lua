@@ -3,7 +3,8 @@ local C = {}
 	local function spawn(id)
 		
 		local temp = {}
-			--temp.col = require "collisionFilters"
+			--temp.collisionFilter = { categoryBits = 4, maskBits = 3}
+			--temp.sensorCollFilter = { categoryBits = 8, maskBits = 1}
 			--setup variables
 			temp.physics = require ("physics")
 			temp.health = 2
@@ -18,21 +19,22 @@ local C = {}
 								{	density=3.0, 
 									friction=1.0, 
 									bounce=0.0,
-									--filter=temp.col.enemyCol,
-									isFixedRotation=true
+									--filter=temp.collisionFilter,
+									{isSensor=true, 
+									isFixedRotation=true}
 								} )
 			--hellPup detection area
-			--temp.bounds.filter = temp.col.enemyCol
+			temp.bounds.filter = temp.collisionFilter
 			temp.sensorRadius = 500
 			temp.sensorArea = display.newCircle( temp.bounds.x, temp.bounds.y, temp.sensorRadius )
 			temp.sensorArea.myName = "hellPupSensor"
 			temp.physics.addBody( 	temp.sensorArea, 
 									"dynamic", 
-								{	isSensor = true, 
+									{isSensor = true, 
 									radius=temp.sensorRadius
-									--filter=temp.col.sensorCol
+									--,filter=temp.sensorCollFilter
 								} )
-			--temp.sensorArea.filter = temp.col.sensorCol
+			--temp.sensorArea.filter = temp.sensorCollFilter
 			temp.bounds.isFixedRotation = true
 			temp.bounds.linearDamping = 7
 			
@@ -45,19 +47,41 @@ local C = {}
 				temp.sensorArea.y = temp.bounds.y
 			end
 			Runtime:addEventListener( "enterFrame", temp.update )
-			
 
-			temp.onCollision = function( event ) 
-				--print("hellpup collision with: ")
+			temp.detectPlayer = function( event )
 				if (event.phase == "began") then
 
-					print( "hellpupsensor" .. ": collision began with " )
+					--print( event.myName .. ": collision began with " .. event.other.myName )
+					--print("Killed by: " .. event.object1.myName)
+						--event.object2:applyLinearImpulse( 3000, 0, 50, 50 )
 					if(event.other.myName == "player") then
 						print("Target acquired!")
 					end
 				end
+				return true
 			end
-			temp.bounds:addEventListener( "collision", temp.onCollision )
+			
+			temp.onCollision = function( event )
+				print(event.other.myName)
+				if (event.phase == "began") then
+					if (event.other.myName == "shotgun"
+						and event.other.reloading == true) then
+							--print("reloading: "..event.object1.reloading)
+							if(temp.health > 0) then
+								temp.bounds:applyLinearImpulse( 2000, 0, 50, 50 )
+							else
+								print("Killed by: " .. event.other.myName) 
+								temp.parent:removeSelf()
+							end
+						--C[event.object2.id].parent:removeSelf( )
+
+					end
+				end
+				return true
+			end
+	
+		temp.sensorArea:addEventListener( "collision", temp.detectPlayer )
+		temp.bounds:addEventListener( "collision", temp.onCollision )
 		return temp
 		
 	end

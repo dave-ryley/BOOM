@@ -14,6 +14,8 @@ function scene:create( event )
     	-- code in here to highlight the first button
 	end
 
+	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
+
 	function buttonPress( self, event )
     	if event.phase == "began" then
     		audio.play(press, {channel = 31})
@@ -41,12 +43,11 @@ function scene:create( event )
 		buttons[i].touch = buttonPress
 		buttons[i]:addEventListener( "touch", buttons[i] )
 	end
-	
+
+
 	background.anchorX = 0
 	background.anchorY = 0
 	background.x, background.y = 0, 0
-
-	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
 	
 	sceneGroup:insert(background)
 
@@ -58,6 +59,13 @@ function scene:show( event )
 	if phase == "will" then
 		for i=1,numOfButtons do 
 			sceneGroup:insert(buttons[i])
+		end
+		buttonText = {"PLAY", "SCOREBOARD", "LEVEL EDITOR","CREDITS","QUIT"}
+		text = {}
+		for i=1,numOfButtons do
+			text[i] = display.newText(buttonText[i], display.actualContentWidth/(numOfButtons*2) + (i-1)*display.actualContentWidth/numOfButtons,display.actualContentHeight - 100, "Curse of the Zombie.ttf",40)
+			text[i]:setFillColor( 1, 1, 0 )
+			sceneGroup:insert(text[i])
 		end
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then

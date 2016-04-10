@@ -50,6 +50,7 @@
    end
    io.close(file)
 
+<<<<<<< HEAD
    size = 5
 
    for i=2,table.getn(map),1 do
@@ -69,6 +70,29 @@
   minotaur:setFillColor(0,1,1,1)
   end
    end
+=======
+  size = 5
+  for i=2,table.getn(map),1 do
+    if(tonumber(map[i][3])==10)then
+      lineWall = display.newLine(level,tonumber(map[i-1][1])*size,tonumber(map[i-1][2])*size,tonumber(map[i][1])*size,tonumber(map[i][2])*size )
+      lineWall.strokeWidth = 20
+      corners = display.newCircle(level,tonumber(map[i-1][1])*size,tonumber(map[i-1][2])*size,10)
+      corners:setFillColor(1,1,1,1)
+
+      physics.addBody( lineWall, "static", {chain= tonumber(map[i][1])*size,tonumber(map[i][2])*size} )
+      physics.addBody( corners, "static",{friction = 0,bounce = 0.3} )
+    elseif(tonumber(map[i][3])==1)then--imp
+      imp = display.newRect(imps,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
+      imp:setFillColor(0,0,1,1)
+    elseif(tonumber(map[i][3])==2)then--hellPup
+      hellPup = display.newRect(hellPups,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
+      hellPup:setFillColor(0,1,0,1)
+    elseif(tonumber(map[i][3])==3)then--rosy
+      minotaur = display.newRect(minotaurs,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
+      minotaur:setFillColor(0,1,1,1)
+    end
+  end
+>>>>>>> d39d260baa70a57509d08926a5714a30b49754b2
 
 
    ------TEMPORARY! TO BE DELETED!-----------
@@ -96,6 +120,7 @@
    camera:add(player.parent, 1)
    camera:add(player.cameraLock, 1)
    camera:add(player.shotgun.blast, 1)
+   camera:add(player.shotgun.bounds, 1)
    camera:add(tempFloor, 2)
    camera:add(player.bounds, 1)
    --camera:add(traps[0].bounds, 2)
@@ -104,7 +129,7 @@
 
    camera:add(level, 2)
    camera:add(imps, 1)
-   --camera:add(hellPups, 1)
+   camera:add(hellPups, 1)
    camera:add(minotaurs, 1)
 
    -- INITIALIZING CAMERA
@@ -119,11 +144,9 @@
    ---------------------------------------------------------------------------------
 
    -- local forward references should go here
-
-   ---------------------------------------------------------------------------------
-   -- "scene:create()"
-   function scene:create( event )
-
+-- "scene:create()"
+function scene:create( event )
+ 
    local sceneGroup = self.view
    sceneGroup:insert(camera)
    function buttonPress( self, event )
@@ -136,7 +159,7 @@
          return true
       end
    end
-   --if(system.getInfo("platformName") == "Android") then
+   if(system.getInfo("platformName") == "Android") then
       rightJoystick = joysticks.joystick(sceneGroup, "Graphics/Animation/analogStickHead.png", 200, 200, "Graphics/Animation/analogStickBase.png", 280, 280)
       rightJoystick.x = display.actualContentWidth -250
       rightJoystick.y = display.actualContentHeight -250
@@ -145,7 +168,7 @@
       leftJoystick.x = 250
       leftJoystick.y = display.actualContentHeight -250
       leftJoystick.activate()
-   --end
+   end
    --[[buttons = {}
    for i=1,1 do 
       buttons[i] = display.newRect(display.contentCenterX,display.contentCenterY+(i-1)*200,500,150)
@@ -210,7 +233,6 @@
 
    local function onAxisEvent( event )
    -- Map event data to simple variables
-   print("axis")
    if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
       local axis = controllerMapping.axis[event.axis.number]
       --if globals.pause then print("globals.pause = true") else print("globals.pause = false") end
@@ -227,17 +249,17 @@
    local axis = ""
    local value = 0
 
-   print (event.keyName)
-
    if (event.phase == "down") then
 
         -- Adjust velocity for testing, remove for final game        
         if ( event.keyName == "[" or event.keyName == "rightShoulderButton1" ) then
             if (player.velocity > 0 ) then
                 player.velocity = player.velocity - 1
+                player.shotgun.powerUp(-1)
             end
         elseif ( event.keyName == "]" or event.keyName == "leftShoulderButton1" ) then
             player.velocity = player.velocity + 1
+            player.shotgun.powerUp(1)
         end
         -- WASD and ArrowKeys pressed down
         if ( event.keyName == "w" ) then
