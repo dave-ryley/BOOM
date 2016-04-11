@@ -185,4 +185,15 @@ local C = {}
     end
     C.createBlastBounds = createBlastBounds
 
+    function displayPower()
+        if(shotgunOMeter)then shotgunOMeter:removeSelf()end
+        blocks = {}
+        shotgunOMeter = display.newGroup()
+        for i=1,C.power-9,1 do
+            blocks[i]=display.newRect( shotgunOMeter,(i*42)+250, 40, 40,40 )
+            blocks[i]:setFillColor((i/5),5/i,0,0.9)
+        end
+        return shotgunOMeter
+    end
+    C.displayPower = displayPower
 return C
