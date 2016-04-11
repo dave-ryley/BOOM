@@ -6,7 +6,7 @@ V = {}
     {
         width = 300,
         height = 300,
-        numFrames = 64
+        numFrames = 136
     }
     local imp_sheet = graphics.newImageSheet( "Graphics/Animation/Imp.png", imp_sheetOptions )
     local imp_sequences = require "SpriteSeq.impSeq"
