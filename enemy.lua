@@ -1,6 +1,6 @@
 local C = {}
-
 	local function spawn(enemyType, id, startX, startY, data)
+		local splatterParts = require "splatterParts"
 		local path = "Graphics/Temp/"
 		local e = {}
 			--e.collisionFilter = { categoryBits = 4, maskBits = 3}
@@ -41,6 +41,20 @@ local C = {}
 			end
 			e.bounds.die = die
 
+			function splat(angle, x, y)
+				return splatterParts.spawn(angle, x, y)
+			end
+			e.splat = splat
+
+			    local function getX()
+			        return e.bounds.x
+			    end
+			    e.getX = getX
+
+			    local function getY()
+			        return e.bounds.y
+			    end
+			    e.getY = getY
 			e.bounds.detectPlayer = function( event )
 
 				if (event.phase == "began") then

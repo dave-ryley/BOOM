@@ -103,14 +103,17 @@
   ]]
   --local win = require "win"
   local imptest = require "imp"
+  local sausage = require "sausage"
   --local wintile = win.spawn(1)
   player.parent:translate(500, 500)
+  local sausage1 = sausage.spawn(4)
   enemies = {}
   enemies[1] = imptest.spawn(1, 0, 0)
   --enemies[1].parent:translate( 1000, -500 )
   --enemies[1].parent:translate(500, 500)
    -- SETTING UP OBJECTS IN THE CAMERA
    camera:add(player.parent, 1)
+   camera:add(sausage1.display, 1)
    camera:add(player.cameraLock, 1)
    camera:add(player.shotgun.blast, 1)
    camera:add(player.shotgun.bounds, 1)
@@ -328,20 +331,17 @@ local function gameLoop( event )
       end
       player.movePlayer()
 
-
---[[
       for k,v in pairs(enemies) do
         if(v.bounds.health <= 0 ) then
             print("killing: "..v.bounds.myName)
-            --local gore = v.splatter()
+            local gore = v.splat(player.getAimAngle(), v.getX(), v.getY())
             v.bounds.die()
-            --camera:add(gore, 1)
+            camera:add(gore, 1)
             v.bounds.parent:removeSelf( )
             table.remove( enemies, k )
             end
-            v.bounds.updatePlayerLocation(player.bounds.x, player.bounds.y)
+            --v.bounds.updatePlayerLocation(player.bounds.x, player.bounds.y)
           end
--]]
        end
    return true
    end

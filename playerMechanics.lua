@@ -108,7 +108,6 @@ local P = {}
         P.shotgun.createBlastBounds()
         P.shotgun.bounds.isAwake = true
         P.canShoot = false
-
         P.bounds:applyLinearImpulse(    
                     math.cos(math.rad(P.thisAimAngle + 90))*P.shotgun.force, 
                     math.sin(math.rad(P.thisAimAngle + 90))*P.shotgun.force, 
@@ -126,7 +125,20 @@ local P = {}
 
     P.shoot = shoot
 
-   
+    local function getAimAngle()
+        return P.shotgun.bounds.aimAngle
+    end
+    P.getAimAngle = getAimAngle
+
+    local function getX()
+        return P.bounds.x
+    end
+    P.getX = getX
+
+    local function getY()
+        return P.bounds.y
+    end
+    P.getY = getY
     ----- Started adding in functions
     
     local function playerAxis( axis, value )
