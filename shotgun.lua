@@ -8,13 +8,15 @@ local C = {}
 	C.max = 20
 	C.min = 5
 	C.power = 10 --Default
-	C.force = 100
+	C.force = C.power*50-200
 	C.vertices = { -40,90, -100,-150, 100,-150, 40,90 }
 	-- Blast animation and bounds Scale = 1/10 power
 	C.bounds.myName = "shotgun"
 	C.bounds.isSensor = true
 	C.bounds.anchorY = 1.0
     C.bounds.aimAngle = 0
+    C.bounds.xScale = C.power/10
+    C.bounds.yScale = C.power/10
     --[[
 	physics.addBody( C.bounds, "dynamic", { 	
 												density = 0.0, 
@@ -28,6 +30,8 @@ local C = {}
 	-- Setting up the blast Animation
     
     C.blast = display.newGroup()
+    C.blast.xScale = C.power/10
+    C.blast.yScale = C.power/10
     --C.blast:insert(C.bounds)
 
     local blastSheetOptions =
@@ -164,8 +168,7 @@ local C = {}
     	C.bounds.yScale = C.power/10
     	C.blast.xScale = C.power/10
     	C.blast.yScale = C.power/10
-    	
-    	C.vertices = { -40,90, C.power*-10,C.power*-15, C.power*10,C.power*-15, 40,90 }
+    	C.vertices = { -40,90, C.power*(-5)-25,C.power*(-25)+90, C.power*5+25,C.power*(-25)+90, 40,90 }
     end
 
     C.powerUp = powerUp
