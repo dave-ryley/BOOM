@@ -35,7 +35,8 @@ settings =
 	UIPrerenderedIcon = true,
 	UIAppFonts = 
 	{
-	"Curse of the Zombie.ttf"
+	"Curse of the Zombie.ttf",
+	"BLOODY.ttf"
 	}
 
 	}

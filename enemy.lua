@@ -1,4 +1,18 @@
 local C = {}
+	local function shape(enemyType)
+		local imp = { density=1.0, friction=0.3, bounce=0.2, shape={ -20,-20, 20,-20, 20,20, -20,20 } }
+		local spot = { density=1.0, friction=0.3, bounce=0.2, shape={ -20,-20, 20,-20, 20,20, -20,20 } }
+		local rosy = { density=1.0, friction=0.3, bounce=0.2, shape={ -20,-20, 20,-20, 20,20, -20,20 } }
+		if enemyType == "imp" then
+			result = imp
+		elseif enemyType == "spot" then
+			result = spot
+		elseif enemyType == "rosy" then
+			result = rosy
+		end
+		return result
+	end
+
 	local function spawn(enemyType, id, startX, startY, data)
 		local splatterParts = require "splatterParts"
 		local path = "enemies."
