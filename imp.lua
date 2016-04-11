@@ -1,7 +1,9 @@
 local T = {}
 	local constructor = require "enemy"
+	local impShape = { -80,-70, 80,-70, 80,120, -80,120 }
 	local impData = {	
-				physicsData = 	{	
+				physicsData = 	{
+							shape=impShape,
 							density=3.0, 
 							friction=1.0, 
 							bounce=0.0,
