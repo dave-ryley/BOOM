@@ -29,50 +29,69 @@
 
 
    -----Map-----
-   local path = system.pathForFile(levelName,system.ResourceDirectory)
-   local file = io.open(path,"r")
-   i = 1
-
-   function explode(div,str)
-    if (div=='') then return false end
-    local pos,arr = 0,{}
-    for st,sp in function() return string.find(str,div,pos,true) end do
-        table.insert(arr,string.sub(str,pos,st-1))
-        pos = sp + 1
-    end
-    table.insert(arr,string.sub(str,pos))
-    return arr
-   end
-
-   for line in file:lines()do
-   map[i] = explode(",",line)
-   i = i + 1
-   end
-   io.close(file)
-
   size = 5
-  for i=2,table.getn(map),1 do
-    if(tonumber(map[i][3])==10)then
-      lineWall = display.newLine(level,tonumber(map[i-1][1])*size,tonumber(map[i-1][2])*size,tonumber(map[i][1])*size,tonumber(map[i][2])*size )
-      lineWall.strokeWidth = 20
-      corners = display.newCircle(level,tonumber(map[i-1][1])*size,tonumber(map[i-1][2])*size,10)
-      corners:setFillColor(1,1,1,1)
+  local function getVertices(type,rotation)
+    if(type == 1)then
+        vertices = {0*size,0*size,0*size,128*size,128*size,128*size,128*size,0*size}
+        if(rotation == 1)then
+            
+        elseif(rotation == 2)then
+            
+        elseif(rotation == 3)then
+            
+        else
+            
+        end
+    elseif(type == 2)then
+        if(rotation == 1)then
+            vertices = {64*size,64*size,0*size,128*size,128*size,128*size,128*size,0}
+        elseif(rotation == 2)then
+            vertices = {0*size,0*size,0*size,128*size,128*size,128*size,64*size,64*size}
+        elseif(rotation == 3)then
+            vertices = {0*size,0*size,0*size,128*size,64*size,64*size,128*size,0*size}
+        else
+            vertices = {0*size,0*size,64*size,64*size,128*size,128*size,128*size,0}
+        end
+    elseif(type == 3)then
 
-      physics.addBody( lineWall, "static", {chain= tonumber(map[i][1])*size,tonumber(map[i][2])*size} )
-      physics.addBody( corners, "static",{friction = 0,bounce = 0.3} )
-    elseif(tonumber(map[i][3])==1)then--imp
-      imp = display.newRect(imps,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
-      imp:setFillColor(0,0,1,1)
-    elseif(tonumber(map[i][3])==2)then--spot
-      spot = display.newRect(spots,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
-      spot:setFillColor(0,1,0,1)
-    elseif(tonumber(map[i][3])==3)then--rosy
-      minotaur = display.newRect(minotaurs,tonumber(map[i-1][1]*size), tonumber(map[i-1][2])*size, 10*size, 10*size )
-      minotaur:setFillColor(0,1,1,1)
     end
+    return vertices
   end
 
+  local path = system.pathForFile(levelName,system.ResourceDirectory)
+  local file = io.open(path,"r")
+  
+  function explode(div,str)
+    if (div=='') then return false end
+    local pos,arr = 0,{}
+      for st,sp in function() return string.find(str,div,pos,true) end do
+        table.insert(arr,string.sub(str,pos,st-1))
+        pos = sp + 1
+      end
+    table.insert(arr,string.sub(str,pos))
+    return arr
+  end
+  counter = 1
+  for line in file:lines()do
+    map[counter] = explode(",",line)
+    counter = counter + 1
+    print (counter)
+  end
+  io.close(file)
 
+  print(map[1][1],map[1][2],map[1][3],map[1][4])
+
+  --size = 1
+  physlevel = {}
+  --objno,rotation,x,y
+  for mapCounter=1,table.getn(map),1 do
+    if(tonumber(map[mapCounter][1])<10)then
+      physlevel[mapCounter] = display.newPolygon( level, tonumber(map[mapCounter][3])*size-640*size,tonumber(map[mapCounter][4]*size)-640, getVertices(tonumber(map[mapCounter][1]),tonumber(map[mapCounter][2])))
+      physlevel[mapCounter]:setFillColor(0.5,0,0,1)
+      physlevel[mapCounter].myName = "Wall"
+      physics.addBody( physlevel[mapCounter], "static", {friction = 0, bounce = 0.3} )
+    end
+  end
 
    ------TEMPORARY! TO BE DELETED!-----------
    local tempfloor = display.newRect( display.contentCenterX, display.contentCenterY, 5000, 5000 )
@@ -179,6 +198,9 @@ function scene:create( event )
    pauseButton.touch = buttonPress
    pauseButton:addEventListener( "touch", pauseButton )
    local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
+   function updateGUI()
+       sceneGroup:insert(player.shotgun.displayPower())
+    end
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
    end
@@ -323,6 +345,8 @@ function scene:create( event )
 
 
 local function gameLoop( event )
+   shotgunOMeter = player.shotgun.displayPower()
+   updateGUI()
    if globals.pause == false and axis ~= "" then
       if(globals.android) then
          player.virtualJoystickInput(leftJoystick.angle, leftJoystick.xLoc/70, leftJoystick.yLoc/70, rightJoystick.angle, rightJoystick.distance/70, rightJoystick.xLoc/70, rightJoystick.yLoc/70)
