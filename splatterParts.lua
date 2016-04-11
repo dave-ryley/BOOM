@@ -24,7 +24,7 @@ local C = {}
 					p.angularDamping = 2
 					parts.display:insert(p)
 				end
-				parts.display:insert(sausage.spawn(3).display)
+				parts.display:insert(sausage.spawn(10).display)
 		return parts.display
 	end
 	--C[1] = parts.display

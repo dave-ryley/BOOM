@@ -194,4 +194,5 @@ local upperBody_sequences =
         loopDirection = "bounce"
     }
 }
+
 return upperBody_sequences

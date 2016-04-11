@@ -43,7 +43,7 @@ local P = {}
     P.cameraLock.x = P.parent.x
     P.cameraLock.y = P.parent.y
     
-    local sounds = function( event )
+    --[[local sounds = function( event )
         currentFrame = P.visuals.lowerBodyRun_sprite.frame
         --print("frame: ",currentFrame)
         if(P.isMovingX ~= 0 or P.isMovingY ~=0) then
@@ -54,11 +54,11 @@ local P = {}
             end
         end
     end
-    P.sounds = sounds
+    P.sounds = sounds]]
 
     local update = function( event )
         --if(P.bounds.velocity > 0) then
-        P.sounds(event)
+        --P.sounds(event)
         --end
         P.parent.x = P.bounds.x
         P.parent.y = P.bounds.y

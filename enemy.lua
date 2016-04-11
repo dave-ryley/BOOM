@@ -1,12 +1,14 @@
 local C = {}
 	local function spawn(enemyType, id, startX, startY, data)
 		local splatterParts = require "splatterParts"
-		local path = "Graphics/Temp/"
+		local path = "enemies."
 		local e = {}
 			--e.collisionFilter = { categoryBits = 4, maskBits = 3}
 			--e.sensorCollFilter = { categoryBits = 8, maskBits = 1}
 			--setup variables
-			e.bounds = display.newImageRect( path..enemyType..".png", 100, 100 )
+			e.bounds = display.newRect( 0, 0, 100, 100 )
+			e.bounds.visuals = require(  path .. enemyType .. "Visuals")
+			e.bounds.visuals.animate(math.random(359), "Stand")
 			e.parent = display.newGroup()
 			e.bounds.hasTarget = false
 			e.bounds.physics = require ("physics")
@@ -82,6 +84,7 @@ local C = {}
 			Runtime:addEventListener( "enterFrame", e.update )
 			e.parent:insert(e.bounds, true)
 			e.parent:insert(e.sensorArea, true)
+			e.parent:insert(e.bounds.visuals.imp_sprite, true)
 		return e
 	end
 	C.spawn = spawn
