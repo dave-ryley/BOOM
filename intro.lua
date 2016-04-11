@@ -18,7 +18,7 @@ function scene:create( event )
 
    local sceneGroup = self.view
    cinematics = true
-   myText = display.newText( "Intro Cinematics. Hit any button to skip.", display.contentCenterX, display.contentCenterY, native.systemFont, 80 )
+   myText = display.newText( "INTRO CINEMATICS.", display.contentCenterX, display.contentCenterY, "Curse of the Zombie", 80 )
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
 end

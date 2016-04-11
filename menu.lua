@@ -64,7 +64,7 @@ function scene:show( event )
 		buttonText = {"PLAY", "SCOREBOARD", "LEVEL EDITOR","CREDITS","QUIT"}
 		text = {}
 		for i=1,numOfButtons do
-			text[i] = display.newText(buttonText[i], display.actualContentWidth/(numOfButtons*2) + (i-1)*display.actualContentWidth/numOfButtons,display.actualContentHeight - 100, "Curse of the Zombie.ttf",40)
+			text[i] = display.newText(buttonText[i], display.actualContentWidth/(numOfButtons*2) + (i-1)*display.actualContentWidth/numOfButtons,display.actualContentHeight - 100, "Curse of the Zombie",40)
 			text[i]:setFillColor( 1, 1, 0 )
 			sceneGroup:insert(text[i])
 		end

@@ -26,4 +26,17 @@ settings =
 			"android.permission.INTERNET",
 		},
 	},
+	plist =
+	{
+
+
+	UIApplicationExitsOnSuspend = true,
+	UIStatusBarHidden = true,
+	UIPrerenderedIcon = true,
+	UIAppFonts = 
+	{
+	"Curse of the Zombie.ttf"
+	}
+
+	}
 }

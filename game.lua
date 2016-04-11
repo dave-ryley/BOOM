@@ -25,7 +25,7 @@
   local physics = require "physics"
   physics.start()
   physics.setGravity(0,0)
-  physics.setDrawMode( "normal" )
+  physics.setDrawMode( "hybrid" )
 
 
    -----Map-----
@@ -106,28 +106,26 @@
   local sausage = require "sausage"
   --local wintile = win.spawn(1)
   player.parent:translate(500, 500)
-  local sausage1 = sausage.spawn(4)
   enemies = {}
   enemies[1] = imptest.spawn(1, 0, 0)
   --enemies[1].parent:translate( 1000, -500 )
   --enemies[1].parent:translate(500, 500)
    -- SETTING UP OBJECTS IN THE CAMERA
    camera:add(player.parent, 1)
-   camera:add(sausage1.display, 1)
    camera:add(player.cameraLock, 1)
    camera:add(player.shotgun.blast, 1)
    camera:add(player.shotgun.bounds, 1)
    camera:add(tempfloor, 3)
    camera:add(player.bounds, 1)
-   camera:add(enemies[1].parent, 1)
+   camera:add(enemies[1].parent, 2)
    --camera:add(wintile.bounds, 2)
    --camera:add(traps[0].bounds, 2)
    --camera:add(traps[1].bounds, 2)
 
    camera:add(level, 2)
-   camera:add(imps, 1)
-   camera:add(spots, 1)
-   camera:add(minotaurs, 1)
+   camera:add(imps, 2)
+   camera:add(spots, 2)
+   camera:add(minotaurs, 2)
 
    -- INITIALIZING CAMERA
    camera:prependLayer()

@@ -10,7 +10,7 @@ V = {}
     }
     local imp_sheet = graphics.newImageSheet( "Graphics/Animation/Imp.png", imp_sheetOptions )
     local imp_sequences = require "SpriteSeq.impSeq"
-    V.imp_sprite = display.newSprite( imp_sheet, imp_sequences )
+    V.bounds = display.newSprite( imp_sheet, imp_sequences )
 
     local function animate(angle, ext) -- angle i.e 90, ext is the extension onto the animation, i.e "Shoot" or "Stand"
         -- Animate Upper Body
@@ -36,8 +36,8 @@ V = {}
         anim = anim .. ext
 
         if V.anim ~= anim then
-            V.imp_sprite:setSequence(anim)
-            V.imp_sprite:play()
+            V.bounds:setSequence(anim)
+            V.bounds:play()
             V.anim = anim
         end
     end
