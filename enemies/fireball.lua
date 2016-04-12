@@ -29,11 +29,12 @@ function spawn(angle, x, y)
     fireball.y = math.sin(math.rad(angle - 90))*200 + y -- need to determine actual angle
     fireball.myName = "fireball"
 
-    local fireballShape = { -80,-70, 80,-70, 80,120, -80,120 }
+    --local fireballShape = { -80,-70, 80,-70, 80,120, -80,120 }
+    local fireballShape = { -50,-50, 50,-50, 50,50, -50,50 }
     local fireballData = {   
                     physicsData =   {
                                 shape=fireballShape,
-                                density=0.5, 
+                                density=0.0, 
                                 friction=0.0, 
                                 bounce=0.0,
                                 isFixedRotation=true,
@@ -41,10 +42,15 @@ function spawn(angle, x, y)
                                     }
                                 }
     fireball.rotation = angle
-
+    fireball.isFixedRotation=true
+--[[
     physics.addBody( fireball, "dynamic", fireballData.physicsData )
     xForce = math.cos(math.rad(angle - 90))*200
     yForce = math.sin(math.rad(angle - 90))*200
+    ]]
+    physics.addBody( fireball, "dynamic", fireballData.physicsData )
+    xForce = math.cos(math.rad(angle - 90))*3
+    yForce = math.sin(math.rad(angle - 90))*3
     fireball:applyLinearImpulse( xForce, yForce, x, y )
     fireball.super = fireball
 

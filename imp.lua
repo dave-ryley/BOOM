@@ -2,8 +2,10 @@ local T = {}
 local colFilters = require "collisionFilters"
 
 	local constructor = require "enemy"
+	local impShape = { -60,-90, 60,-90, 60,90, -60,90 }
 	local impData = {
 			physicsData = 	{	
+								shape=impShape,
 								density=3.0, 
 								friction=1.0, 
 								bounce=0.0,
@@ -14,7 +16,7 @@ local colFilters = require "collisionFilters"
 								radius=800,
 								filter=colFilters.sensorCol,
 							},
-			sensorRadius=	500,
+			sensorRadius=	800,
 			health 		= 	1
 	}
 

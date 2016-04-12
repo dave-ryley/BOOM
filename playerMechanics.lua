@@ -14,15 +14,15 @@ local P = {}
     P.isRotatingY = 0
     P.thisAimAngle = 0
     P.thisDirectionAngle = 0
-    P.velocity = 10
-    P.maxSpeed = 1
+    P.velocity = 0.07
+    P.maxSpeed = 10000.0
     P.isAlive = true
    
     P.parent:insert( P.visuals.lowerBody )
     P.parent:insert( P.visuals.upperBody )
 
     -- Collision object setup
-    P.bounds = display.newRect(0,0,150,170)
+    P.bounds = display.newRect(0,0,70,70)
     P.bounds.alpha = 0.0
     P.bounds.myName = "player"
 
@@ -37,7 +37,7 @@ local P = {}
     P.bounds.isFixedRotation=true
     P.bounds.x = display.contentCenterX
     P.bounds.y = display.contentCenterY
-    P.bounds.linearDamping = 5
+    P.bounds.linearDamping = 3
     -- Camera lock object setup
     P.cameraLock = display.newRect(0,-200,50,50)
     P.cameraLock.alpha = 0.00
@@ -70,6 +70,36 @@ local P = {}
     
     local function movePlayer()
 
+        if ( P.isMovingX ~= 0 or P.isMovingY ~= 0 ) then
+            --P.bounds.linearDamping = 5
+            local x, y = P.bounds:getLinearVelocity()
+            x = x + P.isMovingX*P.velocity
+            y = y + P.isMovingY*P.velocity
+            print("x = " .. x .. " y = " .. y)
+            local hyp = math.sqrt(x*x + y*y) * 1.0
+            if (hyp > P.maxSpeed) then
+                x = x/hyp * P.maxSpeed
+                y = y/hyp * P.maxSpeed
+                print("x = " .. x .. " y = " .. y)
+            end
+            P.bounds:setLinearVelocity( x, y )
+            P.parent.x, P.parent.y = P.bounds.x, P.bounds.y
+        else
+            --P.bounds.linearDamping = math.max(5,P.bounds.linearDamping +1)
+        end
+
+        -- placing the shotgun
+
+        if(P.shotgun.shooting == false) then
+            P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity*P.maxSpeed)
+            P.shotgun.place(P.thisAimAngle, P.parent.x, P.parent.y)
+        else
+            P.shotgun.place( P.shotgun.bounds.rotation , P.parent.x, P.parent.y)
+        end
+
+    end
+
+    local function movePlayerOld()
         if ( P.isMovingX ~= 0 ) then
             P.bounds.x = P.bounds.x + P.isMovingX
             P.parent.x = P.bounds.x
@@ -88,8 +118,8 @@ local P = {}
         else
             P.shotgun.place( P.shotgun.bounds.rotation , P.parent.x, P.parent.y)
         end
-
     end
+
 
     P.movePlayer = movePlayer
 
