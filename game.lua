@@ -25,7 +25,7 @@
   local physics = require "physics"
   physics.start()
   physics.setGravity(0,0)
-  physics.setDrawMode( "normal" )
+  physics.setDrawMode( "hybrid" )
 
 
    -----Map-----

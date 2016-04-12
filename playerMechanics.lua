@@ -14,7 +14,7 @@ local P = {}
     P.isRotatingY = 0
     P.thisAimAngle = 0
     P.thisDirectionAngle = 0
-    P.velocity = 10
+    P.velocity = 10.0
     P.maxSpeed = 1
     P.isAlive = true
    
@@ -22,7 +22,7 @@ local P = {}
     P.parent:insert( P.visuals.upperBody )
 
     -- Collision object setup
-    P.bounds = display.newRect(0,0,150,170)
+    P.bounds = display.newRect(0,0,70,70)
     P.bounds.alpha = 0.0
     P.bounds.myName = "player"
 
@@ -69,6 +69,24 @@ local P = {}
     
     local function movePlayer()
 
+        if ( P.isMovingX ~= 0 and P.isMovingY ~= 0 ) then
+            local x, y = P.bounds:getLinearVelocity()
+            P.bounds:setLinearVelocity( x + P.isMovingX*P.velocity, y + P.isMovingY*P.velocity )
+            P.parent.x, P.parent.y = P.bounds.x, P.bounds.y
+        end
+
+        -- placing the shotgun
+
+        if(P.shotgun.shooting == false) then
+            P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity*P.maxSpeed)
+            P.shotgun.place(P.thisAimAngle, P.parent.x, P.parent.y)
+        else
+            P.shotgun.place( P.shotgun.bounds.rotation , P.parent.x, P.parent.y)
+        end
+
+    end
+
+    local function movePlayerOld()
         if ( P.isMovingX ~= 0 ) then
             P.bounds.x = P.bounds.x + P.isMovingX
             P.parent.x = P.bounds.x
@@ -87,8 +105,8 @@ local P = {}
         else
             P.shotgun.place( P.shotgun.bounds.rotation , P.parent.x, P.parent.y)
         end
-
     end
+
 
     P.movePlayer = movePlayer
 
