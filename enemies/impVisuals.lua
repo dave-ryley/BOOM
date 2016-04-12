@@ -14,7 +14,7 @@ V = {}
 
     local function animate(angle, ext) -- angle i.e 90, ext is the extension onto the animation, i.e "Shoot" or "Stand"
         -- Animate Upper Body
-        print("animating " .. ext .. " at angle " .. angle)
+        --print("animating " .. ext .. " at angle " .. angle)
         local anim = ""
         if angle > 337 or angle < 23 then
             anim = "up"

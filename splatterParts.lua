@@ -1,4 +1,5 @@
 local C = {}
+local colFilters = require "collisionFilters"
 	local function spawn(angle, x, y)
 		local parts = {}
 				local sausage = require "sausage"
@@ -13,18 +14,29 @@ local C = {}
 				          	"dynamic",
 				        {	density = 0.5,
 				        	friction = 0.5,
-				        	bounce = 0.9
+				        	bounce = 0.7,
+				        	filter=colFilters.enemyCol
 				        })
+				    --p.isFixedRotation=true
 					p:applyLinearImpulse( 
-						math.cos(angle)*50, 
-						math.sin(angle)*50, 
-						50, 
-						50 )
-					p.linearDamping = 2
-					p.angularDamping = 2
+							math.cos(angle)*50, 
+							math.sin(angle)*50 
+							)
+					p.isFixedRotation = true
+					p.linearDamping = 3
+					p.angularDamping = 3
+					p.super = p
+					p.bounds = p
 					parts.display:insert(p)
 				end
-				parts.display:insert(sausage.spawn(4).display)
+				local s = sausage.spawn(4, x, y)
+				
+				s.link[math.ceil(#s.link/2)]:applyLinearImpulse( 
+						math.cos(angle)*80, 
+						math.sin(angle)*80, 
+						50, 
+						50 )
+				parts.display:insert(s.display)
 		return parts.display
 	end
 	--C[1] = parts.display

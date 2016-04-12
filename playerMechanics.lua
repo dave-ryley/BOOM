@@ -1,5 +1,5 @@
 local P = {}
-    --local col = require "collisionFilters"
+    local col = require "collisionFilters"
     P.visuals = require "playerVisuals"
     P.movementFunctions = require "movementFunctions"
     P.myName = "player"
@@ -14,8 +14,8 @@ local P = {}
     P.isRotatingY = 0
     P.thisAimAngle = 0
     P.thisDirectionAngle = 0
-    P.velocity = 0.07
-    P.maxSpeed = 10000.0
+    P.velocity = 0.5
+    P.maxSpeed = 1000.0
     P.isAlive = true
    
     P.parent:insert( P.visuals.lowerBody )
@@ -30,8 +30,9 @@ local P = {}
                                 {
                                     density=0.5, 
                                     friction=0.3, 
-                                    bounce=0.0}
-                                )
+                                    bounce=0.0,
+                                    filter=col.playerCol
+                                })
 
     P.bounds.isFixedRotation=true
     P.bounds.x = display.contentCenterX
@@ -42,28 +43,14 @@ local P = {}
     P.cameraLock.alpha = 0.00
     P.cameraLock.x = P.parent.x
     P.cameraLock.y = P.parent.y
-    
-    --[[local sounds = function( event )
-        currentFrame = P.visuals.lowerBodyRun_sprite.frame
-        --print("frame: ",currentFrame)
-        if(P.isMovingX ~= 0 or P.isMovingY ~=0) then
-            if(currentFrame == 3)then
-                audio.play( P.visuals.sounds.step1, { channel = 1, loops=0})
-            elseif(currentFrame == 7)then
-                audio.play( P.visuals.sounds.step2, { channel = 3, loops=0})
-            end
-        end
-    end
-    P.sounds = sounds]]
+    P.bounds.super = P
 
     local update = function( event )
-        --if(P.bounds.velocity > 0) then
-        --P.sounds(event)
-        --end
         P.parent.x = P.bounds.x
-        P.parent.y = P.bounds.y
+        P.parent.y = P.bounds.y -50
         P.cameraLock.x = P.parent.x + P.isRotatingX*250
         P.cameraLock.y = P.parent.y + P.isRotatingY*250
+        P.visuals.footsteps()
     end
     Runtime:addEventListener( "enterFrame", update )
     
@@ -82,56 +69,32 @@ local P = {}
                 print("x = " .. x .. " y = " .. y)
             end
             P.bounds:setLinearVelocity( x, y )
-            P.parent.x, P.parent.y = P.bounds.x, P.bounds.y
-        else
-            --P.bounds.linearDamping = math.max(5,P.bounds.linearDamping +1)
+            --P.parent.x, P.parent.y = P.bounds.x, P.bounds.y
         end
 
         -- placing the shotgun
 
         if(P.shotgun.shooting == false) then
-            P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity*P.maxSpeed)
+            P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity)
             P.shotgun.place(P.thisAimAngle, P.parent.x, P.parent.y)
         else
             P.shotgun.place( P.shotgun.bounds.rotation , P.parent.x, P.parent.y)
         end
 
     end
-
-    local function movePlayerOld()
-        if ( P.isMovingX ~= 0 ) then
-            P.bounds.x = P.bounds.x + P.isMovingX
-            P.parent.x = P.bounds.x
-        end
-
-        if ( P.isMovingY ~= 0 ) then
-            P.bounds.y = P.bounds.y + P.isMovingY
-            P.parent.y = P.bounds.y - 20
-        end
-
-        -- placing the shotgun
-
-        if(P.shotgun.shooting == false) then
-            P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity*P.maxSpeed)
-            P.shotgun.place(P.thisAimAngle, P.parent.x, P.parent.y)
-        else
-            P.shotgun.place( P.shotgun.bounds.rotation , P.parent.x, P.parent.y)
-        end
-    end
-
 
     P.movePlayer = movePlayer
 
     local function blastDisppear( event )
         P.shotgun.bounds.isAwake = false
-        P.shotgun.blast.alpha = 0
         P.shotgun.shooting = false
         physics.removeBody( P.shotgun.bounds )
+        P.shotgun.blast.alpha = 0
+        P.shotgun.bounds.isAwake = false    
     end
 
     local function shootDelay( event )
         P.canShoot = true;
-        P.shotgun.bounds.isAwake = false    
     end
 
     local function shoot()
@@ -150,7 +113,7 @@ local P = {}
         P.shotgun.shooting = true
         P.visuals.animateShotgunBlast(P.thisAimAngle )
         timer.performWithDelay(200, blastDisppear)
-        timer.performWithDelay(800, shootDelay)
+        return timer.performWithDelay(500, shootDelay)
     end
 
     P.shoot = shoot
@@ -208,22 +171,10 @@ local P = {}
 
     
     P.onCollision = function( event )
-        print("player collided with: ".. event.other.myName)
-            if (event.phase == "began") then
-                if (event.other.myName == "trap_fire") then
-                        --print("reloading: "..event.object1.reloading)
-                    print("Killed by: " .. event.other.myName) 
-                    --P.bounds:removeSelf()
-                    --P.bounds:applyLinearImpulse( 2000, 0, 50, 50 )
-                    --C[event.object2.id].parent:removeSelf( )
-                elseif (event.other.myName == "trap_win") then
-                    print("GOOD JOB CHRIS THAT WAS GOOD WELL DONE")
-                end
+        if (event.phase == "began" and event.other ~= nil) then
+            local other = event.other.super
+                print("player collided with: ".. other.myName)
                 
-                if(event.other.myName == "trap_slow") then
-                    print("Slowed by: " .. event.other.myName)
-                    P.maxSpeed = P.maxSpeed/2
-                end
 
             end
         end

@@ -51,7 +51,7 @@ M = {}
                 --angle = angle + math.pi*3/4
             end
             --print("calculatedAngle: " .. angle*180/math.pi)
-        return angle
+        return angle*180/math.pi + 90
     end
     M.calculateLineAngle = calculateLineAngle
 

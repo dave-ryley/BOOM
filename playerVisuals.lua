@@ -155,7 +155,9 @@ V = {}
             upperBodyAnim = upperBodyAnim .. "Stand"
             lowerBodyAnim = upperBodyAnim
         elseif reverse then
-            lowerBodyAnim = lowerBodyAnim .. "Back"
+            lowerBodyAnim = lowerBodyAnim .. "Back" .. "Run"
+        else
+            lowerBodyAnim = lowerBodyAnim .. "Run"
         end
 
         if V.upperBodyAnim ~= upperBodyAnim then
@@ -169,8 +171,8 @@ V = {}
             V.lowerBodyAnim = lowerBodyAnim
         end
         if moving >= 0.1 then
-            upperBodyRun_sprite.timeScale = math.min(velocity*moving/200.0, 2.0)
-            lowerBodyRun_sprite.timeScale = math.min(velocity*moving/200.0, 2.0)
+            upperBodyRun_sprite.timeScale = math.min(moving/1000, 1.0)
+            lowerBodyRun_sprite.timeScale = math.min(moving/1000, 1.0)
         else
             upperBodyRun_sprite.timeScale = 1.0
             lowerBodyRun_sprite.timeScale = 1.0
@@ -224,5 +226,18 @@ V = {}
     end
 
     V.animateShotgunBlast = animateShotgunBlast
+
+    local function footsteps()
+        if string.sub( lowerBodyRun_sprite.sequence, -3 ) == "Run" then
+            print("run")
+            if(lowerBodyRun_sprite.frame == 3)then
+                audio.play( V.sounds.step1, { channel = 1, loops=0})
+            elseif(lowerBodyRun_sprite.frame == 7)then
+                print("playing")
+                audio.play( V.sounds.step2, { channel = 3, loops=0})
+            end
+        end
+    end
+    V.footsteps = footsteps
 
 return V
