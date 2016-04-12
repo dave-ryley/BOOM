@@ -3,6 +3,7 @@ F = {}
 local physics = require "physics"
 
 function spawn(angle, x, y)
+    local col = require "collisionFilters"
     local fireballSheetOptions =
     {
         width = 120,
@@ -22,7 +23,7 @@ function spawn(angle, x, y)
         }
     }
 
-    fireball = display.newSprite( fireballSheet, fireballSeq )
+    local fireball = display.newSprite( fireballSheet, fireballSeq )
     fireball:play()
     fireball.x = math.cos(math.rad(angle - 90))*200 + x -- need to determine actual angle
     fireball.y = math.sin(math.rad(angle - 90))*200 + y -- need to determine actual angle
@@ -32,21 +33,33 @@ function spawn(angle, x, y)
     local fireballData = {   
                     physicsData =   {
                                 shape=fireballShape,
-                                density=1.0, 
+                                density=0.5, 
                                 friction=0.0, 
                                 bounce=0.0,
-                                isFixedRotation=true
+                                isFixedRotation=true,
+                                filter=col.projCol
                                     }
                                 }
     fireball.rotation = angle
 
-    physics.addBody( fireball, "dynamic", fireballData )
-    xForce = math.cos(math.rad(angle - 90))*5
-    yForce = math.sin(math.rad(angle - 90))*5
+    physics.addBody( fireball, "dynamic", fireballData.physicsData )
+    xForce = math.cos(math.rad(angle - 90))*200
+    yForce = math.sin(math.rad(angle - 90))*200
     fireball:applyLinearImpulse( xForce, yForce, x, y )
-    return fireball
-end
+    fireball.super = fireball
 
-F.spawn = spawn
+    fireball.onCollision = function (event)
+        if (event.phase == "began" and event.other ~= nil) then
+            local other = event.other.super
+            if(other.myName == "player") then
+                print("Fireball killing player")
+            end
+            fireball:removeSelf( )
+        end
+    end
+    fireball:addEventListener( "collision", fireball.onCollision )
+    return fireball
+    end
+    F.spawn = spawn
 
 return F

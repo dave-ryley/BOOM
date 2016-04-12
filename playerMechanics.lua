@@ -1,5 +1,5 @@
 local P = {}
-    --local col = require "collisionFilters"
+    local col = require "collisionFilters"
     P.visuals = require "playerVisuals"
     P.movementFunctions = require "movementFunctions"
     P.myName = "player"
@@ -30,8 +30,9 @@ local P = {}
                                 {
                                     density=0.5, 
                                     friction=0.3, 
-                                    bounce=0.0}
-                                )
+                                    bounce=0.0,
+                                    filter=col.playerCol
+                                })
 
     P.bounds.isFixedRotation=true
     P.bounds.x = display.contentCenterX
@@ -42,7 +43,7 @@ local P = {}
     P.cameraLock.alpha = 0.00
     P.cameraLock.x = P.parent.x
     P.cameraLock.y = P.parent.y
-    
+    P.bounds.super = P
     --[[local sounds = function( event )
         currentFrame = P.visuals.lowerBodyRun_sprite.frame
         --print("frame: ",currentFrame)
@@ -94,14 +95,14 @@ local P = {}
 
     local function blastDisppear( event )
         P.shotgun.bounds.isAwake = false
-        P.shotgun.blast.alpha = 0
         P.shotgun.shooting = false
         physics.removeBody( P.shotgun.bounds )
+        P.shotgun.blast.alpha = 0
+        P.shotgun.bounds.isAwake = false    
     end
 
     local function shootDelay( event )
         P.canShoot = true;
-        P.shotgun.bounds.isAwake = false    
     end
 
     local function shoot()
@@ -120,7 +121,7 @@ local P = {}
         P.shotgun.shooting = true
         P.visuals.animateShotgunBlast(P.thisAimAngle )
         timer.performWithDelay(200, blastDisppear)
-        timer.performWithDelay(800, shootDelay)
+        return timer.performWithDelay(500, shootDelay)
     end
 
     P.shoot = shoot
@@ -178,22 +179,10 @@ local P = {}
 
     
     P.onCollision = function( event )
-        print("player collided with: ".. event.other.myName)
-            if (event.phase == "began") then
-                if (event.other.myName == "trap_fire") then
-                        --print("reloading: "..event.object1.reloading)
-                    print("Killed by: " .. event.other.myName) 
-                    --P.bounds:removeSelf()
-                    --P.bounds:applyLinearImpulse( 2000, 0, 50, 50 )
-                    --C[event.object2.id].parent:removeSelf( )
-                elseif (event.other.myName == "trap_win") then
-                    print("GOOD JOB CHRIS THAT WAS GOOD WELL DONE")
-                end
+        if (event.phase == "began" and event.other ~= nil) then
+            local other = event.other.super
+                print("player collided with: ".. other.myName)
                 
-                if(event.other.myName == "trap_slow") then
-                    print("Slowed by: " .. event.other.myName)
-                    P.maxSpeed = P.maxSpeed/2
-                end
 
             end
         end
