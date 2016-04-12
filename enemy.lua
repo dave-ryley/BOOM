@@ -83,6 +83,8 @@ local C = {}
 
 				if e.shooting == 0 then
 					e.shooting = 1
+					local impFire = audio.loadSound( "Sounds/Enemies/ImpFire.ogg" )
+					audio.play(impFire,{ channel = 10, loops = 0, fadein = 0})
 					e.animate(e.bounds.targetAngle, "Shoot")
 				elseif e.bounds.frame == 5 and e.shooting == 1 then
 					e.shooting = 2

@@ -14,7 +14,6 @@ local T = {}
 								}
 
 local fireball = require "enemies.fireball"
-
 	local function spawn(id, startX, startY)
 		local i = constructor.spawn("imp", id, startX, startY, impData)
 		i.bounds.update = function( event )
