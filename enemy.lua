@@ -7,16 +7,16 @@ local C = {}
 			--e.collisionFilter = { categoryBits = 4, maskBits = 3}
 			--e.sensorCollFilter = { categoryBits = 8, maskBits = 1}
 			--setup variables
-			--e.animate(math.random(359), "Stand")
-			e.bounds:play()
 			e.parent = display.newGroup()
 			e.bounds.hasTarget = false
 			e.bounds.physics = require ("physics")
 			e.bounds.targetX = 0
 			e.bounds.targetY = 0
-			e.bounds.moveAngle = 0
+			e.bounds.targetAngle = math.random(359)
+			e.animate(e.bounds.targetAngle, "Shoot")
 			e.bounds.isDead = false
 			e.bounds.health = data.health
+			e.shooting = 0
 
 			e.bounds.myName = "e_"..enemyType .. tostring(id)
 			e.bounds.id = e.bounds.myName..id
@@ -76,10 +76,24 @@ local C = {}
 				print("from "..e.bounds.myName .. " colliding with " .. event.other.myName)
 			end
 			e.bounds:addEventListener( "collision", e.bounds.onCollision )
-
+			local fireball = require "enemies.fireball"
 			e.update = function()
 				e.sensorArea.x = e.bounds.x
 				e.sensorArea.y = e.bounds.y
+
+				if e.shooting == 0 then
+					e.shooting = 1
+					e.animate(e.bounds.targetAngle, "Shoot")
+				elseif e.bounds.frame == 5 and e.shooting == 1 then
+					e.shooting = 2
+					local f = fireball.spawn(e.bounds.targetAngle, e.getX(), e.getY() )
+					e.parent:insert(f)
+				end
+				if e.bounds.frame == 7 and e.shooting == 2 and string.sub( e.bounds.sequence, -5 ) == "Shoot" then
+					e.animate(e.bounds.targetAngle, "Stand")
+					timer.performWithDelay(2000, function() e.shooting = 0 end )
+				end
+
 			end
 			Runtime:addEventListener( "enterFrame", e.update )
 			e.parent:insert(e.bounds, true)

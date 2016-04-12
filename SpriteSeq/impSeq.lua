@@ -76,71 +76,71 @@ local imp_seq =
     {
         name = "upShoot",
         start = 9,
-        count = 8,
-        time = 800,
+        count = 7,
+        time = 700,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
         name = "upRightShoot",
         start = 26,
-        count = 8,
-        time = 800,
+        count = 7,
+        time = 700,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
         name = "rightShoot",
         start = 43,
-        count = 8,
-        time = 800,
+        count = 7,
+        time = 700,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
         name = "downRightShoot",
         start = 60,
-        count = 8,
-        time = 800,
+        count = 7,
+        time = 700,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
         name = "downShoot",
         start = 77,
-        count = 8,
-        time = 800,
+        count = 7,
+        time = 700,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
         name = "upLeftShoot",
         start = 94,
-        count = 8,
-        time = 800,
+        count = 7,
+        time = 700,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
         name = "leftShoot",
         start = 111,
-        count = 8,
-        time = 800,
+        count = 7,
+        time = 700,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
         name = "downLeftShoot",
         start = 128,
-        count = 8,
-        time = 800,
+        count = 7,
+        time = 700,
         loopCount = 0,
         loopDirection = "forward"
     },
     {
         name = "upHit",
         start = 16,
-        count = 2,
+        count = 7,
         time = 200,
         loopCount = 1,
         loopDirection = "forward"
