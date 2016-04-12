@@ -2,6 +2,14 @@
 local imp_seq = 
 {
     {
+        name = "default",
+        start = 1,
+        count = 137,
+        time = 13700,
+        loopCount = 0,
+        loopDirection = "forward"
+    },
+    {
         name = "upStand",
         start = 1,
         count = 8,

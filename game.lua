@@ -25,7 +25,7 @@
   local physics = require "physics"
   physics.start()
   physics.setGravity(0,0)
-  physics.setDrawMode( "hybrid" )
+  physics.setDrawMode( "normal" )
 
 
    -----Map-----
@@ -94,13 +94,13 @@
   end
 
    ------TEMPORARY! TO BE DELETED!-----------
-   local tempfloor = display.newRect( display.contentCenterX, display.contentCenterY, 5000, 5000 )
+   --[[local tempfloor = display.newRect( display.contentCenterX, display.contentCenterY, 5000, 5000 )
    tempfloor.myName = "floor"
    display.setDefault( "textureWrapX", "repeat" )
    display.setDefault( "textureWrapY", "repeat" )
    tempfloor.fill = { type="image", filename="Graphics/Temp/dungeonFloor.png" }
    tempfloor.fill.scaleX = 0.1
-   tempfloor.fill.scaleY = 0.1
+   tempfloor.fill.scaleY = 0.1]]
    -------------------------------------------
    controllerMapping = require "controllerMapping"
    player = require "playerMechanics"
@@ -110,31 +110,31 @@
    --traps[0] = fireTrap.spawn(0)
    --traps[0].bounds:translate( 1000, 500)
    --traps[1] = slowTrap.spawn(1)
-   --[[
-   spot = require "spot"
    
-   enemies[1] = spotpies.spawn(1)
-  enemies[2] = spotpies.spawn(2)
-   enemies[1].bounds:translate(800, 800)
-  enemies[2].bounds:translate(500, 500)
-     camera:add(enemies[1].parent, 1)
-   camera:add(enemies[2].parent, 1)
-  ]]
+   --spot = require "spot"
+   
+   
+  
   --local win = require "win"
   local imp = require "imp"
   local sausage = require "sausage"
   --local wintile = win.spawn(1)
   enemies = {}
   player.parent:translate(500, 500)
-  enemies[1] = imp.spawn(1, 0, 0)
+  enemies[1] = imp.spawn(1, 500, 500)
+  --enemies[2] = spot.spawn(1)
+  --enemies[3] = spot.spawn(2)
+  --enemies[2].bounds:translate(800, 800)
+  --enemies[3].bounds:translate(500, 500)
+  --camera:add(enemies[2].parent, 2)
+  --camera:add(enemies[3].parent, 2)
   --enemies[1].parent:translate( 1000, -500 )
-  --enemies[1].parent:translate(500, 500)
    -- SETTING UP OBJECTS IN THE CAMERA
    camera:add(player.parent, 1)
    camera:add(player.cameraLock, 1)
    camera:add(player.shotgun.blast, 1)
    camera:add(player.shotgun.bounds, 1)
-   camera:add(tempfloor, 3)
+   --camera:add(tempfloor, 3)
    camera:add(player.bounds, 1)
    --camera:add(wintile.bounds, 2)
    --camera:add(traps[0].bounds, 2)
@@ -358,7 +358,7 @@ local function gameLoop( event )
             print("killing: "..v.bounds.myName)
             local gore = v.splat(player.getAimAngle(), v.getX(), v.getY())
             v.bounds.die()
-            camera:add(gore, 1)
+            camera:add(gore, 2)
             v.bounds.parent:removeSelf( )
             table.remove( enemies, k )
             end

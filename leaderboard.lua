@@ -39,7 +39,7 @@ function scene:create( event )
    for i=1,table.getn(Leaderboard) do
       leaderBoardString = leaderBoardString..Leaderboard[i][1].." | "..Leaderboard[i][2].." ["..Leaderboard[i][3].." : "..Leaderboard[i][4].." : "..Leaderboard[i][5].."] "..Leaderboard[i][6].." | "..Leaderboard[i][7].."\n"
    end
-   myText = display.newText( leaderBoardString, display.contentCenterX, display.contentCenterY, "BLOODY", 50 )
+   myText = display.newText( leaderBoardString, display.contentCenterX, display.contentCenterY, "Bloody", 50 )
    myText:setFillColor(1,0,0)
    sceneGroup:insert(myText)
    -- Initialize the scene here.

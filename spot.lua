@@ -9,7 +9,6 @@ local C = {}
 			--setup variables
 			temp.hasTarget = false
 			temp.physics = require ("physics")
-			temp.health = 2
 			temp.targetX = 0
 			temp.targetY = 0
 			temp.moveAngle = 0
@@ -22,6 +21,7 @@ local C = {}
 			temp.myName = "spot" .. tostring(id)
 			--setting up collision bounds
 			temp.bounds = display.newImageRect( "Graphics/Temp/TestFace.png", 100, 100 )
+			temp.bounds.health = 2
 			temp.bounds.id = id
 			temp.bounds.myName = "spot"
 			temp.physics.addBody( 	temp.bounds, 
@@ -151,7 +151,7 @@ local C = {}
 
 		temp.splatter = splatter
 		temp.update = function( event )
-			if(temp.health <= 0) then
+			if(temp.bounds.health <= 0) then
 				temp.die()
 			end
 			temp.sensorArea.x = temp.bounds.x
@@ -206,7 +206,7 @@ local C = {}
 			if (event.phase == "began") then
 				if (event.other.myName == "shotgun") then
 						--print("reloaawding: "..event.object1.reloading)
-					if(temp.health > 0) then
+					if(temp.bounds.health > 0) then
 						temp.bounds:applyLinearImpulse( 	
 										math.cos(math.mod(
 											temp.moveAngle+math.pi, math.pi))*2000, 
@@ -215,8 +215,8 @@ local C = {}
 										50, 
 										50 
 									)
-						temp.health = temp.health - 1
-						print("puppy health: " .. temp.health)
+						temp.bounds.health = temp.bounds.health - 1
+						print("puppy health: " .. temp.bounds.health)
 					else
 						temp.die()
 						print("Killed by: " .. event.other.myName)

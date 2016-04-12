@@ -10,7 +10,8 @@ function scene:create( event )
 	if(system.getInfo("platformName") ~= "Android") then
     	-- code in here to highlight the first button
 	end
-	myText = display.newText( "Paused", display.contentCenterX, display.contentCenterY-200, native.systemFont, 80 )
+	myText = display.newText( "PAUSED", display.contentCenterX, display.contentCenterY-200, "Curse of the Zombie", 80 )
+	myText:setFillColor(1,1,0,1)
 	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
 	function buttonPress( self, event )
     	if event.phase == "began" then

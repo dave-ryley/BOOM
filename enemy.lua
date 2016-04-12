@@ -7,7 +7,8 @@ local C = {}
 			--e.collisionFilter = { categoryBits = 4, maskBits = 3}
 			--e.sensorCollFilter = { categoryBits = 8, maskBits = 1}
 			--setup variables
-			e.animate(math.random(359), "Stand")
+			--e.animate(math.random(359), "Stand")
+			e.bounds:play()
 			e.parent = display.newGroup()
 			e.bounds.hasTarget = false
 			e.bounds.physics = require ("physics")
