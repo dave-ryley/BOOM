@@ -1,4 +1,4 @@
-local C = {}
+--[[local C = {}
 	local function splat(parts)
 		print("in plat")
 		local p = require "splatterParts"
@@ -9,7 +9,7 @@ local C = {}
 	end
 	C.splat = splat
 return C
-				--[[			
+						
 				print("making face: " .. temp.myName)
 				local xPos = temp.bounds.x
 				local yPos = temp.bounds.y 

@@ -307,7 +307,7 @@ function scene:create( event )
             value = 1
             axis = "left_trigger"
         end
-    else
+    elseif(event.phase == "down") then
         -- WASD and Arrow keys pressed up
         if ( event.keyName == "w" ) then
             value = 0
@@ -376,7 +376,7 @@ local function gameLoop( event )
    scene:addEventListener( "hide", scene )
    scene:addEventListener( "destroy", scene )
    Runtime:addEventListener( "key", onKeyEvent )
-   Runtime:addEventListener( "axis", onAxisEvent )
+   if(globals.android == false) then Runtime:addEventListener( "axis", onAxisEvent ) end
    Runtime:addEventListener( "enterFrame", gameLoop )
    ---------------------------------------------------------------------------------
 

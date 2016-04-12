@@ -139,8 +139,8 @@ local P = {}
         P.shotgun.bounds.isAwake = true
         P.canShoot = false
         P.bounds:applyLinearImpulse(    
-                    math.cos(math.rad(P.thisAimAngle + 90))*P.shotgun.force, 
-                    math.sin(math.rad(P.thisAimAngle + 90))*P.shotgun.force, 
+                    math.cos(math.rad(P.thisAimAngle + 90))*P.shotgun.force/2, 
+                    math.sin(math.rad(P.thisAimAngle + 90))*P.shotgun.force/2, 
                     0, 0)
         audio.stop(3)
         audio.play(P.visuals.sounds.boomStick,{channel = 3})
