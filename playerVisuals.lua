@@ -63,6 +63,29 @@ V = {}
     torch:play()
     V.upperBody:insert( torch )
 
+    local torchRadiusSheetOptions =
+    {
+        width = 3600,
+        height = 3600,
+        numFrames = 1
+    }
+    torchRadius_sheet = graphics.newImageSheet( "Graphics/Animation/torchRadius.png", torchRadiusSheetOptions )
+    torchRadius_sequences =
+    {
+        {
+            name = "default",
+            start = 1,
+            count = 1,
+            time = 800,
+            loopCount = 0,
+            loopDirection = "forward"
+        }
+    }
+
+    torchRadius = display.newSprite( torchRadius_sheet, torchRadius_sequences )
+    torchRadius:play()
+    V.upperBody:insert( torchRadius )
+
     local function animate(aimAngle, directionAngle, moving, velocity)
         -- Animate Upper Body
         local upperBodyAnim = ""
