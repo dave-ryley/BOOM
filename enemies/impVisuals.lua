@@ -5,7 +5,7 @@ V = {}
     local imp_sheetOptions =
     {
         width = 300,
-        height = 300,
+        height = 240,
         numFrames = 136
     }
     local imp_sheet = graphics.newImageSheet( "Graphics/Animation/Imp.png", imp_sheetOptions )
