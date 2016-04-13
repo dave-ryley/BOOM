@@ -71,6 +71,7 @@ function scene:show( event )
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
 		composer.removeScene( "intro", false )
+		--composer.removeScene( "game", false )
 		-- Called when the scene is now on screen
 		-- 
 		-- INSERT code here to make the scene come alive

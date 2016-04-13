@@ -6,7 +6,6 @@ grid = display.newGroup()
 -- "scene:create()"
 function scene:create( event )
   local sceneGroup = self.view
-  grid = display.newGroup()
   overlay = display.newGroup( )
 
   myText = display.newText(overlay, "LEVEL EDITOR", display.contentCenterX, 40, "Curse of the Zombie.ttf", 80 )

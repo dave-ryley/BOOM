@@ -6,7 +6,7 @@ local V = {}
     V.sounds.boomStick = audio.loadSound("Sounds/Player/BOOMSTICK.ogg")
     V.sounds.step1 = audio.loadSound( "Sounds/Player/Step1.ogg" )
     V.sounds.step2 = audio.loadSound( "Sounds/Player/Step2.ogg" )
-    V.sounds.torchIdle = audio.loadSound( "/Sounds/Player/torchIdle.ogg" )
+    V.sounds.torchIdle = audio.loadSound( "Sounds/Player/Torchidle.ogg" )
     audio.play(V.sounds.torchIdle, { channel = 2, loops = -1, fadein = 0})
     audio.setVolume( 0.1, {channel = 2} )
     audio.setVolume( 1, {channel = 3} )

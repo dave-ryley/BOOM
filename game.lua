@@ -18,7 +18,7 @@ local map = {}
 local physics = require "physics"
 physics.start()
 physics.setGravity(0,0)
-physics.setDrawMode( "hybrid" )
+physics.setDrawMode( "normal" )
 
 -----Map-----
 local size = 5
@@ -344,8 +344,10 @@ scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
-Runtime:addEventListener( "key", onKeyEvent )
-if(globals.android == false) then Runtime:addEventListener( "axis", onAxisEvent ) end
+if(globals.android == false) then 
+  Runtime:addEventListener( "key", onKeyEvent )
+  Runtime:addEventListener( "axis", onAxisEvent )
+end
 Runtime:addEventListener( "enterFrame", gameLoop )
 ---------------------------------------------------------------------------------
 
