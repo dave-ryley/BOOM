@@ -9,6 +9,7 @@ local camera = perspective.createView()
 local levelName = "level.BOOMMAP"
 local enemy = require "enemy"
 local imp = require "imp"
+local move = require "movementFunctions"
 local imps = display.newGroup()
 local spots = display.newGroup()
 local minotaurs = display.newGroup()
@@ -70,7 +71,7 @@ local counter = 1
 for line in file:lines()do
 	map[counter] = explode(",",line)
 	counter = counter + 1
-	print (counter)
+	--print (counter)
 end
 io.close(file)
 
@@ -314,6 +315,11 @@ local function makeGore( event )
 	)
 end
 Runtime:addEventListener( "makeGore", makeGore)
+
+local function getPlayerLocation( event )
+	return event.updatePlayerLocation(player.bounds.x, player.bounds.y)
+end
+Runtime:addEventListener( "getPlayerLocation", getPlayerLocation)
 
 local function gameLoop( event )
 	local shotgunOMeter = player.shotgun.displayPower()

@@ -125,7 +125,7 @@ local C = {}
 			end
 			if (event.phase == "ended") then
 				--print("Target lost!")
-				--e.hasTarget = false
+				e.hasTarget = false
 				--e.shooting = 0
 			end
 		end
@@ -147,6 +147,10 @@ local C = {}
 			e.sensorArea.y = e.bounds.y
 			if(e.hasTarget) then
 				--e.updatePlayerLocation(other.getX(), other.getY())
+				Runtime:dispatchEvent({	name="getPlayerLocation", 
+										updatePlayerLocation=e.updatePlayerLocation})
+				--print("x: "..x..", y: "..y.. " :dispatch")
+				--e.updatePlayerLocation(x, y)
 			end
 		end
 		Runtime:addEventListener( "enterFrame", e.update )
