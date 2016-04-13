@@ -15,7 +15,7 @@ local spots = display.newGroup()
 local minotaurs = display.newGroup()
 local level = display.newGroup( )
 local map = {}
-
+local enemies = {group = display.newGroup()}
 local physics = require "physics"
 physics.start()
 physics.setGravity(0,0)
@@ -24,7 +24,7 @@ physics.setDrawMode( "normal" )
 -----Map-----
 local size = 5
 local function getVertices(type,rotation)
-	if(type == 1)then
+	if(type <= 1)then
 		vertices = {0*size,0*size,0*size,128*size,128*size,128*size,128*size,0*size}
 		if(rotation == 1)then
 
@@ -53,7 +53,6 @@ end
 
 local path = system.pathForFile(levelName,system.ResourceDirectory)
 local file = io.open(path,"r")
-
 function explode(div,str)
 	if (div=='') then 
 		return false 
@@ -66,7 +65,6 @@ function explode(div,str)
 	table.insert(arr,string.sub(str,pos))
 	return arr
 end
-
 local counter = 1
 for line in file:lines()do
 	map[counter] = explode(",",line)
@@ -75,20 +73,33 @@ for line in file:lines()do
 end
 io.close(file)
 
---print(map[1][1],map[1][2],map[1][3],map[1][4])
-
---size = 1
 local physlevel = {}
---objno,rotation,x,y
 for mapCounter=1,table.getn(map),1 do
-	if (tonumber(map[mapCounter][1]) < 10) then
-		physlevel[mapCounter] = display.newPolygon( level, tonumber(map[mapCounter][3])*size-640*size,tonumber(map[mapCounter][4]*size)-640, getVertices(tonumber(map[mapCounter][1]),tonumber(map[mapCounter][2])))
+	if (tonumber(map[mapCounter][1]) <11 and tonumber(map[mapCounter][1]) >0) then
+		physlevel[mapCounter] = display.newPolygon( level, tonumber((map[mapCounter][3])-448)*size,tonumber((map[mapCounter][4])-448)*size, getVertices(tonumber(map[mapCounter][1]),tonumber(map[mapCounter][2])))
 		physlevel[mapCounter]:setFillColor(0.5,0,0,1)
 		physics.addBody( physlevel[mapCounter], "static", {friction = 0, bounce = 0.3, filter=col.wallCol} )
 		physlevel[mapCounter].myName = "Wall"
 		physlevel[mapCounter].super = physlevel[mapCounter]
+	elseif(tonumber(map[mapCounter][1]) <21)then
+		local enemyType = tonumber(map[mapCounter][1])
+		local location = {tonumber((map[mapCounter][3])-448)*size,tonumber((map[mapCounter][4])-448)*size}
+		if(enemyType == 11)then
+			enemies.group:insert(imp.spawn(location[1],location[2]).parent)
+		elseif(enemyType == 12)then
+			--spawn dog
+		elseif(enemyType == 13)then
+			--spawn rosy
+		end
+	elseif(tonumber(map[mapCounter][1]) <31)then
+		--spawn items/deco
+	elseif(tonumber(map[mapCounter][1]) <41)then
+		--satans trailpath
 	end
 end
+
+zerozero = display.newRect( level, 0, 0, 100, 100 )
+zerozero:setFillColor( 0,0,1 )
 
 local controllerMapping = require "controllerMapping"
 local player = require "playerMechanics"
@@ -96,12 +107,12 @@ local player = require "playerMechanics"
 --local imp = require "imp"
 local sausage = require "sausage"
 --local wintile = win.spawn(1)
-local enemies = {
 
-	group = display.newGroup()
-
-}
-player.bounds:translate(-2000, 500)
+player.bounds:translate(0,0)
+--enemies.group:insert(imp.spawn(-1500, 500).parent)
+--enemies.group:insert(imp.spawn(1000, 1000).parent)
+--player.bounds:translate(-2000, 500)
+print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
 enemies.group:insert(imp.spawn(-1500, 500).parent)
 enemies.group:insert(imp.spawn(1000, 1000).parent)
 enemies.group:insert(imp.spawn(-1000, 500).parent)

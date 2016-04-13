@@ -4,6 +4,39 @@ local scene = composer.newScene()
 
 grid = display.newGroup()
 -- "scene:create()"
+
+local function getVertices(type,rotation)
+    if(type <= 1)then
+        vertices = {0,0,0,128,128,128,128,0}
+        if(rotation == 1)then
+            
+        elseif(rotation == 2)then
+            
+        elseif(rotation == 3)then
+            
+        else
+            
+        end
+    elseif(type == 2)then
+        if(rotation == 1)then
+            vertices = {64,64,0,128,128,128,128,0}
+        elseif(rotation == 2)then
+            vertices = {0,0,0,128,128,128,64,64}
+        elseif(rotation == 3)then
+            vertices = {0,0,0,128,64,64,128,0}
+        else
+            vertices = {0,0,64,64,128,128,128,0}
+        end
+    elseif(type == 3)then
+
+    end
+    return vertices
+end
+
+local function mapPoint(object,rotation,xValue,yValue)
+    writeMap[mapSize] = {obj = object, rot= rotation, x = xValue, y = yValue}
+end
+
 function scene:create( event )
   local sceneGroup = self.view
   overlay = display.newGroup( )
@@ -57,6 +90,16 @@ function scene:create( event )
       gridLines:setStrokeColor( 1, 1, 1, 0.3)
       gridLines.strokeWidth = 2
   end
+  
+  mapSize = mapSize +1
+  map[mapSize] = display.newPolygon( grid, 448, 448, getVertices(0,1))
+  map[mapSize]:setFillColor( 1,0,0)
+  mapPoint(0,rotation,448,448)
+
+  mapSize = mapSize +1
+  map[mapSize] = display.newPolygon( grid, 1216, 448, getVertices(0,1))
+  map[mapSize]:setFillColor(0,1,0)
+  mapPoint(0,rotation,1216,448)
 end
  
 -- "scene:show()"
@@ -110,38 +153,6 @@ local function writeBoomMap()
       io.close(file)
       file = nil
       print("Written")
-  end
-
-local function mapPoint(object,rotation,xValue,yValue)
-    writeMap[mapSize] = {obj = object, rot= rotation, x = xValue, y = yValue}
- end
-
-local function getVertices(type,rotation)
-    if(type == 1)then
-        vertices = {0,0,0,128,128,128,128,0}
-        if(rotation == 1)then
-            
-        elseif(rotation == 2)then
-            
-        elseif(rotation == 3)then
-            
-        else
-            
-        end
-    elseif(type == 2)then
-        if(rotation == 1)then
-            vertices = {64,64,0,128,128,128,128,0}
-        elseif(rotation == 2)then
-            vertices = {0,0,0,128,128,128,64,64}
-        elseif(rotation == 3)then
-            vertices = {0,0,0,128,64,64,128,0}
-        else
-            vertices = {0,0,64,64,128,128,128,0}
-        end
-    elseif(type == 3)then
-
-    end
-    return vertices
 end
 
 local function onMouseEvent( event )
@@ -151,23 +162,31 @@ local function onMouseEvent( event )
         squareX = math.floor((localX/squareSize))*128+64
         squareY = math.floor((localY/squareSize))*128+64
         print(squareX,squareY)
-        if (mapSize > 1) then
-            for i = 1,table.getn(writeMap),1 do
-                if(math.floor((writeMap[i].x/squareSize))*128+64 == squareX and math.floor((writeMap[i].y/squareSize))*128+64 == squareY)then 
-                    blocked = true 
-                    i=table.getn(writeMap)
-                end
-            end
+        if(selectedObject<11)then
+          if (mapSize > 0) then
+              for i = 1,table.getn(writeMap),1 do
+                  if(math.floor((writeMap[i].x/squareSize))*128+64 == squareX and math.floor((writeMap[i].y/squareSize))*128+64 == squareY)then 
+                      blocked = true 
+                      i=table.getn(writeMap)
+                  end
+              end
+          end
+          if(not blocked)then
+              mapSize = mapSize +1
+              map[mapSize] = display.newPolygon( grid, squareX, squareY, getVertices(selectedObject,rotation))
+              map[mapSize]:setFillColor( objectColours[selectedObject][1],objectColours[selectedObject][2],objectColours[selectedObject][3]  )
+              --map[mapSize].fill = { type="image", filename=""..objectFileName[selectedObject]..tostring(rotation)..".png" }
+              mapPoint(selectedObject,rotation,squareX,squareY)
+              print("Block placed")
+              print(mapSize)
+          end
+          blocked = false
+        else
+          mapSize = mapSize +1
+          map[mapSize] = display.newRect( grid, localX, localY, 10,10)
+          map[mapSize]:setFillColor(1,0,0)
+          mapPoint(selectedObject,rotation,localX,localY)
         end
-        if(not blocked)then
-            mapSize = mapSize +1
-            map[mapSize] = display.newPolygon( grid, squareX, squareY, getVertices(selectedObject,rotation))
-            map[mapSize]:setFillColor( objectColours[selectedObject][1],objectColours[selectedObject][2],objectColours[selectedObject][3]  )
-            --map[mapSize].fill = { type="image", filename=""..objectFileName[selectedObject]..tostring(rotation)..".png" }
-            mapPoint(selectedObject,rotation,squareX,squareY)
-            print("Block placed")
-        end
-        blocked = false
     end
     
     if(event.isSecondaryButtonDown)then
@@ -187,9 +206,8 @@ local function onMouseEvent( event )
 end
 
 local function onKeyEvent( event )
-    print( event.keyName )
     if ( event.keyName == "z" and event.phase == "down") then
-        if(mapSize >0)then 
+        if(mapSize >2)then 
         map[mapSize]:removeSelf()
         writeMap[mapSize] = nil
         mapSize = mapSize-1
@@ -209,7 +227,7 @@ local function onKeyEvent( event )
     end
     
     if ( event.keyName == "w" and event.phase == "down") then
-        if(selectedObject > 1)then selectedObject = selectedObject -1 
+        if(selectedObject > table.getn(objectFileName)-1)then selectedObject = 1
         else selectedObject = table.getn(objectFileName)
         end
     end
@@ -219,8 +237,16 @@ local function onKeyEvent( event )
         else selectedObject = 1
         end
     end
-    
-    if(event.phase == "down")then
+    if(event.keyName == "e" and event.phase == "down")then
+      selectedObject = selectedObject+1
+      if(selectedObject < 11)then
+        selectedObject = 11
+      elseif(selectedObject>20)then
+        selectedObject = 11
+      end
+      print(selectedObject)
+    end
+    if(event.phase == "down" and selectedObject < 3)then
         if(selectedShape)then selectedShape:removeSelf()end
         selectedShape = display.newPolygon( overlay, display.contentWidth/16,display.contentHeight-100, getVertices(selectedObject,rotation) )
         selectedShape:setFillColor( objectColours[selectedObject][1],objectColours[selectedObject][2],objectColours[selectedObject][3] )
