@@ -111,17 +111,10 @@ local sausage = require "sausage"
 player.bounds:translate(0,0)
 --enemies.group:insert(imp.spawn(-1500, 500).parent)
 --enemies.group:insert(imp.spawn(1000, 1000).parent)
-
-local enemies = {
-
-	group = display.newGroup()
-
-}
 --player.bounds:translate(-2000, 500)
 print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
 enemies.group:insert(imp.spawn(-1500, 500).parent)
 enemies.group:insert(imp.spawn(1000, 1000).parent)
->>>>>>> origin/master
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
 camera:add(player.shotgun.blast, 1)
