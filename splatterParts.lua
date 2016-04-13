@@ -1,9 +1,10 @@
 local C = {}
 local colFilters = require "collisionFilters"
-	local function spawn(angle, x, y)
+	local function spawn( angle, x, y)
 		local parts = {}
 				local sausage = require "sausage"
-				parts.display = display.newGroup( )
+				parts.disp = display.newGroup( )
+				parts.disp.myName = "goreDisplay"
 				for i =1,4 do
 					local p = display.newImage(
 						"Graphics/Temp/TestFaceShattered/facePiece"..i..".png")
@@ -27,17 +28,16 @@ local colFilters = require "collisionFilters"
 					p.angularDamping = 3
 					p.super = p
 					p.bounds = p
-					parts.display:insert(p)
+					parts.disp:insert(p)
 				end
-				local s = sausage.spawn(4, x, y)
-				
+				local s = sausage.spawn(3, x, y)
 				s.link[math.ceil(#s.link/2)]:applyLinearImpulse( 
 						math.cos(angle)*80, 
 						math.sin(angle)*80, 
 						50, 
 						50 )
-				parts.display:insert(s.display)
-		return parts.display
+				parts.disp:insert(s.display)
+		return parts.disp
 	end
 	--C[1] = parts.display
 	C.spawn = spawn

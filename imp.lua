@@ -20,12 +20,11 @@ local colFilters = require "collisionFilters"
 			health 		= 	2
 	}
 
-	local function spawn(id, startX, startY)
-		local i = constructor.spawn("imp", id, startX, startY, impData)
+	local function spawn(startX, startY)
+		local i = constructor.spawn("imp", startX, startY, impData)
 		local fireball = require "enemies.fireball"
-		i.update = function()
-			i.sensorArea.x = i.bounds.x
-			i.sensorArea.y = i.bounds.y
+		i.AI = function()
+			--print(i.hasTarget)
 			if(i.hasTarget == true) then
 				--print("frame "..i.bounds.frame.." : shooting "..i.shooting)
 
@@ -38,17 +37,20 @@ local colFilters = require "collisionFilters"
 					i.shooting = 2
 					local f = fireball.spawn(i.targetAngle, i.getX(), i.getY() )
 					i.parent:insert(f)
-				end
-				if i.bounds.frame == 7 and i.shooting == 2 and string.sub( i.bounds.sequence, -5 ) == "Shoot" then
+				elseif i.bounds.frame == 7 and i.shooting == 2 and string.sub( i.bounds.sequence, -5 ) == "Shoot" then
 					i.animate(i.targetAngle, "Stand")
-					timer.performWithDelay(1000, function() i.shooting = 0 end )
+					timer.performWithDelay(1000, 
+						function() 
+							i.shooting = 0
+						end 
+					)
 				end
 			else
 				i.animate(i.targetAngle, "Stand")
 			end
-			--print("update: " .. i.myName)
+			--print("shooting: " .. i.shooting)
 		end
-		Runtime:addEventListener( "enterFrame", i.update )
+		Runtime:addEventListener( "enterFrame", i.AI )
 		return i
 	end
 	T.spawn = spawn

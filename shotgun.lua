@@ -123,9 +123,11 @@ local C = {}
     C.place = place
 
    C.onCollision = function( event )
+        print("in shotgun collision")
         if (event.phase == "began") then
             local other = event.other.super
             print("shotgun collided with "..other.myName)
+            print(string.sub(other.myName, 1, 2))
             if (other ~= nil) then
                 other.bounds:applyLinearImpulse(
                     math.cos(
@@ -136,17 +138,16 @@ local C = {}
                     0 
                 )
                 if(string.sub(other.myName, 1, 2) == "e_") then
-                    print("enemy")
+                    print(other.health)
                     other.health = other.health - 1
                     if(other.health == 0) then
-                        other.die()
+                        return other.die()
                     end
                 end
             end
         end
         return true
     end
-
     C.bounds:addEventListener( "collision", C.onCollision )
 
     function powerUp( value )

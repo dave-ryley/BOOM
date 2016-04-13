@@ -7,6 +7,8 @@ local spot = require("spot")
 local perspective = require("perspective")
 local camera = perspective.createView()
 local levelName = "level.BOOMMAP"
+local enemy = require "enemy"
+local imp = require "imp"
 local imps = display.newGroup()
 local spots = display.newGroup()
 local minotaurs = display.newGroup()
@@ -16,10 +18,10 @@ local map = {}
 local physics = require "physics"
 physics.start()
 physics.setGravity(0,0)
-physics.setDrawMode( "normal" )
+physics.setDrawMode( "hybrid" )
 
 -----Map-----
-size = 5
+local size = 5
 local function getVertices(type,rotation)
 	if(type == 1)then
 		vertices = {0*size,0*size,0*size,128*size,128*size,128*size,128*size,0*size}
@@ -72,7 +74,7 @@ for line in file:lines()do
 end
 io.close(file)
 
-print(map[1][1],map[1][2],map[1][3],map[1][4])
+--print(map[1][1],map[1][2],map[1][3],map[1][4])
 
 --size = 1
 local physlevel = {}
@@ -90,22 +92,27 @@ end
 local controllerMapping = require "controllerMapping"
 local player = require "playerMechanics"
 
-local imp = require "imp"
+--local imp = require "imp"
 local sausage = require "sausage"
 --local wintile = win.spawn(1)
-local enemies = {}
+local enemies = {
+
+	group = display.newGroup()
+
+}
 player.bounds:translate(-2000, 500)
-enemies[1] = imp.spawn(1, 1000, 1000)
+enemies.group:insert(imp.spawn(-1500, 500).parent)
+enemies.group:insert(imp.spawn(1000, 1000).parent)
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
 camera:add(player.shotgun.blast, 1)
 camera:add(player.shotgun.bounds, 1)
 camera:add(player.bounds, 1)
-camera:add(level, 2)
+camera:add(level, 3)
 camera:add(imps, 2)
 camera:add(spots, 2)
 camera:add(minotaurs, 2)
-camera:add(enemies[1].parent, 2)
+camera:add(enemies.group, 2)
 
 -- INITIALIZING CAMERA
 camera:prependLayer()
@@ -298,6 +305,15 @@ local function onKeyEvent( event )
 	return false
 end
 
+local function makeGore( event )
+	timer.performWithDelay( 10, 
+		function ()
+			local g = event.splat(player.thisAimAngle, event.bounds.x, event.bounds.y)
+			camera:add(g, 2)
+		end
+	)
+end
+Runtime:addEventListener( "makeGore", makeGore)
 
 local function gameLoop( event )
 	local shotgunOMeter = player.shotgun.displayPower()
@@ -307,7 +323,7 @@ local function gameLoop( event )
 			player.virtualJoystickInput(leftJoystick.angle, leftJoystick.xLoc/70, leftJoystick.yLoc/70, rightJoystick.angle, rightJoystick.distance/70, rightJoystick.xLoc/70, rightJoystick.yLoc/70)
 		end
 		player.movePlayer()
-
+--[[
 		for k,v in pairs(enemies) do
 			if(v.health <= 0 ) then
 				print("killing: "..v.bounds.myName)
@@ -316,8 +332,8 @@ local function gameLoop( event )
 				v.parent:removeSelf( )
 				table.remove( enemies, k )
 			end
-			v.updatePlayerLocation(player.getX(), player.getY())
 		end
+	]]		--v.updatePlayerLocation(player.getX(), player.getY())
 	end
 	return true
 end

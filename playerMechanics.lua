@@ -61,12 +61,12 @@ local P = {}
             local x, y = P.bounds:getLinearVelocity()
             x = x + P.isMovingX*P.velocity
             y = y + P.isMovingY*P.velocity
-            print("x = " .. x .. " y = " .. y)
+            --print("x = " .. x .. " y = " .. y)
             local hyp = math.sqrt(x*x + y*y) * 1.0
             if (hyp > P.maxSpeed) then
                 x = x/hyp * P.maxSpeed
                 y = y/hyp * P.maxSpeed
-                print("x = " .. x .. " y = " .. y)
+                --print("x = " .. x .. " y = " .. y)
             end
             P.bounds:setLinearVelocity( x, y )
             --P.parent.x, P.parent.y = P.bounds.x, P.bounds.y
@@ -173,7 +173,7 @@ local P = {}
     P.onCollision = function( event )
         if (event.phase == "began" and event.other ~= nil) then
             local other = event.other.super
-                print("player collided with: ".. other.myName)
+                --print("player collided with: ".. other.myName)
                 
 
             end

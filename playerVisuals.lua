@@ -1,4 +1,4 @@
-V = {}
+local V = {}
 
     V.lowerBodyAnim = ""
     V.upperBodyAnim = ""
@@ -229,11 +229,11 @@ V = {}
 
     local function footsteps()
         if string.sub( lowerBodyRun_sprite.sequence, -3 ) == "Run" then
-            print("run")
+            --print("run")
             if(lowerBodyRun_sprite.frame == 3)then
                 audio.play( V.sounds.step1, { channel = 1, loops=0})
             elseif(lowerBodyRun_sprite.frame == 7)then
-                print("playing")
+                --print("playing")
                 audio.play( V.sounds.step2, { channel = 3, loops=0})
             end
         end
