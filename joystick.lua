@@ -1,6 +1,6 @@
 J = {}
 
-function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidth, bgHeight)
+function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidth, bgHeight, distScale)
     local stage = display.getCurrentStage();
     local mMin = math.min;
     local mCos = math.cos;
@@ -29,9 +29,9 @@ function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidt
                 local angle = (mAtan2( posX, posY )*radToDeg)-90;
                 if angle < 0 then angle = 360 + angle end;
                 local distance = mSqrt((posX*posX)+(posY*posY));
-                if distance >= radius then
+                if distance >= radius*distScale then
                     local radAngle = angle*degToRad;
-                    distance = radius;
+                    distance = radius*distScale;
                     self.x, self.y = distance*mCos(radAngle), -distance*mSin(radAngle)
                 else
                     self.x, self.y = posX, posY;
@@ -55,9 +55,9 @@ function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidt
             local angle = (mAtan2( posX, posY )*radToDeg)-90;
             if angle < 0 then angle = 360 + angle end;
             local distance = mSqrt((posX*posX)+(posY*posY));
-            if distance >= radius then
+            if distance >= radius*distScale then
                 local radAngle = angle*degToRad;
-                distance = radius;
+                distance = radius*distScale;
                 self.x, self.y = distance*mCos(radAngle), -distance*mSin(radAngle)
             else
                 self.x, self.y = posX, posY;

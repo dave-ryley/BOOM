@@ -186,13 +186,19 @@ local P = {}
     
 
     function virtualJoystickInput(ljsAngle, ljsX, ljsY, rjsAngle, rjsDistance, rjsX, rjsY)
-        if rjsDistance > 0.9 and P.canShoot then
+        if rjsDistance > 2.45 and P.canShoot then
             P.shoot()
         end
         P.isMovingX = ljsX * P.velocity*P.maxSpeed
         P.isMovingY = ljsY * P.velocity*P.maxSpeed
-        P.isRotatingX = rjsX
-        P.isRotatingY = rjsY
+        local rhyp = math.sqrt(rjsX*rjsX + rjsY*rjsY)
+        if rhyp > 1 then
+            P.isRotatingX = rjsX/rhyp
+            P.isRotatingY = rjsY/rhyp
+        else
+            P.isRotatingX = rjsX
+            P.isRotatingY = rjsY
+        end
         P.thisDirectionAngle = (720-(ljsAngle-90)) % 360
         P.thisAimAngle = (720-(rjsAngle-90)) % 360
     end
