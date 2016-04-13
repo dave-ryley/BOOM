@@ -104,6 +104,8 @@ local enemies = {
 player.bounds:translate(-2000, 500)
 enemies.group:insert(imp.spawn(-1500, 500).parent)
 enemies.group:insert(imp.spawn(1000, 1000).parent)
+enemies.group:insert(imp.spawn(-1000, 500).parent)
+enemies.group:insert(imp.spawn(1500, 1000).parent)
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
 camera:add(player.shotgun.blast, 1)

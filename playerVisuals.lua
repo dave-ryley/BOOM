@@ -171,8 +171,8 @@ local V = {}
             V.lowerBodyAnim = lowerBodyAnim
         end
         if moving >= 0.1 then
-            upperBodyRun_sprite.timeScale = math.min(moving/1000, 1.0)
-            lowerBodyRun_sprite.timeScale = math.min(moving/1000, 1.0)
+            upperBodyRun_sprite.timeScale = math.min(moving/100, 2.0)
+            lowerBodyRun_sprite.timeScale = math.min(moving/100, 2.0)
         else
             upperBodyRun_sprite.timeScale = 1.0
             lowerBodyRun_sprite.timeScale = 1.0

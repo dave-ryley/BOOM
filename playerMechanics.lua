@@ -28,7 +28,7 @@ local P = {}
 
     physics.addBody( P.bounds, "dynamic", 
                                 {
-                                    density=0.5, 
+                                    density=1.0, 
                                     friction=0.3, 
                                     bounce=0.0,
                                     filter=col.playerCol

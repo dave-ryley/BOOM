@@ -30,7 +30,7 @@ local colFilters = require "collisionFilters"
 					p.bounds = p
 					parts.disp:insert(p)
 				end
-				local s = sausage.spawn(3, x, y)
+				local s = sausage.spawn(8, x, y)
 				s.link[math.ceil(#s.link/2)]:applyLinearImpulse( 
 						math.cos(angle)*80, 
 						math.sin(angle)*80, 

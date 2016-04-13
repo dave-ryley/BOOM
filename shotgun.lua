@@ -8,7 +8,7 @@ local C = {}
     C.max = 50
     C.min = 10
     C.power = 10 --Default
-    C.force = C.power*50-200
+    C.force = C.power*50
     C.vertices = { -40,90, -100,-150, 100,-150, 40,90 }
     -- Blast animation and bounds Scale = 1/10 power
     C.myName = "shotgun"
@@ -131,9 +131,9 @@ local C = {}
             if (other ~= nil) then
                 other.bounds:applyLinearImpulse(
                     math.cos(
-                        (C.bounds.aimAngle - 90)*math.pi/180)*2000, 
+                        (C.bounds.aimAngle - 90)*math.pi/180)*C.force, 
                     math.sin(
-                        (C.bounds.aimAngle - 90)*math.pi/180)*2000, 
+                        (C.bounds.aimAngle - 90)*math.pi/180)*C.force, 
                     0, 
                     0 
                 )
