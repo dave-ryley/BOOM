@@ -13,7 +13,7 @@ local colFilters = require "collisionFilters"
 							},
 			sensorData	=	{
 								isSensor=true,
-								radius=800,
+								radius=500,
 								filter=colFilters.sensorCol,
 							},
 			sensorRadius=	800,
