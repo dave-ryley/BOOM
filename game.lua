@@ -71,7 +71,7 @@ local counter = 1
 for line in file:lines()do
 	map[counter] = explode(",",line)
 	counter = counter + 1
-	print (counter)
+	--print (counter)
 end
 io.close(file)
 
