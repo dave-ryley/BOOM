@@ -16,8 +16,8 @@ local colFilters = require "collisionFilters"
 								radius=800,
 								filter=colFilters.sensorCol,
 							},
-			sensorRadius=	800,
-			health 		= 	2
+			sensorRadius=	500,
+			health 		= 	1
 	}
 
 	local function spawn(startX, startY)
