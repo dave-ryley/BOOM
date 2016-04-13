@@ -5,8 +5,8 @@ local P = {}
     P.myName = "player"
     P.shotgun = require("shotgun")
     P.parent = display.newGroup()
-    P.parent.x = display.contentCenterX
-    P.parent.y = display.contentCenterY
+    --P.parent.x = display.contentCenterX
+    --P.parent.y = display.contentCenterY
     P.canShoot = true
     P.isMovingX = 0
     P.isMovingY = 0
@@ -35,8 +35,8 @@ local P = {}
                                 })
 
     P.bounds.isFixedRotation=true
-    P.bounds.x = display.contentCenterX
-    P.bounds.y = display.contentCenterY
+    --P.bounds.x = display.contentCenterX
+    --P.bounds.y = display.contentCenterY
     P.bounds.linearDamping = 3
     -- Camera lock object setup
     P.cameraLock = display.newRect(0,-200,50,50)

@@ -101,7 +101,8 @@ local enemies = {
 	group = display.newGroup()
 
 }
-player.bounds:translate(-2000, 500)
+--player.bounds:translate(-2000, 500)
+print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
 enemies.group:insert(imp.spawn(-1500, 500).parent)
 enemies.group:insert(imp.spawn(1000, 1000).parent)
 camera:add(player.parent, 1)
