@@ -3,8 +3,8 @@ local C = {}
 	C.shotgunCol= 	{ categoryBits=2, 	maskBits=4	}
 	C.enemyCol 	=	{ categoryBits=4, 	maskBits=23	}
 	C.sensorCol	=	{ categoryBits=8, 	maskBits=1	}
-	C.wallCol	=	{ categoryBits=16,	maskBits=37	}
-	C.projCol	=	{ categoryBits=32,	maslBits=17	}
+	C.wallCol	=	{ categoryBits=16,	maskBits=5	}
+	C.projCol	=	{ categoryBits=32,	maslBits=1	}
 return C
 --[[
 
@@ -26,6 +26,6 @@ Wall	||category||					X				|	16
 		||collides|| 	X		X			X			|	37
 ============================================================
 Proj	||category||						X			|	32
-		||collides|| 	X				X				|	17
+		||collides|| 	X								|	1
 ============================================================
 --]]
