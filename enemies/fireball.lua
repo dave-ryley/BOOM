@@ -27,13 +27,12 @@ function spawn(angle, x, y)
     fireball.x = math.cos(math.rad(angle - 90))*100 + x -- need to determine actual angle
     fireball.y = math.sin(math.rad(angle - 90))*100 + y -- need to determine actual angle
     fireball.myName = "p_fireball"
-
     --local fireballShape = { -80,-70, 80,-70, 80,120, -80,120 }
-    local fireballShape = { -50,-50, 50,-50, 50,50, -50,50 }
+    local fireballShape = { -30,-30, 30,-30, 30,30, -30,30 }
     local fireballData = {   
                     physicsData =   {
                                 shape=fireballShape,
-                                density=0.0, 
+                                density=0.025, 
                                 friction=0.0, 
                                 bounce=0.0,
                                 isFixedRotation=true,

@@ -58,9 +58,7 @@ camera:add(player.bounds, 1)
 camera:add(level, 3)
 --print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
 camera:add(floor,5)
---camera:add(imps, 2)
---camera:add(spots, 2)
---camera:add(minotaurs, 2)
+camera:add(player.torchLight, 5)
 camera:add(enemies.group, 2)
 
 -- INITIALIZING CAMERA
@@ -284,7 +282,7 @@ Runtime:addEventListener( "youWin", youWin)
 local function youDied( event )
 	print("you Died")
 	--physics.pause( )
-	composer.gotoScene( g.scenePath.."death")
+	--composer.gotoScene( g.scenePath.."death")
 
 end
 Runtime:addEventListener( "youDied", youDied)
