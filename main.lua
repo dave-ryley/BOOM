@@ -5,4 +5,4 @@ if(system.getInfo("platformName") == "Android") then
 end
 local composer = require "composer"
 --composer.gotoScene( "levelEditorScene" )
-composer.gotoScene( g.scenePath.."game" )  
+composer.gotoScene( g.scenePath.."intro" )  
