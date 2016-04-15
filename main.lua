@@ -4,5 +4,6 @@ if(system.getInfo("platformName") == "Android") then
     system.activate( "multitouch" )
 end
 local composer = require "composer"
---composer.gotoScene( "levelEditorScene" )
-composer.gotoScene( g.scenePath.."intro" )  
+--composer.gotoScene( g.scenePath.."levelEditorScene" )
+composer.gotoScene( g.scenePath.."game" )  
+>>>>>>> 19799976ff64342cfa5cf9d81a8cc1bca16308ff
