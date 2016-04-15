@@ -121,7 +121,7 @@ for mapCounter=1,table.getn(map),1 do
 		if(enemyType == 11)then
 			enemies.group:insert(imp.spawn(location[1],location[2]).parent)
 		elseif(enemyType == 12)then
-			--spawn dog
+			enemies.group:insert(spot.spawn(location[1],location[2]).parent)
 		elseif(enemyType == 13)then
 			--spawn rosy
 		end
