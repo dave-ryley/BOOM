@@ -6,4 +6,3 @@ end
 local composer = require "composer"
 --composer.gotoScene( g.scenePath.."levelEditorScene" )
 composer.gotoScene( g.scenePath.."game" )  
->>>>>>> 19799976ff64342cfa5cf9d81a8cc1bca16308ff
