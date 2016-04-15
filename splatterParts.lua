@@ -1,6 +1,7 @@
 local C = {}
 local colFilters = require "collisionFilters"
 local partsList = require "splatter"
+local g = require "globals"
 	local function spawn( angle, x, y)
 		local files = partsList.imp
 		local parts = {}
@@ -21,7 +22,7 @@ local partsList = require "splatter"
 			        	filter=colFilters.enemyCol
 			        })
 			    --p.isFixedRotation=true
-				p:applyLinearImpulse( 
+				p:applyForce( 
 						math.cos(angle)*50, 
 						math.sin(angle)*50 
 						)
@@ -33,12 +34,19 @@ local partsList = require "splatter"
 				parts.disp:insert(p)
 			end
 			local s = sausage.spawn(4, x, y)
-			s.link[math.ceil(#s.link/2)]:applyLinearImpulse( 
+			s.link[math.ceil(#s.link/2)]:applyForce( 
 					math.cos(angle)*40, 
 					math.sin(angle)*40, 
 					50, 
 					50 )
 			parts.disp:insert(s.display)
+			local b = display.newImage( g.gorePath.."BloodSplatter.png")
+			b.x = x
+			b.y = y
+			b.anchorY = 0.75
+			b:scale(	1.2, 	1.2)
+			b.rotation = angle
+			parts.disp:insert(b)
 		return parts.disp
 	end
 	--C[1] = parts.display

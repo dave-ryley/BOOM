@@ -142,7 +142,7 @@ camera:add(player.shotgun.blast, 1)
 camera:add(player.shotgun.bounds, 1)
 camera:add(player.bounds, 1)
 camera:add(level, 3)
-camera:add(floor,4)
+camera:add(floor,5)
 camera:add(imps, 2)
 camera:add(spots, 2)
 camera:add(minotaurs, 2)
@@ -354,7 +354,7 @@ local function makeGore( event )
 	timer.performWithDelay( 10, 
 		function ()
 			local g = event.splat(player.thisAimAngle, event.bounds.x, event.bounds.y)
-			camera:add(g, 2)
+			camera:add(g, 4)
 		end
 	)
 end
