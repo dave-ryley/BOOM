@@ -19,7 +19,7 @@ local enemies = {group = display.newGroup()}
 local physics = require "physics"
 physics.start()
 physics.setGravity(0,0)
-physics.setDrawMode( "normal" )
+physics.setDrawMode( "hybrid" )
 
 -----Map-----
 local size = 5
@@ -103,12 +103,14 @@ zerozero:setFillColor( 0,0,1 )
 
 local controllerMapping = require "controllerMapping"
 local player = require "playerMechanics"
-
+local slowtrap = require "Traps.slowtrap"
+local s1 = slowtrap.spawn(500, 0)
 --local imp = require "imp"
 local sausage = require "sausage"
 --local wintile = win.spawn(1)
 
 player.bounds:translate(0,0)
+
 --enemies.group:insert(imp.spawn(-1500, 500).parent)
 --enemies.group:insert(imp.spawn(1000, 1000).parent)
 --player.bounds:translate(-2000, 500)
@@ -117,6 +119,7 @@ enemies.group:insert(imp.spawn(-1500, 500).parent)
 enemies.group:insert(imp.spawn(1000, 1000).parent)
 enemies.group:insert(imp.spawn(-1000, 500).parent)
 enemies.group:insert(imp.spawn(1500, 1000).parent)
+camera:add(s1.bounds, 2)
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
 camera:add(player.shotgun.blast, 1)

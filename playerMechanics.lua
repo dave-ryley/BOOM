@@ -27,11 +27,12 @@ local P = {}
     P.bounds = display.newRect(0,0,70,70)
     P.bounds.alpha = 0.0
     P.bounds.myName = "player"
+    P.id = 1
 
     physics.addBody( P.bounds, "dynamic", 
                                 {
                                     density=1.0, 
-                                    friction=0.3, 
+                                    friction=0.5, 
                                     bounce=0.0,
                                     filter=col.playerCol
                                 })

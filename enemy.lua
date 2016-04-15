@@ -9,7 +9,7 @@ local C = {}
 ]]
 	local path = "enemies."
 	--initializing id
-	C.id = 0
+	C.id = 1
 	local function spawn(enemyType, startX, startY, data)
 		local enemy = require(  path .. enemyType .. "Visuals")
 		C.id = C.id + 1
@@ -29,6 +29,7 @@ local C = {}
 		--has the enemy spotted the player
 		e.hasTarget = false
 		--used for entity identification
+		e.id = C.id
 		e.myName = "e_"..enemyType .. tostring(C.id)
 		e.bounds.myName=e.myName.."_bounds"
 
@@ -135,7 +136,7 @@ local C = {}
 		e.onCollision = function( event )
 			if(event.other ~= nil) then
 				local other = event.other.super
-				print("from "..e.myName .. " colliding with " .. other.myName)
+				--print("from "..e.myName .. " colliding with " .. other.myName)
 
 			end
 		end
