@@ -90,7 +90,7 @@ for mapCounter=1,table.getn(map),1 do
 													tonumber(map[mapCounter][2])))
 		--physlevel[mapCounter]:setFillColor(0.5,0,0,1)
 		physlevel[mapCounter].fill = { 	type="image", 
-										filename="/Graphics/Background/LavaTile.png" }
+										filename="/Graphics/Background/LavaTile1.png" }
 		physics.addBody( 	physlevel[mapCounter], 
 							"static", 
 							{
