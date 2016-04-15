@@ -83,9 +83,9 @@ local V = {}
         }
     }
 
-    torchRadius = display.newSprite( torchRadius_sheet, torchRadius_sequences )
-    torchRadius:play()
-    V.upperBody:insert( torchRadius )
+    --torchRadius = display.newSprite( torchRadius_sheet, torchRadius_sequences )
+    --torchRadius:play()
+    --V.upperBody:insert( torchRadius )
 
     local function animate(aimAngle, directionAngle, moving, velocity)
         -- Animate Upper Body
