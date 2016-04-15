@@ -50,9 +50,20 @@ local P = {}
     P.cameraLock.y = P.parent.y
     P.bounds.super = P
 
+    --TORCH LIGHT--
+
+    P.torchLight = display.newRect(P.bounds.x, P.bounds.y,51200,51200)
+    display.setDefault( "textureWrapX", "clampToEdge" )
+    display.setDefault( "textureWrapY", "clampToEdge" )
+    P.torchLight.fill = {type = "image",filename ="/Graphics/Animation/torchRad.png"}
+    P.torchLight.fill.scaleX = 0.02
+    P.torchLight.fill.scaleY = 0.02
+    P.torchLight.alpha = 0.75
+
+
     local update = function( event )
-        P.parent.x = P.bounds.x
-        P.parent.y = P.bounds.y -50
+        P.parent.x, P.torchLight.x = P.bounds.x, P.bounds.x
+        P.parent.y, P.torchLight.y = P.bounds.y -50, P.bounds.y
         P.cameraLock.x = P.parent.x + P.isRotatingX*250
         P.cameraLock.y = P.parent.y + P.isRotatingY*250
         P.visuals.footsteps()
