@@ -3,137 +3,25 @@ local composer = require( "composer" )
 local g = require "globals"
 local scene = composer.newScene()
 local joysticks = require "joystick"
-local spot = require("spot")
 local perspective = require("perspective")
 local camera = perspective.createView()
-local levelName = "level.BOOMMAP"
 local enemy = require "enemy"
 local imp = require "imp"
 local move = require "movementFunctions"
-local imps = display.newGroup()
-local spots = display.newGroup()
-local minotaurs = display.newGroup()
-local level = display.newGroup( )
-local map = {}
-local enemies = {group = display.newGroup()}
+
+
+
 local physics = require "physics"
 physics.start()
 physics.setGravity(0,0)
-physics.setDrawMode( "normal" )
-
+physics.setDrawMode( "hybrid" )
+local levelBuilder = require "levelBuilder"
 -----Map-----
-local size = 5
-local function getVertices(type,rotation)
-    if(type <= 1)then
-      vertices = {0,0,0,128,128,128,128,0}
-    elseif(type == 2)then
-        if(rotation == 1)then
-            vertices = {64,64,0,128,128,128,128,0}
-        elseif(rotation == 2)then
-            vertices = {0,0,0,128,128,128,64,64}
-        elseif(rotation == 3)then
-            vertices = {0,0,0,128,64,64,128,0}
-        else
-            vertices = {0,0,64,64,128,128,128,0}
-        end
-    elseif(type == 3)then
-      if(rotation == 1)then
-            vertices = {10,0,0,0,0,10,118,128,128,128,128,118}
-        elseif(rotation == 2)then
-            vertices = {128,10,128,0,118,0,0,118,0,128,10,128}
-        elseif(rotation == 3)then
-            vertices = {10,0,0,0,0,10,118,128,128,128,128,118}
-        else
-            vertices = {128,10,128,0,118,0,0,118,0,128,10,128}
-        end
-    elseif(type == 4)then
-    	if(rotation == 1)then
-          	vertices = {0,0,128,0,128,20,0,20}
-      	elseif(rotation == 2)then
-          	vertices = {49,0,69,0,69,128,49,128}
-      	elseif(rotation == 3)then
-          	vertices = {0,0,128,0,128,20,0,20}
-      	else
-          	vertices = {49,0,69,0,69,128,49,128}
-      end
-    end
-    for i = 1,table.getn(vertices),1 do
-    	vertices[i] = vertices[i]*size
-    end
-    return vertices
-end
 
-local floor = display.newRect(g.ccx, g.ccy,500000,500000)
-display.setDefault( "textureWrapX", "repeat" )
-display.setDefault( "textureWrapY", "repeat" )
-floor.fill = {type = "image",filename ="/Graphics/Background/FloorTile.png"}
-floor.fill.scaleX = 0.001
-floor.fill.scaleY = 0.001
-
-local path = system.pathForFile(levelName,system.ResourceDirectory)
-local file = io.open(path,"r")
-function explode(div,str)
-	if (div=='') then 
-		return false 
-	end
-	local pos,arr = 0,{}
-	for st,sp in function() return string.find(str,div,pos,true) end do
-		table.insert(arr,string.sub(str,pos,st-1))
-		pos = sp + 1
-	end
-	table.insert(arr,string.sub(str,pos))
-	return arr
-end
-local counter = 1
-for line in file:lines()do
-	map[counter] = explode(",",line)
-	counter = counter + 1
-	--print (counter)
-end
-io.close(file)
-local objectFileName = {"lavaTile","lavaTile","wall_diagonal","wall_flat"}
-local physlevel = {}
-for mapCounter=1,table.getn(map),1 do
-	if (tonumber(map[mapCounter][1]) <11 and tonumber(map[mapCounter][1]) >0) then
-		physlevel[mapCounter] = display.newPolygon( level, 
-													tonumber((map[mapCounter][3])-448)*size,
-													tonumber((map[mapCounter][4])-448)*size, 
-													getVertices(tonumber(map[mapCounter][1]),
-													tonumber(map[mapCounter][2])))
-		--physlevel[mapCounter]:setFillColor(0.5,0,0,1)
-		physlevel[mapCounter].fill = { 	type="image", filename="/Graphics/Background/"..objectFileName[tonumber(map[mapCounter][1])]..tonumber(map[mapCounter][2])..".png" }
-		physics.addBody( 	physlevel[mapCounter], 
-							"static", 
-							{
-								friction = 0, 
-								bounce = 0.3, 
-								filter=col.wallCol
-							}
-						)
-		physlevel[mapCounter].myName = "Wall"
-		physlevel[mapCounter].super = physlevel[mapCounter]
-	elseif(tonumber(map[mapCounter][1]) <21)then
-		local enemyType = tonumber(map[mapCounter][1])
-		local location = 	{
-								tonumber((map[mapCounter][3])-448)*size,
-								tonumber((map[mapCounter][4])-448)*size
-							}
-		if(enemyType == 11)then
-			enemies.group:insert(imp.spawn(location[1],location[2]).parent)
-		elseif(enemyType == 12)then
-			enemies.group:insert(spot.spawn(location[1],location[2]).parent)
-		elseif(enemyType == 13)then
-			--spawn rosy
-		end
-	elseif(tonumber(map[mapCounter][1]) <31)then
-		--spawn items/deco
-	elseif(tonumber(map[mapCounter][1]) <41)then
-		--satans trailpath
-	end
-end
-
-zerozero = display.newRect( level, 0, 0, 100, 100 )
-zerozero:setFillColor( 0,0,1 )
+local params = levelBuilder.buildLevel(g.level)
+local level = params.level
+local enemies = params.enemies
+local floor = params.floor
 
 local controllerMapping = require "controllerMapping"
 local player = require "playerMechanics"
@@ -151,16 +39,17 @@ player.bounds:translate(0,0)
 --player.bounds:translate(-2000, 500)
 
 
-local spot = require "spot"
-local puppy = spot.spawn(300, 0)
-
+--local spot = require "spot"
+--local puppy = spot.spawn(300, 0)
+--local wintile = require "Traps.winTrap"
+--local win1 = wintile.spawn(1000, 0)
 
 -- (1) move square to bottom right corner; subtract half side-length
-print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
-camera:add(puppy.parent, 2)
+--camera:add(puppy.parent, 2)
 --camera:add(satan1.bounds, 2)
 --print(satan1.path[1].x)
 --transition.to( satan1.bounds, satan1.path[1] )
+--camera:add(win1.bounds, 4)
 --camera:add(s1.bounds, 3)
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
@@ -168,11 +57,9 @@ camera:add(player.shotgun.blast, 1)
 camera:add(player.shotgun.bounds, 1)
 camera:add(player.bounds, 1)
 camera:add(level, 3)
+--print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
 camera:add(floor,5)
 camera:add(player.torchLight, 5)
-camera:add(imps, 2)
-camera:add(spots, 2)
-camera:add(minotaurs, 2)
 camera:add(enemies.group, 2)
 
 -- INITIALIZING CAMERA
@@ -386,6 +273,20 @@ local function makeGore( event )
 	)
 end
 Runtime:addEventListener( "makeGore", makeGore)
+
+local function youWin( event )
+	print("you win")
+
+end
+Runtime:addEventListener( "youWin", youWin)
+
+local function youDied( event )
+	print("you Died")
+	--physics.pause( )
+	--composer.gotoScene( g.scenePath.."death")
+
+end
+Runtime:addEventListener( "youDied", youDied)
 
 local function getPlayerLocation( event )
 	return event.updatePlayerLocation(player.bounds.x, player.bounds.y)

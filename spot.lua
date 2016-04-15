@@ -49,7 +49,7 @@ local colFilters = require "collisionFilters"
 					i.speedMod = 2
 					i.evil = true
 					i.animationParam = "Evil"
-					print("spot is evil now!")
+					--print("spot is evil now!")
 				elseif (i.evil == true and distance > i.diveRange) then
 					i.evil = false
 					i.animationParam = ""
@@ -60,13 +60,13 @@ local colFilters = require "collisionFilters"
 				if (i.moving == false) then
 					i.moving = true
 					i.currentAngle = i.targetAngle
-					print("target angle: "..i.currentAngle)
+					--print("target angle: "..i.currentAngle)
 					i.xMove = 
 						math.cos(math.rad(i.currentAngle - 90))
 					i.yMove =
 						math.sin(math.rad(i.currentAngle - 90))
 
-					print("xMove: " .. i.xMove .. " : yMove: " .. i.yMove)
+					--print("xMove: " .. i.xMove .. " : yMove: " .. i.yMove)
 					timer.performWithDelay( 500,
 						function()
 							--print("spot angle: "..i.targetAngle.." : frame: ".. i.bounds.sequence)

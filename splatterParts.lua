@@ -8,6 +8,12 @@ local g = require "globals"
 			local sausage = require "sausage"
 			parts.disp = display.newGroup( )
 			parts.disp.myName = "goreDisplay"
+			local b = display.newImage( g.gorePath.."BloodSplatter.png")
+			b.x = x
+			b.y = y
+			b.anchorY = 0.75
+			b:scale(	1.2, 	1.2)
+			b.rotation = angle
 			for i =1, #files do
 				local p = display.newImage( files[i].path)
 				p:scale(	1.5,	1.5)
@@ -40,12 +46,6 @@ local g = require "globals"
 					50, 
 					50 )
 			parts.disp:insert(s.display)
-			local b = display.newImage( g.gorePath.."BloodSplatter.png")
-			b.x = x
-			b.y = y
-			b.anchorY = 0.75
-			b:scale(	1.2, 	1.2)
-			b.rotation = angle
 			parts.disp:insert(b)
 		return parts.disp
 	end

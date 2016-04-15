@@ -12,29 +12,29 @@ function scene:create( event )
 												g.ch )
 	numOfButtons = 5
 	if(g.android) then
-    	numOfButtons = 4
-    else
-    	-- code in here to highlight the first button
+		numOfButtons = 4
+	else
+		-- code in here to highlight the first button
 	end
 
 	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
 
 	function buttonPress( self, event )
-    	if event.phase == "began" then
-    		audio.play(press, {channel = 31})
-    		if self.id == 1 then
-    			composer.gotoScene( g.scenePath.."game" )
-    		elseif self.id == 2 then
-    			composer.gotoScene( g.scenePath.."leaderboard" )
-    		elseif self.id == 3 then
-    			composer.gotoScene( g.scenePath.."levelEditorScene" )
-    		elseif self.id == 4 then
-    			composer.gotoScene( g.scenePath.."credits" )
-    		elseif self.id == 5 then
-    			native.requestExit()
-    		end
-    		return true
-    	end
+		if event.phase == "began" then
+			audio.play(press, {channel = 31})
+			if self.id == 1 then
+				composer.gotoScene( g.scenePath.."game" )
+			elseif self.id == 2 then
+				composer.gotoScene( g.scenePath.."leaderboard" )
+			elseif self.id == 3 then
+				composer.gotoScene( g.scenePath.."levelEditorScene" )
+			elseif self.id == 4 then
+				composer.gotoScene( g.scenePath.."credits" )
+			elseif self.id == 5 then
+				native.requestExit()
+			end
+			return true
+		end
 	end
 
 	buttons = {}
