@@ -104,28 +104,40 @@ zerozero:setFillColor( 0,0,1 )
 local controllerMapping = require "controllerMapping"
 local player = require "playerMechanics"
 local slowtrap = require "Traps.slowtrap"
-local s1 = slowtrap.spawn(500, 0)
+--local s1 = slowtrap.spawn(500, 0)
 --local imp = require "imp"
 local sausage = require "sausage"
 --local wintile = win.spawn(1)
-
+local satan = require "satan"
+--local satan1 = satan.spawn()
 player.bounds:translate(0,0)
 
 --enemies.group:insert(imp.spawn(-1500, 500).parent)
 --enemies.group:insert(imp.spawn(1000, 1000).parent)
 --player.bounds:translate(-2000, 500)
+
+
+local spot = require "spot"
+local puppy = spot.spawn(300, 0)
+
+
+-- (1) move square to bottom right corner; subtract half side-length
 print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
+camera:add(puppy.parent, 2)
 enemies.group:insert(imp.spawn(-1500, 500).parent)
 enemies.group:insert(imp.spawn(1000, 1000).parent)
 enemies.group:insert(imp.spawn(-1000, 500).parent)
 enemies.group:insert(imp.spawn(1500, 1000).parent)
-camera:add(s1.bounds, 2)
+--camera:add(satan1.bounds, 2)
+--print(satan1.path[1].x)
+--transition.to( satan1.bounds, satan1.path[1] )
+--camera:add(s1.bounds, 3)
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
 camera:add(player.shotgun.blast, 1)
 camera:add(player.shotgun.bounds, 1)
 camera:add(player.bounds, 1)
-camera:add(level, 3)
+camera:add(level, 4)
 camera:add(imps, 2)
 camera:add(spots, 2)
 camera:add(minotaurs, 2)

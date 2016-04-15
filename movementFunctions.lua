@@ -55,4 +55,13 @@ M = {}
     end
     M.calculateLineAngle = calculateLineAngle
 
+    local function calculateDistance( x1, y1, x2, y2 )
+
+        local deltaX = x2 - x1
+        local deltaY = y2 - y1
+        local distance = math.sqrt( math.pow( deltaX, 2 ) + math.pow(deltaY, 2))
+        return distance
+    end
+    M.calculateDistance = calculateDistance
+
 return M

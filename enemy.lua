@@ -120,7 +120,7 @@ local C = {}
 			if (event.phase == "began" and event.other ~= nil) then
 				local other = event.other.super
 				e.updatePlayerLocation(other.getX(), other.getY())
-				--print(e.sensorArea.myName.." colliding with: "..other.myName)
+				print(e.sensorArea.myName.." colliding with: "..other.myName)
 				--print(e.myName.." updating target: "..other.getX() .. " : " .. other.getY())
 				e.hasTarget = true
 			end

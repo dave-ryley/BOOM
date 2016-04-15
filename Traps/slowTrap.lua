@@ -15,7 +15,7 @@ local S = {}
 			T.bounds.y = y
 			T.slow = 0.3
 			T.previousSpeed = 0
-			physics.addBody( T.bounds, "static", {
+			physics.addBody( T.bounds, "static", 	{
 														isSensor=true,
 														filter=col.sensorCol,
 
@@ -34,7 +34,7 @@ local S = {}
 				return true
 			end
 			T.bounds:addEventListener( "collision", T.trap )
-		return T
+		return T 
 
 	end
 	S.spawn = spawn
