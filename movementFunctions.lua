@@ -51,8 +51,8 @@ M = {}
                 --angle = angle + math.pi*3/4
             end
             --print("calculatedAngle: " .. angle*180/math.pi)
-        return angle*180/math.pi + 90
-    end
+                return math.fmod((angle*180/math.pi + 90 + 360), 360)
+            end
     M.calculateLineAngle = calculateLineAngle
 
     local function calculateDistance( x1, y1, x2, y2 )
