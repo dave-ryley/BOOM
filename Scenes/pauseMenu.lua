@@ -10,7 +10,7 @@ function scene:create( event )
 	if(system.getInfo("platformName") ~= "Android") then
     	-- code in here to highlight the first button
 	end
-	myText = display.newText( "PAUSED", display.contentCenterX, display.contentCenterY-200, "Curse of the Zombie", 80 )
+	myText = display.newText( "PAUSED", g.ccx, g.ccy-200, "Curse of the Zombie", 80 )
 	myText:setFillColor(1,1,0,1)
 	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
 	function buttonPress( self, event )
@@ -20,14 +20,14 @@ function scene:create( event )
     			g.pause = false
     			composer.hideOverlay()
     		elseif self.id == 2 then
-    			composer.gotoScene( "menu" )
+    			composer.gotoScene( g.scenePath.."menu" )
     		end
     		return true
     	end
 	end
 	buttons = {}
 	for i=1,2 do 
-		buttons[i] = display.newRect(display.contentCenterX,display.contentCenterY+(i-1)*200,500,150)
+		buttons[i] = display.newRect(g.ccx,g.ccy+(i-1)*200,500,150)
 		sceneGroup:insert(buttons[i])
 		buttons[i]:setFillColor( 1, 0, 0 )
 		buttons[i].id = i

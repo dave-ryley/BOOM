@@ -24,31 +24,43 @@ physics.setDrawMode( "normal" )
 -----Map-----
 local size = 5
 local function getVertices(type,rotation)
-	if(type <= 1)then
-		vertices = {0*size,0*size,0*size,128*size,128*size,128*size,128*size,0*size}
-		if(rotation == 1)then
-
-		elseif(rotation == 2)then
-
-		elseif(rotation == 3)then
-
-		else
-
-		end
-	elseif(type == 2)then
-		if(rotation == 1)then
-			vertices = {64*size,64*size,0*size,128*size,128*size,128*size,128*size,0}
-		elseif(rotation == 2)then
-			vertices = {0*size,0*size,0*size,128*size,128*size,128*size,64*size,64*size}
-		elseif(rotation == 3)then
-			vertices = {0*size,0*size,0*size,128*size,64*size,64*size,128*size,0*size}
-		else
-			vertices = {0*size,0*size,64*size,64*size,128*size,128*size,128*size,0}
-		end
-	elseif(type == 3)then
-
-	end
-	return vertices
+    if(type <= 1)then
+      vertices = {0,0,0,128,128,128,128,0}
+    elseif(type == 2)then
+        if(rotation == 1)then
+            vertices = {64,64,0,128,128,128,128,0}
+        elseif(rotation == 2)then
+            vertices = {0,0,0,128,128,128,64,64}
+        elseif(rotation == 3)then
+            vertices = {0,0,0,128,64,64,128,0}
+        else
+            vertices = {0,0,64,64,128,128,128,0}
+        end
+    elseif(type == 3)then
+      if(rotation == 1)then
+            vertices = {10,0,0,0,0,10,118,128,128,128,128,118}
+        elseif(rotation == 2)then
+            vertices = {128,10,128,0,118,0,0,118,0,128,10,128}
+        elseif(rotation == 3)then
+            vertices = {10,0,0,0,0,10,118,128,128,128,128,118}
+        else
+            vertices = {128,10,128,0,118,0,0,118,0,128,10,128}
+        end
+    elseif(type == 4)then
+    if(rotation == 1)then
+          vertices = {0,0,128,0,128,10,0,10}
+      elseif(rotation == 2)then
+          vertices = {54,0,64,0,64,128,54,128}
+      elseif(rotation == 3)then
+          vertices = {0,0,128,0,128,10,0,10}
+      else
+          vertices = {54,0,64,0,64,128,54,128}
+      end
+    end
+    for i = 1,table.getn(vertices),1 do
+    	vertices[i] = vertices[i]*size
+    end
+    return vertices
 end
 
 local floor = display.newRect(g.ccx, g.ccy,500000,500000)
@@ -79,7 +91,7 @@ for line in file:lines()do
 	--print (counter)
 end
 io.close(file)
-
+local objectFileName = {"lavaTile","lavaTile","wall_diagonal","wall_flat"}
 local physlevel = {}
 for mapCounter=1,table.getn(map),1 do
 	if (tonumber(map[mapCounter][1]) <11 and tonumber(map[mapCounter][1]) >0) then
@@ -89,8 +101,7 @@ for mapCounter=1,table.getn(map),1 do
 													getVertices(tonumber(map[mapCounter][1]),
 													tonumber(map[mapCounter][2])))
 		--physlevel[mapCounter]:setFillColor(0.5,0,0,1)
-		physlevel[mapCounter].fill = { 	type="image", 
-										filename="/Graphics/Background/LavaTile1.png" }
+		physlevel[mapCounter].fill = { 	type="image", filename="/Graphics/Background/"..objectFileName[tonumber(map[mapCounter][1])]..tonumber(map[mapCounter][2])..".png" }
 		physics.addBody( 	physlevel[mapCounter], 
 							"static", 
 							{
