@@ -4,6 +4,7 @@ G = {}
 	G.pause = false
 	G.scenePath = "Scenes."
 	G.animationPath = "Graphics/Animation/"
+	G.gorePath = "Graphics/Animation/Gore/"
 	G.cw = display.contentWidth
 	G.ch = display.contentHeight
 	G.acw = display.actualContentWidth
