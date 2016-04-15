@@ -19,7 +19,7 @@ local enemies = {group = display.newGroup()}
 local physics = require "physics"
 physics.start()
 physics.setGravity(0,0)
-physics.setDrawMode( "hybrid" )
+physics.setDrawMode( "normal" )
 
 -----Map-----
 local size = 5
@@ -51,6 +51,13 @@ local function getVertices(type,rotation)
 	return vertices
 end
 
+local floor = display.newRect(display.contentCenterX, display.contentCenterY,500000,500000)
+display.setDefault( "textureWrapX", "repeat" )
+display.setDefault( "textureWrapY", "repeat" )
+floor.fill = {type = "image",filename ="/Graphics/Background/FloorTile.png"}
+floor.fill.scaleX = 0.001
+floor.fill.scaleY = 0.001
+
 local path = system.pathForFile(levelName,system.ResourceDirectory)
 local file = io.open(path,"r")
 function explode(div,str)
@@ -77,7 +84,8 @@ local physlevel = {}
 for mapCounter=1,table.getn(map),1 do
 	if (tonumber(map[mapCounter][1]) <11 and tonumber(map[mapCounter][1]) >0) then
 		physlevel[mapCounter] = display.newPolygon( level, tonumber((map[mapCounter][3])-448)*size,tonumber((map[mapCounter][4])-448)*size, getVertices(tonumber(map[mapCounter][1]),tonumber(map[mapCounter][2])))
-		physlevel[mapCounter]:setFillColor(0.5,0,0,1)
+		--physlevel[mapCounter]:setFillColor(0.5,0,0,1)
+		physlevel[mapCounter].fill = { type="image", filename="/Graphics/Background/LavaTile.png" }
 		physics.addBody( physlevel[mapCounter], "static", {friction = 0, bounce = 0.3, filter=col.wallCol} )
 		physlevel[mapCounter].myName = "Wall"
 		physlevel[mapCounter].super = physlevel[mapCounter]
@@ -115,10 +123,6 @@ player.bounds:translate(0,0)
 --enemies.group:insert(imp.spawn(1000, 1000).parent)
 --player.bounds:translate(-2000, 500)
 print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
-enemies.group:insert(imp.spawn(-1500, 500).parent)
-enemies.group:insert(imp.spawn(1000, 1000).parent)
-enemies.group:insert(imp.spawn(-1000, 500).parent)
-enemies.group:insert(imp.spawn(1500, 1000).parent)
 camera:add(s1.bounds, 2)
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
@@ -126,6 +130,7 @@ camera:add(player.shotgun.blast, 1)
 camera:add(player.shotgun.bounds, 1)
 camera:add(player.bounds, 1)
 camera:add(level, 3)
+camera:add(floor,4)
 camera:add(imps, 2)
 camera:add(spots, 2)
 camera:add(minotaurs, 2)
@@ -148,6 +153,17 @@ local sceneGroup
 function scene:create( event )
 	sceneGroup = self.view
 	sceneGroup:insert(camera)
+	
+	local bgOptions =
+	{
+		channel = 20,
+		loops = -1,
+		fadein = 1000,
+	}
+	audio.setVolume( 0.2, { channel=20 } )
+	local bgMusic = audio.loadStream( "Sounds/Music/HeadShredder.mp3")
+	audio.play(bgMusic,bgOptions)
+	
 	function buttonPress( self, event )
 		if event.phase == "began" then
 			audio.play(press, {channel = 31})
