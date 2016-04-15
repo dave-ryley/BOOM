@@ -7,16 +7,7 @@ grid = display.newGroup()
 
 local function getVertices(type,rotation)
     if(type <= 1)then
-        vertices = {0,0,0,128,128,128,128,0}
-        if(rotation == 1)then
-            
-        elseif(rotation == 2)then
-            
-        elseif(rotation == 3)then
-            
-        else
-            
-        end
+      vertices = {0,0,0,128,128,128,128,0}
     elseif(type == 2)then
         if(rotation == 1)then
             vertices = {64,64,0,128,128,128,128,0}
@@ -37,6 +28,16 @@ local function getVertices(type,rotation)
         else
             vertices = {128,10,128,0,118,0,0,118,0,128,10,128}
         end
+    elseif(type == 4)then
+    if(rotation == 1)then
+          vertices = {0,0,128,0,128,10,0,10}
+      elseif(rotation == 2)then
+          vertices = {54,0,64,0,64,128,54,128}
+      elseif(rotation == 3)then
+          vertices = {0,0,128,0,128,10,0,10}
+      else
+          vertices = {54,0,64,0,64,128,54,128}
+      end
     end
     return vertices
 end
@@ -62,19 +63,9 @@ function scene:create( event )
 
   blocked = false
 
-  --amountOfObjects = 8
-  --for i = 1, amountOfObjects, 1 do
-      --for j = 1, 2,1 do
-          --option = display.newRect(overlay,j*88-10,i*100,80,80)
-          --option:setFillColor( 0,0,1,1 )
-          --text = display.newText(overlay, "A", j*88-10, i*100, "Curse of the Zombie.ttf", 40 )
-      --end
-  --end
-
-
   --objno,rotation,x,y
 
-  objectFileName = {"lavaTile","lavaTile","wall_diagonal","wall"}
+  objectFileName = {"lavaTile","lavaTile","wall_diagonal","wall_flat"}
   enemyFileName = {"imp","spot","rosy"}
   miscFileName = {}
 
@@ -179,21 +170,35 @@ local function onMouseEvent( event )
         squareY = math.floor((localY/squareSize))*128+64
         --print(squareX,squareY)
         if(selectedObject<11)then
-          if (mapSize > 0 and selectedObject < 3) then
+          if (mapSize > 0) then
               for i = 1,table.getn(writeMap),1 do
-                  if(math.floor((writeMap[i].x/squareSize))*128+64 == squareX and math.floor((writeMap[i].y/squareSize))*128+64 == squareY)then 
-                      blocked = true 
-                      i=table.getn(writeMap)
+                  if(math.floor((writeMap[i].x/squareSize))*128+64 == squareX and math.floor((writeMap[i].y/squareSize))*128+64 == squareY
+                      and writeMap[i].obj == selectedObject)then 
+                      if(selectedObject < 3 or writeMap[i].rot == rotation)then
+                        blocked = true 
+                        i=table.getn(writeMap)
+                      end
                   end
               end
           end
           if(not blocked)then
               mapSize = mapSize +1
+              if(selectedObject == 4)then
+                if(rotation == 1)then
+                  squareY = squareY-64
+                elseif(rotation == 2)then
+                  squareX = squareX+64
+                elseif(rotation == 3)then
+                  squareY = squareY+64
+                elseif(rotation == 4)then
+                  squareX = squareX-64
+                end
+              end
               map[mapSize] = display.newPolygon( grid, squareX, squareY, getVertices(selectedObject,rotation))
               --map[mapSize]:setFillColor(1,0,0)
               map[mapSize].fill = { type="image", filename="Graphics/Background/"..objectFileName[selectedObject]..tonumber(rotation)..".png" }
               mapPoint(selectedObject,rotation,squareX,squareY)
-              --print("Block placed")
+              print("Block placed")
               --print(mapSize)
           end
           blocked = false
@@ -244,7 +249,7 @@ local function onKeyEvent( event )
     
     if ( event.keyName == "w" and event.phase == "down") then
         if(selectedObject > 1)then selectedObject = selectedObject -1 
-        else selectedObject = table.getn(objectFileName)-1
+        else selectedObject = table.getn(objectFileName)
         end
     end
     
@@ -261,7 +266,7 @@ local function onKeyEvent( event )
         selectedObject = 11
       end
     end
-    if(event.phase == "down" and selectedObject < 4)then
+    if(event.phase == "down" and selectedObject < 5)then
         if(selectedShape)then selectedShape:removeSelf()end
         print(selectedObject,rotation)
         selectedShape = display.newPolygon( overlay, display.contentWidth/16,display.contentHeight-100, getVertices(selectedObject,rotation) )
