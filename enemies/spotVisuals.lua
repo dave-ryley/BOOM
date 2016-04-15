@@ -1,5 +1,5 @@
 local T = {}
-
+    local g = require "globals"
     local function spawn()
         local V = {}
         V.anim = ""
@@ -10,7 +10,7 @@ local T = {}
             height = 300,
             numFrames = 64
         }
-        local spot_sheet_nice = graphics.newImageSheet( "Graphics/Animation/spotRun.png", spot_sheetOptions )
+        local spot_sheet_nice = graphics.newImageSheet( g.animationPath.."spotRun.png", spot_sheetOptions )
         local spot_sequences = require "SpriteSeq.spotSeq"
         
         V.bounds = display.newSprite( spot_sheet_nice, spot_sequences )
@@ -18,7 +18,6 @@ local T = {}
         local function animate(angle, ext, param) -- angle i.e 90, ext is the extension onto the animation, i.e "Shoot" or "Stand"
             -- Animate Upper Body
             --print("animating " .. ext .. " at angle " .. angle)
-            print("testing param: "..param)
             local anim = ""
             if angle > 337 or angle < 23 then
                 anim = "up"

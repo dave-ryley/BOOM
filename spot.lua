@@ -25,30 +25,37 @@ local colFilters = require "collisionFilters"
 		local i = constructor.spawn("spot", startX, startY, spotData)
 		i.xMove = 0
 		i.yMove = 0
-		i.speed = 10
+		i.baseSpeed = 10
+		i.speedMod = 1
 		i.animationParam = ""
 		i.currentAngle = 0
-		i.diveRange = 600
+		i.diveRange = 500
 		i.moving = false
 		i.evil = false
 		i.AI = function()
-			i.animate(i.targetAngle, "Run", i.animationParam)
+			
 			if(i.health <= 0) then
 				i.die()
 			end
-
-			if(i.hasTarget == true) then
+			if(i.hit == true) then
+				i.animate(i.targetAngle, "Run", "Hit")
+			elseif(i.hasTarget == true) then
 				local move = require "movementFunctions"
 				local distance = move.calculateDistance(i.targetX, 
 														i.targetY, 
 														i.bounds.x, 
 														i.bounds.y)
-				if(distance < i.diveRange and i.evil == false) then
-					i.speed = i.speed * 2
+				if(distance <= i.diveRange and i.evil == false) then
+					i.speedMod = 2
 					i.evil = true
 					i.animationParam = "Evil"
 					print("spot is evil now!")
+				elseif (i.evil == true and distance > i.diveRange) then
+					i.evil = false
+					i.animationParam = ""
+					i.speedMod = 1
 				end
+					i.animate(i.targetAngle, "Run", i.animationParam)
 
 				if (i.moving == false) then
 					i.moving = true
@@ -60,15 +67,15 @@ local colFilters = require "collisionFilters"
 						math.sin(math.rad(i.currentAngle - 90))
 
 					print("xMove: " .. i.xMove .. " : yMove: " .. i.yMove)
-					timer.performWithDelay( 500, 
+					timer.performWithDelay( 500,
 						function()
 							--print("spot angle: "..i.targetAngle.." : frame: ".. i.bounds.sequence)
 							i.moving = false
 						end
 					)
 				end
-			i.bounds.x = i.bounds.x + i.xMove*i.speed
-			i.bounds.y = i.bounds.y + i.yMove*i.speed
+			i.bounds.x = i.bounds.x + i.xMove*i.baseSpeed*i.speedMod
+			i.bounds.y = i.bounds.y + i.yMove*i.baseSpeed*i.speedMod
 			end
 		end
 		Runtime:addEventListener( "enterFrame", i.AI )

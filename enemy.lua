@@ -48,6 +48,9 @@ local C = {}
 		e.health = data.health
 		--initialize physics body with data passed in
 		e.shooting = 0
+		--check if enemy has been hit
+		e.hit = false
+
 		physics.addBody( 	e.bounds, 	
 							"dynamic", 	
 							data.physicsData
@@ -89,6 +92,7 @@ local C = {}
 			return splatterParts.spawn(angle, x, y)
 		end
 		e.splat = splat
+
 
 		--return x position
 	    local function getX()
@@ -177,8 +181,24 @@ local C = {}
 				end
 			)
 		end
-
 		e.die = die
+
+		local function takeHit()
+			e.health = e.health - 1
+			e.hit = true
+			if(e.health <= 0) then
+				e.die()
+			else
+				timer.performWithDelay( 200, 
+					function ()
+						e.hit = false
+					end
+				)
+			end
+		end
+		e.takeHit = takeHit
+
+
 		e.bounds.super = e
 		e.sensorArea.super = e
 		return e

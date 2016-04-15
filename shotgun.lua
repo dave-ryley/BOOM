@@ -131,18 +131,15 @@ local C = {}
             if (other ~= nil) then
                 other.bounds:applyLinearImpulse(
                     math.cos(
-                        (C.bounds.aimAngle - 90)*math.pi/180)*C.force, 
+                        (C.bounds.aimAngle - 90)*math.pi/180)*C.force*10, 
                     math.sin(
-                        (C.bounds.aimAngle - 90)*math.pi/180)*C.force, 
+                        (C.bounds.aimAngle - 90)*math.pi/180)*C.force*10, 
                     0, 
                     0 
                 )
                 if(string.sub(other.myName, 1, 2) == "e_") then
-                    print(other.health)
-                    other.health = other.health - 1
-                    if(other.health == 0) then
-                        return other.die()
-                    end
+                    --print(other.health)
+                    other.takeHit()
                 end
             end
         end

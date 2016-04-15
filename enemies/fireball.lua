@@ -1,7 +1,6 @@
-
 F = {}
-local physics = require "physics"
-
+--local physics = require "physics"
+local g = require "globals"
 function spawn(angle, x, y)
     local col = require "collisionFilters"
     local fireballSheetOptions =
@@ -10,7 +9,7 @@ function spawn(angle, x, y)
         height = 160,
         numFrames = 8
     }
-    local fireballSheet = graphics.newImageSheet( "Graphics/Animation/fireball.png", fireballSheetOptions )
+    local fireballSheet = graphics.newImageSheet(g.animationPath.."fireball.png", fireballSheetOptions )
     local fireballSeq =
     {
         {

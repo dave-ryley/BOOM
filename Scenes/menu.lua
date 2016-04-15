@@ -1,5 +1,5 @@
 local composer = require( "composer" )
-local globals = require "globals"
+
 
 local scene = composer.newScene()
 
@@ -7,44 +7,80 @@ function scene:create( event )
 	local sceneGroup = self.view
 	-- Called when the scene's view does not exist.
 	-- INSERT code here to initialize the scene
-	if(system.getInfo("platformName") ~= "Android") then
+	local background = display.newImageRect( 	"Graphics/Art/Boom.jpg", 
+												g.cw, 
+												g.ch )
+	numOfButtons = 5
+	if(g.android) then
+    	numOfButtons = 4
+    else
     	-- code in here to highlight the first button
 	end
-	myText = display.newText( "PAUSED", display.contentCenterX, display.contentCenterY-200, "Curse of the Zombie", 80 )
-	myText:setFillColor(1,1,0,1)
+
 	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
+
 	function buttonPress( self, event )
     	if event.phase == "began" then
     		audio.play(press, {channel = 31})
     		if self.id == 1 then
-    			globals.pause = false
-    			composer.hideOverlay()
+    			composer.gotoScene( g.scenePath.."game" )
     		elseif self.id == 2 then
-    			composer.gotoScene( "menu" )
+    			composer.gotoScene( g.scenePath.."leaderboard" )
+    		elseif self.id == 3 then
+    			composer.gotoScene( g.scenePath.."levelEditorScene" )
+    		elseif self.id == 4 then
+    			composer.gotoScene( g.scenePath.."credits" )
+    		elseif self.id == 5 then
+    			native.requestExit()
     		end
     		return true
     	end
 	end
+
 	buttons = {}
-	for i=1,2 do 
-		buttons[i] = display.newRect(display.contentCenterX,display.contentCenterY+(i-1)*200,500,150)
+	for i=1,numOfButtons do 
+		buttons[i] = display.newRect(	g.acw/(numOfButtons*2) + (i-1)*g.acw/numOfButtons,
+										g.ach - 100,
+										g.acw*3/20,
+										100)
 		sceneGroup:insert(buttons[i])
 		buttons[i]:setFillColor( 1, 0, 0 )
 		buttons[i].id = i
 		buttons[i].touch = buttonPress
 		buttons[i]:addEventListener( "touch", buttons[i] )
 	end
+
+
+	background.anchorX = 0
+	background.anchorY = 0
+	background.x, background.y = 0, 0
+	
+	sceneGroup:insert(background)
+
 end
 
 function scene:show( event )
 	local sceneGroup = self.view
 	local phase = event.phase
 	if phase == "will" then
-		for i=1,2 do 
+		for i=1,numOfButtons do 
 			sceneGroup:insert(buttons[i])
+		end
+		buttonText = {"PLAY", "SCOREBOARD", "LEVEL EDITOR","CREDITS","QUIT"}
+		text = {}
+		for i=1,numOfButtons do
+			text[i] = display.newText(	buttonText[i], 
+										g.acw/(numOfButtons*2) + (i-1)*g.acw/numOfButtons,
+										g.ach - 100, 
+										"Curse of the Zombie",
+										40)
+			text[i]:setFillColor( 1, 1, 0 )
+			sceneGroup:insert(text[i])
 		end
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
+		composer.removeScene( "intro", false )
+		--composer.removeScene( "game", false )
 		-- Called when the scene is now on screen
 		-- 
 		-- INSERT code here to make the scene come alive
@@ -68,12 +104,7 @@ end
 
 function scene:destroy( event )
 	local sceneGroup = self.view
-	for i=1,2 do 
-		buttons[i]:removeSelf()
-		buttons[i] = nil
-	end
-	myText:removeSelf()
-	myText = nil
+	
 	-- Called prior to the removal of scene's "view" (sceneGroup)
 	-- 
 	-- INSERT code here to cleanup the scene

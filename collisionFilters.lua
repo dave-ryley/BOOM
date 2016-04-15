@@ -4,7 +4,7 @@ local C = {}
 	C.enemyCol 	=	{ categoryBits=4, 	maskBits=23	}
 	C.sensorCol	=	{ categoryBits=8, 	maskBits=1	}
 	C.wallCol	=	{ categoryBits=16,	maskBits=5	}
-	C.projCol	=	{ categoryBits=32,	maslBits=1	}
+	C.projCol	=	{ categoryBits=32,	maskBits=1	}
 return C
 --[[
 

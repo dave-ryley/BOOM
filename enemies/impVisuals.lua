@@ -1,5 +1,5 @@
 local T = {}
-
+    local g = require "globals"
     local function spawn()
         local V = {}
         V.anim = ""
@@ -10,7 +10,7 @@ local T = {}
             height = 240,
             numFrames = 136
         }
-        local imp_sheet = graphics.newImageSheet( "Graphics/Animation/Imp.png", imp_sheetOptions )
+        local imp_sheet = graphics.newImageSheet( g.animationPath.."Imp.png", imp_sheetOptions )
         local imp_sequences = require "SpriteSeq.impSeq"
         V.bounds = display.newSprite( imp_sheet, imp_sequences )
 

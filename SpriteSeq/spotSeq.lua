@@ -1,3 +1,4 @@
+local g = require "globals"
 local spot_sheetOptions =
         {
             width = 300,
@@ -5,8 +6,8 @@ local spot_sheetOptions =
             numFrames = 64
         }
 
-local spot_sheet_nice = graphics.newImageSheet( "Graphics/Animation/spotRun.png", spot_sheetOptions )        
-local spot_sheet_evil = graphics.newImageSheet( "Graphics/Animation/spotTransformHit.png", spot_sheetOptions )
+local spot_sheet_nice = graphics.newImageSheet( g.animationPath.."spotRun.png", spot_sheetOptions )        
+local spot_sheet_evil = graphics.newImageSheet( g.animationPath.."spotTransformHit.png", spot_sheetOptions )
         
 local spot_seq = 
 {
@@ -87,8 +88,8 @@ local spot_seq =
         sheet=spot_sheet_evil,
         start = 1,
         count = 6,
-        time = 800,
-        loopCount = 0,
+        time = 600,
+        loopCount = 1,
         loopDirection = "forward"
     },
     {
@@ -96,8 +97,8 @@ local spot_seq =
         sheet=spot_sheet_evil,
         start = 9,
         count = 6,
-        time = 800,
-        loopCount = 0,
+        time = 600,
+        loopCount = 1,
         loopDirection = "forward"
     },
     {
@@ -105,8 +106,8 @@ local spot_seq =
         sheet=spot_sheet_evil,
         start = 17,
         count = 6,
-        time = 800,
-        loopCount = 0,
+        time = 600,
+        loopCount = 1,
         loopDirection = "forward"
     },
     {
@@ -114,8 +115,8 @@ local spot_seq =
         sheet=spot_sheet_evil,
         start = 25,
         count = 6,
-        time = 800,
-        loopCount = 0,
+        time = 600,
+        loopCount = 1,
         loopDirection = "forward"
     },
     {
@@ -123,8 +124,8 @@ local spot_seq =
         sheet=spot_sheet_evil,
         start = 33,
         count = 6,
-        time = 800,
-        loopCount = 0,
+        time = 600,
+        loopCount = 1,
         loopDirection = "forward"
     },
     {
@@ -132,8 +133,8 @@ local spot_seq =
         sheet=spot_sheet_evil,
         start = 41,
         count = 6,
-        time = 800,
-        loopCount = 0,
+        time = 600,
+        loopCount = 1,
         loopDirection = "forward"
     },
     {
@@ -141,8 +142,8 @@ local spot_seq =
         sheet=spot_sheet_evil,
         start = 49,
         count = 6,
-        time = 800,
-        loopCount = 0,
+        time = 600,
+        loopCount = 1,
         loopDirection = "forward"
     },
     {
@@ -150,8 +151,81 @@ local spot_seq =
         sheet=spot_sheet_evil,
         start = 57,
         count = 6,
-        time = 800,
-        loopCount = 0,
+        time = 600,
+        loopCount = 1,
+        loopDirection = "forward"
+    },
+    --HIT ANIMATIONS
+    {
+        name = "upRunHit",
+        sheet=spot_sheet_evil,
+        start = 7,
+        count = 2,
+        time = 200,
+        loopCount = 1,
+        loopDirection = "forward"
+    },
+    {
+        name = "upRightRunHit",
+        sheet=spot_sheet_evil,
+        start = 15,
+        count = 2,
+        time = 200,
+        loopCount = 1,
+        loopDirection = "forward"
+    },
+    {
+        name = "rightRunHit",
+        sheet=spot_sheet_evil,
+        start = 23,
+        count = 2,
+        time = 200,
+        loopCount = 1,
+        loopDirection = "forward"
+    },
+    {
+        name = "downRightRunHit",
+        sheet=spot_sheet_evil,
+        start = 31,
+        count = 2,
+        time = 200,
+        loopCount = 1,
+        loopDirection = "forward"
+    },
+    {
+        name = "downRunHit",
+        sheet=spot_sheet_evil,
+        start = 39,
+        count = 2,
+        time = 200,
+        loopCount = 1,
+        loopDirection = "forward"
+    },
+    {
+        name = "upLeftRunHit",
+        sheet=spot_sheet_evil,
+        start = 47,
+        count = 2,
+        time = 200,
+        loopCount = 1,
+        loopDirection = "forward"
+    },
+    {
+        name = "leftRunHit",
+        sheet=spot_sheet_evil,
+        start = 55,
+        count = 2,
+        time = 200,
+        loopCount = 1,
+        loopDirection = "forward"
+    },
+    {
+        name = "downLeftRunHit",
+        sheet=spot_sheet_evil,
+        start = 63,
+        count = 2,
+        time = 200,
+        loopCount = 1,
         loopDirection = "forward"
     }
 }
