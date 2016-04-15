@@ -85,7 +85,7 @@ for mapCounter=1,table.getn(map),1 do
 	if (tonumber(map[mapCounter][1]) <11 and tonumber(map[mapCounter][1]) >0) then
 		physlevel[mapCounter] = display.newPolygon( level, tonumber((map[mapCounter][3])-448)*size,tonumber((map[mapCounter][4])-448)*size, getVertices(tonumber(map[mapCounter][1]),tonumber(map[mapCounter][2])))
 		--physlevel[mapCounter]:setFillColor(0.5,0,0,1)
-		physlevel[mapCounter].fill = { type="image", filename="/Graphics/Background/LavaTile.png" }
+		physlevel[mapCounter].fill = { type="image", filename="/Graphics/Background/LavaTile1.png" }
 		physics.addBody( physlevel[mapCounter], "static", {friction = 0, bounce = 0.3, filter=col.wallCol} )
 		physlevel[mapCounter].myName = "Wall"
 		physlevel[mapCounter].super = physlevel[mapCounter]
