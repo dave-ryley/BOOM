@@ -7,22 +7,36 @@ local g = require "globals"
 ---------------------------------------------------------------------------------
 
 -- local forward references should go here
-
+local myText
+local button
 ---------------------------------------------------------------------------------
 
 -- "scene:create()"
+local function buttonPress( self, event )
+	composer.gotoScene( g.scenePath.."menu" )
+	return true
+end
+
 function scene:create( event )
 
 	local sceneGroup = self.view
-	myText = display.newText( 	"Credits", 
-								g.ccx, 
-								g.ccy, 
-								native.systemFont, 
-								80 )
+	myText = display.newText( "YOU DIED!", 
+									g.ccy, 
+									g.ccy, 
+									"Curse of the Zombie", 
+									80 )
 	sceneGroup:insert(myText)
+	button = display.newRect( 	g.ccx,
+								g.ach - 100,
+								g.acw*3/20,
+								100)
+	sceneGroup:insert(button)
+	button.touch = buttonPress
+	button:addEventListener( "touch", buttons )
 	-- Initialize the scene here.
 	-- Example: add display objects to "sceneGroup", add touch listeners, etc.
 end
+
 
 -- "scene:show()"
 function scene:show( event )
@@ -56,7 +70,9 @@ end
 
 -- "scene:destroy()"
 function scene:destroy( event )
-
+	myText:removeSelf()
+	myText = nil
+	button:removeEventListener( "touch", button )
 	local sceneGroup = self.view
 
 -- Called prior to the removal of scene's view ("sceneGroup").
@@ -71,6 +87,7 @@ scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
+--R:addEventListener( "key", onKeyPress )
 
 ---------------------------------------------------------------------------------
 

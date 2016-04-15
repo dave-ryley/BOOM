@@ -26,7 +26,7 @@ function spawn(angle, x, y)
     fireball:play()
     fireball.x = math.cos(math.rad(angle - 90))*100 + x -- need to determine actual angle
     fireball.y = math.sin(math.rad(angle - 90))*100 + y -- need to determine actual angle
-    fireball.myName = "fireball"
+    fireball.myName = "p_fireball"
 
     --local fireballShape = { -80,-70, 80,-70, 80,120, -80,120 }
     local fireballShape = { -50,-50, 50,-50, 50,50, -50,50 }
