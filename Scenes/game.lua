@@ -47,14 +47,14 @@ local function getVertices(type,rotation)
             vertices = {128,10,128,0,118,0,0,118,0,128,10,128}
         end
     elseif(type == 4)then
-    if(rotation == 1)then
-          vertices = {0,0,128,0,128,10,0,10}
-      elseif(rotation == 2)then
-          vertices = {54,0,64,0,64,128,54,128}
-      elseif(rotation == 3)then
-          vertices = {0,0,128,0,128,10,0,10}
-      else
-          vertices = {54,0,64,0,64,128,54,128}
+    	if(rotation == 1)then
+          	vertices = {0,0,128,0,128,20,0,20}
+      	elseif(rotation == 2)then
+          	vertices = {49,0,69,0,69,128,49,128}
+      	elseif(rotation == 3)then
+          	vertices = {0,0,128,0,128,20,0,20}
+      	else
+          	vertices = {49,0,69,0,69,128,49,128}
       end
     end
     for i = 1,table.getn(vertices),1 do
