@@ -13,10 +13,10 @@ local colFilters = require "collisionFilters"
 							},
 			sensorData	=	{
 								isSensor=true,
-								radius=500,
+								--radius=500,
 								filter=colFilters.sensorCol,
 							},
-			sensorRadius=	500,
+			sensorRadius=	1000,
 			health 		= 	1
 	}
 
@@ -31,7 +31,7 @@ local colFilters = require "collisionFilters"
 				if i.shooting == 0 then
 					i.shooting = 1
 					local impFire = audio.loadSound( "Sounds/Enemies/ImpFire.ogg" )
-					audio.play(impFire,{ channel = 10, loops = 0, fadein = 0})
+					audio.play(impFire,{ channel = audio.findFreeChannel(), loops = 0, fadein = 0})
 					i.animate(i.targetAngle, "Shoot")
 				elseif i.bounds.frame == 5 and i.shooting == 1 then
 					i.shooting = 2
