@@ -110,6 +110,11 @@ end
 
 function updateGUI()
 	sceneGroup:insert(player.shotgun.displayPower())
+	if(playerTextSpeed)then
+		playerTextSpeed:removeSelf()
+	end
+	playerTextSpeed = display.newText( sceneGroup, tostring(player.maxSpeed/50).." KMPH", 400, 100, "Curse of the Zombie", 50 )
+	playerTextSpeed:setFillColor( 1,1,0 )
 end
 -- "scene:show()"
 function scene:show( event )
@@ -177,11 +182,11 @@ local function onKeyEvent( event )
 		-- Adjust velocity for testing, remove for final game        
 		if ( event.keyName == "[" or event.keyName == "rightShoulderButton1" ) then
 			if (player.velocity > 0 ) then
-			--player.velocity = player.velocity - 1
+			player.maxSpeed = player.maxSpeed - 50
 				player.shotgun.powerUp(-1)
 			end
 		elseif ( event.keyName == "]" or event.keyName == "leftShoulderButton1" ) then
-			--player.velocity = player.velocity + 1
+			player.maxSpeed = player.maxSpeed + 50
 			player.shotgun.powerUp(1)
 		end
 		-- WASD and ArrowKeys pressed down
