@@ -37,7 +37,8 @@ local colFilters = require "collisionFilters"
 				elseif i.bounds.frame == 5 and i.shooting == 1 then
 					i.shooting = 2
 					local f = fireball.spawn(i.targetAngle, i.getX(), i.getY() )
-					i.parent:insert(f)
+					Runtime:dispatchEvent( {name="fireball", f=f} )
+					--i.parent:insert(f)
 				elseif i.bounds.frame == 7 and i.shooting == 2 and string.sub( i.bounds.sequence, -5 ) == "Shoot" then
 					i.animate(i.targetAngle, "Stand")
 					timer.performWithDelay(1000, 

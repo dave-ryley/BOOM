@@ -14,7 +14,7 @@ local move = require "movementFunctions"
 local physics = require "physics"
 physics.start()
 physics.setGravity(0,0)
-physics.setDrawMode( "hybrid" )
+physics.setDrawMode( "normal" )
 local levelBuilder = require "levelBuilder"
 -----Map-----
 local params = levelBuilder.buildLevel(g.level)
@@ -266,16 +266,25 @@ end
 local function makeGore( event )
 	timer.performWithDelay( 10, 
 		function ()
-			local g = event.splat(player.thisAimAngle, event.bounds.x, event.bounds.y)
-			camera:add(g, 4)
+			local gore = event.splat(player.thisAimAngle, event.bounds.x, event.bounds.y)
+			camera:add(gore, 4)
 		end
 	)
 end
 Runtime:addEventListener( "makeGore", makeGore)
 
+local function fireball( event )
+	timer.performWithDelay( 10, 
+		function ()
+			local f = event.f
+			camera:add(f, 3)
+		end
+	)
+end
+Runtime:addEventListener( "fireball", fireball)
+
 local function youWin( event )
 	print("you win")
-
 end
 Runtime:addEventListener( "youWin", youWin)
 

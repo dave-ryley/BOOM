@@ -1,5 +1,6 @@
 local S = {}
 local colFilters = require "collisionFilters"
+local g = require "globals"
 	local function spawn(links, x, y)
 		local group = {}
 			--local t = display.newImage("Graphics/Temp/sausage.png", 60, 20)
@@ -8,9 +9,10 @@ local colFilters = require "collisionFilters"
 			group.link = {}
 			group.myName = "sausage"
 			for i=1,links do
-				local l = display.newImage("Graphics/Temp/sausage.png")
-				l.width = l.width/10
-				l.height = l.height/10
+				local scale = 1.3
+				local l = display.newImage(g.gorePath.."IntestinePart.png")
+				l.width = l.width * scale
+				l.height = l.height * scale
 				l.x = x + l.width * i
 				l.y = y
 				l.super = l
@@ -32,9 +34,9 @@ local colFilters = require "collisionFilters"
 					group.myJoints[#group.myJoints + 1] = physics.newJoint( "pivot", 
 											prevLink, 
 											l,
-											prevLink.x + 25,
+											prevLink.x + 8 * scale,
 											prevLink.y,
-											l.x + 25,
+											l.x + 8 * scale,
 											l.y
 											)
 					--print
