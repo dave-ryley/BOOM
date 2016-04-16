@@ -28,8 +28,6 @@ local map = {
 	fireballs = {}
 }
 
------Map-----
-
 
 
 function createMap()

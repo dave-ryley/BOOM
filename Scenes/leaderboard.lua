@@ -1,4 +1,5 @@
 local composer = require( "composer" )
+local g = require "globals"
 local scene = composer.newScene()
 
 ---------------------------------------------------------------------------------
@@ -50,6 +51,28 @@ function scene:create( event )
 	sceneGroup:insert(myText)
 	-- Initialize the scene here.
 	-- Example: add display objects to "sceneGroup", add touch listeners, etc.
+
+	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
+	function buttonPress( self, event )
+    	if event.phase == "began" then
+    		audio.play(press, {channel = 31})
+    		if self.id == 1 then
+    			composer.gotoScene( g.scenePath.."menu" )
+    		end
+    		return true
+    	end
+	end
+
+	button = display.newRect(125,37.5,250,75)
+	button:setFillColor( 1, 1, 0 )
+	button.id = 1
+	button.touch = buttonPress
+	button:addEventListener( "touch", button )
+		
+	buttonText = display.newText( "MAIN MENU", 125,37.5, "Curse of the Zombie", 30 )
+	buttonText:setFillColor(1,0,0)
+	sceneGroup:insert(button)
+	sceneGroup:insert(buttonText)
 end
 
 -- "scene:show()"
@@ -59,7 +82,6 @@ function scene:show( event )
 	local phase = event.phase
 
 	if ( phase == "will" ) then
-	  -- Called when the scene is still off screen (but is about to come on screen).
 	elseif ( phase == "did" ) then
 	  -- Called when the scene is now on screen.
 	  -- Insert code here to make the scene come alive.
@@ -86,7 +108,8 @@ end
 function scene:destroy( event )
 
 	local sceneGroup = self.view
-
+		path = nil
+		file = nil
 -- Called prior to the removal of scene's view ("sceneGroup").
 -- Insert code here to clean up the scene.
 -- Example: remove display objects, save state, etc.

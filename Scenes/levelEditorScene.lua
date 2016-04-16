@@ -1,9 +1,10 @@
 local composer = require( "composer" )
-
+local g = require "globals"
 local scene = composer.newScene()
+composer.recycleOnSceneChange = true
+--composer.isDebug = true
 
 grid = display.newGroup()
--- "scene:create()"
 
 local function mapPoint(object,rotation,xValue,yValue)
     writeMap[mapSize] = {obj = object, rot= rotation, x = xValue, y = yValue}
@@ -50,63 +51,91 @@ function scene:create( event )
   local sceneGroup = self.view
   overlay = display.newGroup( )
 
-myText = display.newText(overlay, "LEVEL EDITOR", display.contentCenterX, 40, "Curse of the Zombie.ttf", 80 )
-menu = display.newRect( overlay, display.contentWidth/16, display.contentHeight/2, display.contentWidth/8, display.contentHeight )
+  myText = display.newText(overlay, "LEVEL EDITOR", display.contentCenterX, 40, "Curse of the Zombie.ttf", 80 )
+  menu = display.newRect( overlay, display.contentWidth/16, display.contentHeight/2, display.contentWidth/8, display.contentHeight )
 
-writeMap = {}
+  writeMap = {}
 
-map = {}
-mapSize = 0
-selectedImage = ""
-initPosX = 0
-initPosY = 0
+  map = {}
+  mapSize = 0
+  selectedImage = ""
+  initPosX = 0
+  initPosY = 0
 
-blocked = false
+  blocked = false
 
---objno,rotation,x,y
+  --objno,rotation,x,y
 
-objectFileName = {"lavaTile","lavaTile","wall_diagonal","wall_flat","winTile"}
-enemyFileName = {"Imp","HellPup","Minator"}
-trapFileName = {"Slow","Fire", "FlameThrower"}
-miscFileName = {}
+  objectFileName = {"lavaTile","lavaTile","wall_diagonal","wall_flat","winTile"}
+  enemyFileName = {"Imp","HellPup","Minator"}
+  trapFileName = {"Slow","Fire", "FlameThrower"}
+  miscFileName = {}
 
-objectColours = {{0,0,1},{0,1,0},{0,1,1},{1,0,0}}
-selectedObject = 1
-rotation = 1
+  objectColours = {{0,0,1},{0,1,0},{0,1,1},{1,0,0}}
+  selectedObject = 1
+  rotation = 1
 
---initial wall in corner
-selectedShape = display.newPolygon( overlay, display.contentWidth/16,display.contentHeight-100, getVertices(selectedObject,rotation) )
-selectedShape.fill = { type="image", filename="Graphics/Background/"..objectFileName[selectedObject].."1.png" }
+  --initial wall in corner
+  selectedShape = display.newPolygon( overlay, display.contentWidth/16,display.contentHeight-100, getVertices(selectedObject,rotation) )
+  selectedShape.fill = { type="image", filename="Graphics/Background/"..objectFileName[selectedObject].."1.png" }
 
-mapDone = false
+  mapDone = false
 
-top = 0
-bottom = display.contentHeight
-left = 0
-right = display.contentWidth
-squareSize = 128
+  top = 0
+  bottom = display.contentHeight
+  left = 0
+  right = display.contentWidth
+  squareSize = 128
 
---Draw Grid
-for i = 1, (right)/squareSize, 1 do
-    gridLines = display.newLine(i*(left+squareSize), top, i* (left+squareSize), bottom )
-    gridLines:setStrokeColor( 1, 1, 1, 0.3 )
-    gridLines.strokeWidth = 2
-end
-for i = 1, (bottom)/squareSize, 1 do
-    gridLines = display.newLine(left, i*squareSize, right, i*squareSize )
-    gridLines:setStrokeColor( 1, 1, 1, 0.3)
-    gridLines.strokeWidth = 2
-end
+  --Draw Grid
+  for i = 1, (right)/squareSize, 1 do
+      gridLines = display.newLine(overlay,i*(left+squareSize), top, i* (left+squareSize), bottom )
+      gridLines:setStrokeColor( 1, 1, 1, 0.3 )
+      gridLines.strokeWidth = 2
+  end
+  for i = 1, (bottom)/squareSize, 1 do
+      gridLines = display.newLine(overlay,left, i*squareSize, right, i*squareSize )
+      gridLines:setStrokeColor( 1, 1, 1, 0.3)
+      gridLines.strokeWidth = 2
+  end
 
-mapSize = mapSize +1
-map[mapSize] = display.newPolygon( grid, 448, 448, getVertices(0,1))
-map[mapSize]:setFillColor( 1,0,0)
-mapPoint(0,rotation,448,448)
+  mapSize = mapSize +1
+  map[mapSize] = display.newPolygon( grid, 448, 448, getVertices(0,1))
+  map[mapSize]:setFillColor( 1,0,0)
+  mapPoint(0,rotation,448,448)
 
-mapSize = mapSize +1
-map[mapSize] = display.newPolygon( grid, 1216, 448, getVertices(0,1))
-map[mapSize]:setFillColor(0,1,0)
-mapPoint(0,rotation,1216,448)
+  mapSize = mapSize +1
+  map[mapSize] = display.newPolygon( grid, 1216, 448, getVertices(0,1))
+  map[mapSize]:setFillColor(0,1,0)
+  mapPoint(0,rotation,1216,448)
+
+  function removeAllListeners(obj)
+    obj._functionListeners = nil
+    obj._tableListeners = nil
+  end
+
+  local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
+  function buttonPress( self, event )
+      if event.phase == "began" then
+        audio.play(press, {channel = 31})
+        if self.id == 1 then
+          removeAllListeners(Runtime)
+          composer.gotoScene( g.scenePath.."menu" )
+        end
+        return true
+      end
+  end
+
+  button = display.newRect(overlay,125,37.5,250,75)
+  button:setFillColor( 1, 1, 0 )
+  button.id = 1
+  button.touch = buttonPress
+  button:addEventListener( "touch", button )
+    
+  buttonText = display.newText(overlay,"MAIN MENU", 125,37.5, "Curse of the Zombie", 30 )
+  buttonText:setFillColor(1,0,0)
+  sceneGroup:insert(grid)
+  sceneGroup:insert(overlay)
 end
  
 -- "scene:show()"
@@ -143,7 +172,6 @@ end
 function scene:destroy( event )
  
    local sceneGroup = self.view
- 
    -- Called prior to the removal of scene's view ("sceneGroup").
    -- Insert code here to clean up the scene.
    -- Example: remove display objects, save state, etc.
