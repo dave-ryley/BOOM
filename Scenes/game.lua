@@ -98,6 +98,7 @@ function scene:create( event )
 		leftJoystick.activate()
 	end
 	local pauseButton = display.newCircle(0,0,200)
+	pauseButton:setFillColor(1,1,0)
 	sceneGroup:insert(pauseButton)
 	pauseButton.id = 1
 	pauseButton.touch = buttonPress

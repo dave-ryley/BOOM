@@ -22,6 +22,28 @@ function scene:create( event )
 	sceneGroup:insert(myText)
 	-- Initialize the scene here.
 	-- Example: add display objects to "sceneGroup", add touch listeners, etc.
+
+	
+	function buttonPress( self, event )
+    	if event.phase == "began" then
+    		audio.play(press, {channel = 31})
+    		if self.id == 1 then
+    			composer.gotoScene( g.scenePath.."menu" )
+    		end
+    		return true
+    	end
+	end
+
+	button = display.newRect(250,75,500,150)
+	button:setFillColor( 1, 0, 0 )
+	button.id = 1
+	button.touch = buttonPress
+	button:addEventListener( "touch", button )
+		
+	buttonText = display.newText( "MAIN MENU", 250,75, "Curse of the Zombie", 50 )
+	buttonText:setFillColor(1,1,0)
+	sceneGroup:insert(button)
+	sceneGroup:insert(buttonText)
 end
 
 -- "scene:show()"

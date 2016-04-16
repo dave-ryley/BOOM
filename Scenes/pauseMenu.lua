@@ -25,14 +25,18 @@ function scene:create( event )
     		return true
     	end
 	end
+	buttonLabels = {"RESUME","MAIN MENU"}
+	buttonText = {}
 	buttons = {}
 	for i=1,2 do 
 		buttons[i] = display.newRect(g.ccx,g.ccy+(i-1)*200,500,150)
-		sceneGroup:insert(buttons[i])
 		buttons[i]:setFillColor( 1, 0, 0 )
 		buttons[i].id = i
 		buttons[i].touch = buttonPress
 		buttons[i]:addEventListener( "touch", buttons[i] )
+		
+		buttonText[i] = display.newText( buttonLabels[i], g.ccx,g.ccy+(i-1)*200, "Curse of the Zombie", 50 )
+		buttonText[i]:setFillColor(1,1,0)
 	end
 end
 
@@ -42,6 +46,7 @@ function scene:show( event )
 	if phase == "will" then
 		for i=1,2 do 
 			sceneGroup:insert(buttons[i])
+			sceneGroup:insert(buttonText[i])
 		end
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
