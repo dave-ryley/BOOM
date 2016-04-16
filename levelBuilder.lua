@@ -2,6 +2,11 @@ local B = {}
 
 	local function buildLevel(levelNo)
 		local b = {}
+		b.enemies = {}
+		b.traps = {}
+		b.physlevel = {}
+		b.satanPath = {}
+		b.level = display.newGroup( )
 		local g = require "globals"
 		local col = require "collisionFilters"
 		local enemy = require "enemy"
@@ -9,16 +14,9 @@ local B = {}
 		local spot = require "spot"
 		local slowTrap = require "Traps.slowTrap"
 		local winTrap = require "Traps.winTrap"
-		b.level = display.newGroup( )
-		b.enemies = {group = display.newGroup()}
-		b.traps = display.newGroup( )
 		local levelName = "level"..levelNo..".BOOMMAP"
 		local map = {}
-		local satanPath = {}
 		local satanPathLength = 0
-		local imps = display.newGroup()
-		local spots = display.newGroup()
-		local minotaurs = display.newGroup()
 		local size = 5
 		local verticesMap = {
 			{
@@ -90,18 +88,21 @@ local B = {}
 		end
 		io.close(file)
 		local objectFileName = {"lavaTile","lavaTile","wall_diagonal","wall_flat"}
-		local physlevel = {}
+		
 		for mapCounter=1,table.getn(map),1 do
 			if (tonumber(map[mapCounter][1]) <11 and tonumber(map[mapCounter][1]) >0) then
-				physlevel[mapCounter] = display.newPolygon( b.level,
-															tonumber((map[mapCounter][3])-448)*size,
-															tonumber((map[mapCounter][4])-448)*size, 
-															getVertices(tonumber(map[mapCounter][1]),
-															tonumber(map[mapCounter][2])))
-				--physlevel[mapCounter]:setFillColor(0.5,0,0,1)
-				physlevel[mapCounter].fill = { 	type="image", 
-												filename=g.backgroundPath..objectFileName[tonumber(map[mapCounter][1])]..tonumber(map[mapCounter][2])..".png" }
-				physics.addBody( 	physlevel[mapCounter], 
+				b.physlevel[mapCounter] = display.newPolygon(	b.level,
+																tonumber((map[mapCounter][3])-448)*size,
+																tonumber((map[mapCounter][4])-448)*size, 
+																getVertices(tonumber(map[mapCounter][1]),
+																tonumber(map[mapCounter][2])))
+				--b.physlevel[mapCounter]:setFillColor(0.5,0,0,1)
+				b.physlevel[mapCounter].fill = { 	type="image", 
+												filename=g.backgroundPath
+												..objectFileName[tonumber(map[mapCounter][1])]
+												..tonumber(map[mapCounter][2])..".png" 
+											}
+				physics.addBody( 	b.physlevel[mapCounter], 
 									"static", 
 									{
 										friction = 0, 
@@ -109,40 +110,39 @@ local B = {}
 										filter=col.wallCol
 									}
 								)
-				physlevel[mapCounter].myName = "Wall"
-				physlevel[mapCounter].super = physlevel[mapCounter]
+				b.physlevel[mapCounter].myName = "Wall"
+				b.physlevel[mapCounter].super = b.physlevel[mapCounter]
 			elseif(tonumber(map[mapCounter][1]) <21)then
 				local enemyType = tonumber(map[mapCounter][1])
 				local location = 	{
 										tonumber((map[mapCounter][3])-448)*size,
 										tonumber((map[mapCounter][4])-448)*size
 									}
-				if(enemyType == 11)then
-					b.enemies.group:insert(imp.spawn(location[1],location[2]).parent)
-				elseif(enemyType == 12)then
-					b.enemies.group:insert(spot.spawn(location[1],location[2]).parent)
-				elseif(enemyType == 13)then
+				if (enemyType == 11) then
+					b.enemies[#b.enemies + 1] = imp.spawn(location[1],location[2])
+				elseif (enemyType == 12) then 
+					b.enemies[#b.enemies + 1] = spot.spawn(location[1],location[2])
+				elseif (enemyType == 13) then
 					--spawn rosy
 				end
 			elseif(tonumber(map[mapCounter][1]) <31)then
 				--spawn items/deco
 			elseif(tonumber(map[mapCounter][1]) <51)then
 				--traps
-				local t = slowTrap.spawn( 	tonumber((map[mapCounter][3])-448)*size, 
-											tonumber((map[mapCounter][4])-448)*size)
-				b.traps:insert(t.bounds)
+				b.traps[#b.traps + 1] = slowTrap.spawn(	tonumber((map[mapCounter][3])-448)*size, 
+														tonumber((map[mapCounter][4])-448)*size)
+
 			elseif(tonumber(map[mapCounter][1]) ==100)then
-				local t = winTrap.spawn(tonumber((map[mapCounter][3])-448)*size, tonumber((map[mapCounter][4])-448)*size)
-				b.traps:insert(t.bounds)
+				b.traps[#b.traps + 1] = winTrap.spawn(	tonumber((map[mapCounter][3])-448)*size,
+														tonumber((map[mapCounter][4])-448)*size)
 			elseif(tonumber(map[mapCounter][1]) ==666)then
 				satanPathLength = satanPathLength+1
-				satanPath[satanPathLength] = {
-									x=tonumber((map[mapCounter][3])-448)*size, 
-									y=tonumber((map[mapCounter][4])-448)*size}
+				b.satanPath[satanPathLength] = {
+											x=tonumber((map[mapCounter][3])-448)*size, 
+											y=tonumber((map[mapCounter][4])-448)*size}
 
 			end
 		end
-		b.satanPath = satanPath
 		return b
 	end
 	B.buildLevel = buildLevel
