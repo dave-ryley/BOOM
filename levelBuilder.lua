@@ -11,6 +11,7 @@ local B = {}
 		local winTrap = require "Traps.winTrap"
 		b.level = display.newGroup( )
 		b.enemies = {group = display.newGroup()}
+		b.traps = display.newGroup( )
 		local levelName = "level"..levelNo..".BOOMMAP"
 		local map = {}
 		local satanPath = {}
@@ -132,9 +133,12 @@ local B = {}
 				--spawn items/deco
 			elseif(tonumber(map[mapCounter][1]) <51)then
 				--traps
-				slowTrap.spawn( tonumber((map[mapCounter][3])-448)*size, tonumber((map[mapCounter][4])-448)*size)
+				local t = slowTrap.spawn( 	tonumber((map[mapCounter][3])-448)*size, 
+											tonumber((map[mapCounter][4])-448)*size)
+				b.traps:insert(t.bounds)
 			elseif(tonumber(map[mapCounter][1]) ==100)then
-				winTrap.spawn(tonumber((map[mapCounter][3])-448)*size, tonumber((map[mapCounter][4])-448)*size)
+				local t = winTrap.spawn(tonumber((map[mapCounter][3])-448)*size, tonumber((map[mapCounter][4])-448)*size)
+				b.traps:insert(t.bounds)
 			elseif(tonumber(map[mapCounter][1]) ==666)then
 				satanPathLength = satanPathLength+1
 				satanPath[satanPathLength] = {
