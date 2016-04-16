@@ -67,12 +67,7 @@ local B = {}
 		b.floor.fill = {type = "image",filename = g.backgroundPath.."floorTile.png"}
 		b.floor.fill.scaleX = 0.001
 		b.floor.fill.scaleY = 0.001
---[[
-		local floorImage = {type = "image",	filename = g.backgroundPath.."FloorTile.png"}
-		floorImage.scaleX = 0.001
-		floorImage.scaleY = 0.001
-		b.floor.fill = floorImage
-]]
+
 		local path = system.pathForFile(levelName,system.ResourceDirectory)
 		local file = io.open(path,"r")
 		function explode(div,str)
