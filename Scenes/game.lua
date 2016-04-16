@@ -28,8 +28,6 @@ local map = {
 	fireballs = {}
 }
 
-
-<<<<<<< HEAD
 function updateGUI()
 	sceneGroup:insert(player.shotgun.displayPower())
 	if(playerTextSpeed)then
@@ -38,10 +36,6 @@ function updateGUI()
 	playerTextSpeed = display.newText( sceneGroup, tostring(player.maxSpeed/50).." KMPH", 400, 100, "Curse of the Zombie", 50 )
 	playerTextSpeed:setFillColor( 1,1,0 )
 end
--- "scene:show()"
-function scene:show( event )
-=======
->>>>>>> 6f8eb361664b31d40ea4e677aed7de4b30771916
 
 function createMap()
 	map.params = levelBuilder.buildLevel(g.level)
