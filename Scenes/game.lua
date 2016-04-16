@@ -114,9 +114,16 @@ end
 
 local function youWin( event )
 	print("you win")
+	local nextLevel = ""
 	g.level = g.level + 1
+	print(g.level .. " : " .. g.lastLevel)
+	if(g.level > g.lastLevel) then
+		nextLevel = "win"
+	else
+		nextLevel = "levelTransition"
+	end
 	g.gameState = "win"
-	composer.gotoScene( g.scenePath.."levelTransition")
+	composer.gotoScene( g.scenePath..nextLevel)
 end
 
 local function onKeyEvent( event )

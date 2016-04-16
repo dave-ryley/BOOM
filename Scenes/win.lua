@@ -8,43 +8,46 @@ local g = require "globals"
 
 -- local forward references should go here
 local myText
+local button
 ---------------------------------------------------------------------------------
 
 -- "scene:create()"
+local function buttonPress( self, event )
+	composer.gotoScene( g.scenePath.."menu" )
+	return true
+end
+
 function scene:create( event )
 
 	local sceneGroup = self.view
-	myText = display.newText( 	"Entering level "..g.level,
-								g.ccx, 
-								g.ccy, 
-								"Bloody.ttf", 
-								70 )
-	myText:setFillColor( 1,0,0 )
+	myText = display.newText( "YOU WIN!", 
+									g.ccy, 
+									g.ccy, 
+									"Curse of the Zombie", 
+									80 )
 	sceneGroup:insert(myText)
-
+	button = display.newRect( 	g.ccx,
+								g.ach - 100,
+								g.acw*3/20,
+								100)
+	sceneGroup:insert(button)
+	button.touch = buttonPress
+	button:addEventListener( "touch", button )
 	-- Initialize the scene here.
 	-- Example: add display objects to "sceneGroup", add touch listeners, etc.
-
 end
 
 
 -- "scene:show()"
-
 function scene:show( event )
 
 	local sceneGroup = self.view
 	local phase = event.phase
-
 	if ( phase == "will" ) then
 	-- Called when the scene is still off screen (but is about to come on screen).
 	elseif ( phase == "did" ) then
-
-		composer.removeScene( g.scenePath.."game", false )
-		timer.performWithDelay( 2000, 
-		function()
-			composer.gotoScene( g.scenePath.."game")
-		end
-	 )
+	composer.removeScene( g.scenePath.."game", false )
+	g.level = 1
 	-- Called when the scene is now on screen.
 	-- Insert code here to make the scene come alive.
 	-- Example: start timers, begin animation, play audio, etc.
@@ -70,6 +73,7 @@ end
 function scene:destroy( event )
 	myText:removeSelf()
 	myText = nil
+	button:removeEventListener( "touch", button )
 	local sceneGroup = self.view
 
 -- Called prior to the removal of scene's view ("sceneGroup").
@@ -84,6 +88,7 @@ scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
+--R:addEventListener( "key", onKeyPress )
 
 ---------------------------------------------------------------------------------
 
