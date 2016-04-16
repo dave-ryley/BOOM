@@ -17,4 +17,6 @@ G = {}
 	G.maxGore = 20
 	G.drawMode = "normal"
 
+	G.gameState = "intro" --intro/introTrans/win/
+
 return G

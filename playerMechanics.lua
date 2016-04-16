@@ -45,40 +45,70 @@ local Q = {}
 		P.bounds.isFixedRotation=true
 		P.bounds.x = (1216-448)*5
 		P.bounds.y = 0
-		--P.bounds.x = display.contentCenterX
-		--P.bounds.y = display.contentCenterY
-		P.bounds.linearDamping = 3
-		-- Camera lock object setup
-		P.cameraLock = display.newRect(0,-200,50,50)
-		P.cameraLock.alpha = 0.00
-		P.cameraLock.x = P.parent.x
-		P.cameraLock.y = P.parent.y
-		P.bounds.super = P
-		print("making new player: " ..P.myName)
-			--TORCH LIGHT--
+        --P.bounds.x = display.contentCenterX
+        --P.bounds.y = display.contentCenterY
+        P.bounds.linearDamping = 3
+        -- Camera lock object setup
+        P.cameraLock = display.newRect(0,-200,50,50)
+        P.cameraLock.alpha = 0.00
+        P.cameraLock.x = P.parent.x
+        P.cameraLock.y = P.parent.y
+        P.bounds.super = P
+        print("making new player: " ..P.myName)
+            --TORCH LIGHT--
 
-		P.torchLight = display.newRect(P.bounds.x, P.bounds.y,51200,51200)
-		display.setDefault( "textureWrapX", "clampToEdge" )
-		display.setDefault( "textureWrapY", "clampToEdge" )
-		P.torchLight.fill = {type = "image",filename ="Graphics/Animation/torchRad.png"}
-		P.torchLight.fill.scaleX = 0.02
-		P.torchLight.fill.scaleY = 0.02
-		P.torchLight.alpha = 0.75
-		P.parent:insert( P.visuals.lowerBody )
-		P.parent:insert( P.visuals.upperBody )
-		P.parent:insert( P.cameraLock)
-		P.parent:insert( P.bounds)
+        P.torchLight = display.newRect(P.bounds.x, P.bounds.y,51200,51200)
+        display.setDefault( "textureWrapX", "clampToEdge" )
+        display.setDefault( "textureWrapY", "clampToEdge" )
+        P.torchLight.fill = {type = "image",filename ="Graphics/Animation/torchRad.png"}
+        P.torchLight.fill.scaleX = 0.02
+        P.torchLight.fill.scaleY = 0.02
+        P.torchLight.alpha = 0.75
+        P.parent:insert( P.visuals.lowerBody )
+        P.parent:insert( P.visuals.upperBody )
+        P.parent:insert( P.cameraLock)
+        P.parent:insert( P.bounds)
+        P.parent.x, P.torchLight.x = P.bounds.x, P.bounds.x
+        P.parent.y, P.torchLight.y = P.bounds.y -50, P.bounds.y
+        P.visuals.animate(90, 90, 0, 0)
 
-		local update = function( event )
-			if(P.isAlive == true) then
+		local function update ( )
+			if(P.isAlive == true ) then
 				P.parent.x, P.torchLight.x = P.bounds.x, P.bounds.x
 				P.parent.y, P.torchLight.y = P.bounds.y -50, P.bounds.y
 				P.cameraLock.x = P.parent.x + P.isRotatingX*250
 				P.cameraLock.y = P.parent.y + P.isRotatingY*250
 				P.visuals.footsteps()
-			end
-			
+            end
+
+            -- MOVE THE PLAYER
+            if ( P.isMovingX ~= 0 or P.isMovingY ~= 0 ) then
+                --P.bounds.linearDamping = 5
+                local x, y = P.bounds:getLinearVelocity()
+                x = x + P.isMovingX*P.velocity
+                y = y + P.isMovingY*P.velocity
+                --print("x = " .. x .. " y = " .. y)
+                local hyp = math.sqrt(x*x + y*y) * 1.0
+                if (hyp > P.maxSpeed) then
+                    x = x/hyp * P.maxSpeed
+                    y = y/hyp * P.maxSpeed
+                    --print("x = " .. x .. " y = " .. y)
+                end
+                P.bounds:setLinearVelocity( x, y )
+                --P.parent.x, P.parent.y = P.bounds.x, P.bounds.y
+            end
+
+            -- PLACE THE SHOTGUN
+            if(P.shotgun.shooting == false) then
+                P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity)
+                P.shotgun.place(P.thisAimAngle, P.parent.x, P.parent.y)
+            else
+                P.shotgun.place( P.shotgun.bounds.rotation , P.parent.x, P.parent.y)
+            end
+
 		end
+
+        P.update = update
 
 		local function playerAxis( axis, value )
 			-- Map event data to simple variables
@@ -114,36 +144,6 @@ local Q = {}
 		end
 
 		P.playerAxis = playerAxis
-
-		local function movePlayer()
-
-			if ( P.isMovingX ~= 0 or P.isMovingY ~= 0 ) then
-				--P.bounds.linearDamping = 5
-				local x, y = P.bounds:getLinearVelocity()
-				x = x + P.isMovingX*P.velocity
-				y = y + P.isMovingY*P.velocity
-				--print("x = " .. x .. " y = " .. y)
-				local hyp = math.sqrt(x*x + y*y) * 1.0
-				if (hyp > P.maxSpeed) then
-					x = x/hyp * P.maxSpeed
-					y = y/hyp * P.maxSpeed
-					--print("x = " .. x .. " y = " .. y)
-				end
-				P.bounds:setLinearVelocity( x, y )
-				--P.parent.x, P.parent.y = P.bounds.x, P.bounds.y
-			end
-
-			-- placing the shotgun
-
-			if(P.shotgun.shooting == false) then
-				P.visuals.animate(P.thisAimAngle, P.thisDirectionAngle, math.abs(P.isMovingX) + math.abs(P.isMovingY), P.velocity)
-				P.shotgun.place(P.thisAimAngle, P.parent.x, P.parent.y)
-			else
-				P.shotgun.place( P.shotgun.bounds.rotation , P.parent.x, P.parent.y)
-			end
-		end
-
-		P.movePlayer = movePlayer
 
 		local function blastDisppear( event )
 			P.shotgun.bounds.isAwake = false
@@ -253,7 +253,6 @@ local Q = {}
 		P.virtualJoystickInput = virtualJoystickInput
 
 		P.bounds:addEventListener( "collision", P.onCollision )
-		Runtime:addEventListener( "enterFrame", update )
 		return P
 	end
 	Q.spawn = spawn

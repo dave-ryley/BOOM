@@ -74,8 +74,27 @@ function createMap()
 	camera.damping = 10
 	camera:setFocus(map.player.cameraLock)
 	camera:track()
-end 
 
+	-- BEGIN GAME
+	timer.performWithDelay(2000, 
+		-- Stays on satan for 2 seconds
+		function() 
+			g.gameState = "introTransition" 
+			-- Pans over to the player
+			transition.to( 	map.player.cameraLock, 
+							{time = 1000, 
+							x = map.player.bounds.x, 
+							y = map.player.bounds.y, 
+							onComplete = 
+								-- Game begins
+								function()
+									g.gameState = "playing"
+								end
+							} )
+		end
+	)
+
+end 
 
 
 function updateGUI()
@@ -236,15 +255,14 @@ local function getPlayerLocation( event )
 end
 
 local function gameLoop( event )
-	--print("in game loop")
-	if g.pause == false and axis ~= "" then
-		
-		--local shotgunOMeter = map.player.shotgun.displayPower()
-		--updateGUI()
+	if g.pause == false and g.gameState == "playing" then
+		print("in game loop")
 		if(g.android) then
 			map.player.virtualJoystickInput(leftJoystick.angle, leftJoystick.xLoc/70, leftJoystick.yLoc/70, rightJoystick.angle, rightJoystick.distance/70, rightJoystick.xLoc/70, rightJoystick.yLoc/70)
 		end
-		map.player.movePlayer()
+		map.player.update()
+	elseif g.gameState == "intro" then
+		map.player.cameraLock.x, map.player.cameraLock.y = map.satan.bounds.x, map.satan.bounds.y
 	end
 	return true
 end
