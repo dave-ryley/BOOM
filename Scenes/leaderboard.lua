@@ -63,14 +63,14 @@ function scene:create( event )
     	end
 	end
 
-	button = display.newRect(250,75,500,150)
-	button:setFillColor( 1, 0, 0 )
+	button = display.newRect(125,37.5,250,75)
+	button:setFillColor( 1, 1, 0 )
 	button.id = 1
 	button.touch = buttonPress
 	button:addEventListener( "touch", button )
 		
-	buttonText = display.newText( "MAIN MENU", 250,75, "Curse of the Zombie", 50 )
-	buttonText:setFillColor(1,1,0)
+	buttonText = display.newText( "MAIN MENU", 125,37.5, "Curse of the Zombie", 30 )
+	buttonText:setFillColor(1,0,0)
 	sceneGroup:insert(button)
 	sceneGroup:insert(buttonText)
 end

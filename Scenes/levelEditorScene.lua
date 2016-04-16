@@ -119,13 +119,13 @@ function scene:create( event )
   end
 
   button = display.newRect(overlay,125,37.5,250,75)
-  button:setFillColor( 1, 0, 0 )
+  button:setFillColor( 1, 1, 0 )
   button.id = 1
   button.touch = buttonPress
   button:addEventListener( "touch", button )
     
   buttonText = display.newText(overlay,"MAIN MENU", 125,37.5, "Curse of the Zombie", 30 )
-  buttonText:setFillColor(1,1,0)
+  buttonText:setFillColor(1,0,0)
   sceneGroup:insert(grid)
   sceneGroup:insert(overlay)
 end
