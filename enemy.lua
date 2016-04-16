@@ -196,12 +196,15 @@ local C = {}
 		local function takeHit()
 			e.health = e.health - 1
 			e.hit = true
+			--print(e.myName.. " took hit: health = " .. e.health)
 			if(e.health <= 0) then
 				e.die()
 			else
 				timer.performWithDelay( 500, 
 					function ()
-						e.hit = false
+						if(e ~= nil) then
+							e.hit = false
+						end
 					end
 				)
 			end

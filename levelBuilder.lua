@@ -137,10 +137,13 @@ local B = {}
 				winTrap.spawn(tonumber((map[mapCounter][3])-448)*size, tonumber((map[mapCounter][4])-448)*size)
 			elseif(tonumber(map[mapCounter][1]) ==666)then
 				satanPathLength = satanPathLength+1
-				satanPath[satanPathLength] = {tonumber((map[mapCounter][3])-448)*size, tonumber((map[mapCounter][4])-448)*size}
+				satanPath[satanPathLength] = {
+									x=tonumber((map[mapCounter][3])-448)*size, 
+									y=tonumber((map[mapCounter][4])-448)*size}
+
 			end
 		end
-		
+		b.satanPath = satanPath
 		return b
 	end
 	B.buildLevel = buildLevel

@@ -190,10 +190,10 @@ local P = {}
 	P.onCollision = function( event )
 		if (event.phase == "began" and event.other ~= nil) then
 			local other = event.other.super
-			print("in player collided with: ".. other.myName)
+			--print("in player collided with: ".. other.myName)
 			local s = string.sub(other.myName, 1, 2)
 			if(s == "e_" or s == "p_") then
-				print(P.health)
+				--print(P.health)
 				P.health = P.health -1
 			end
 			if(P.health == 0) then

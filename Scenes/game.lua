@@ -10,6 +10,8 @@ local imp = require "imp"
 local move = require "movementFunctions"
 
 
+--local performance = require('performance')
+--performance:newPerformanceMeter()
 
 local physics = require "physics"
 physics.start()
@@ -17,12 +19,13 @@ physics.setGravity(0,0)
 physics.setDrawMode( "normal" )
 local levelBuilder = require "levelBuilder"
 -----Map-----
-
+local satan = require "satan"
 local params = levelBuilder.buildLevel(g.level)
 local level = params.level
 local enemies = params.enemies
 local floor = params.floor
-
+local satan1 = satan.spawn(params.satanPath)
+satan1.start()
 local controllerMapping = require "controllerMapping"
 local player = require "playerMechanics"
 
@@ -33,6 +36,7 @@ camera:add(player.cameraLock, 1)
 camera:add(player.shotgun.blast, 1)
 camera:add(player.shotgun.bounds, 1)
 camera:add(player.bounds, 1)
+camera:add(satan1.bounds, 2)
 --print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
 camera:add(floor,5)
 camera:add(level, 3)
