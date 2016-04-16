@@ -2,8 +2,6 @@ local S = {}
 
 	local function spawn(path)
 		local s = {}
-		s.x = 1000
-		s.y = 0
 		s.currentPath = 1
 		s.path = {}
 		s.bounds = display.newRect( 0, 0, 200, 200 )
