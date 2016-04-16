@@ -1,6 +1,8 @@
 local composer = require( "composer" )
 local g = require "globals"
 local scene = composer.newScene()
+composer.recycleOnSceneChange = true
+--composer.isDebug = true
 
 grid = display.newGroup()
 
@@ -107,11 +109,17 @@ function scene:create( event )
   map[mapSize]:setFillColor(0,1,0)
   mapPoint(0,rotation,1216,448)
 
+  function removeAllListeners(obj)
+    obj._functionListeners = nil
+    obj._tableListeners = nil
+  end
+
   local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
   function buttonPress( self, event )
       if event.phase == "began" then
         audio.play(press, {channel = 31})
         if self.id == 1 then
+          removeAllListeners(Runtime)
           composer.gotoScene( g.scenePath.."menu" )
         end
         return true
@@ -164,7 +172,6 @@ end
 function scene:destroy( event )
  
    local sceneGroup = self.view
- 
    -- Called prior to the removal of scene's view ("sceneGroup").
    -- Insert code here to clean up the scene.
    -- Example: remove display objects, save state, etc.
