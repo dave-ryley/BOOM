@@ -19,7 +19,6 @@ end
 
 function scene:create( event )
 
-
 	local sceneGroup = self.view
 	myText = display.newText( "YOU DIED!", 
 									g.ccy, 
@@ -33,7 +32,7 @@ function scene:create( event )
 								100)
 	sceneGroup:insert(button)
 	button.touch = buttonPress
-	button:addEventListener( "touch", buttons )
+	button:addEventListener( "touch", button )
 	-- Initialize the scene here.
 	-- Example: add display objects to "sceneGroup", add touch listeners, etc.
 end

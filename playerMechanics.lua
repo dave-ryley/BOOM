@@ -215,12 +215,14 @@ local Q = {}
 
 		P.onCollision = function( event )
 			if (event.phase == "began" and event.other ~= nil) then
-				--local other = event.other.super
-				local s = string.sub(event.other.myName, 1, 2)
+				local other = event.other.super
+				local s = string.sub(other.myName, 1, 2)
 				if(s == "e_" or s == "p_") then
 					print("in player collided with: ".. event.other.myName)
 					print("player health: "..P.health)
-					P.health = P.health - 1
+					if(other.enemyType ~= "imp") then
+						P.health = P.health - 1
+					end
 				end
 				if(P.health == 0) then
 					P.die()

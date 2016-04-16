@@ -15,7 +15,6 @@ local C = {}
 	local function spawn(enemyType, startX, startY, data)
 
 		local m = require "movementFunctions"
-		C.move = m.spawn()
 		local enemy = require(  path .. enemyType .. "Visuals")
 		C.id = C.id + 1
 		--require for the gory splatter effects
@@ -26,6 +25,7 @@ local C = {}
 -----------------------------------------------------------------------------------
 		--create enemy table
 		local e = require(  path .. enemyType .. "Visuals").spawn()
+		e.move = m.spawn()
 		--display group for physics components
 		e.parent = display.newGroup()
 		--parent:insert(e.animate)
@@ -35,6 +35,7 @@ local C = {}
 		e.hasTarget = false
 		--used for entity identification
 		e.id = C.id
+		e.enemyType = enemyType
 		e.myName = "e_"..enemyType .. tostring(C.id)
 		e.bounds.myName=e.myName.."_bounds"
 
@@ -123,7 +124,7 @@ local C = {}
 	    function updatePlayerLocation(x, y)
 			e.targetX = x
 			e.targetY = y
-			e.targetAngle = C.move.calculateLineAngle(
+			e.targetAngle = e.move.calculateLineAngle(
 									e.bounds.x,
 									e.bounds.y,
 									e.targetX,

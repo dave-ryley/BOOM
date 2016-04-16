@@ -1,9 +1,10 @@
 local S = {}
 	
-	local C = require "enemies.satanVisuals"
 	
 	local function spawn(path)
-		local s = C.spawn()
+		local s = {}
+		local c = require "enemies.satanVisuals"
+		s = c.spawn()
 		s.currentPath = 1
 		s.speed = 0.77
 		s.path = {}
@@ -26,7 +27,10 @@ local S = {}
 			--print(s.path[currentPath].x.." : ".. s.path[currentPath].y)
 			if(s.currentPath < #s.path) then 
 				s.currentPath = s.currentPath + 1
-				transition.to(s.bounds,{time = s.path[s.currentPath][3], x=s.path[s.currentPath][1], y=s.path[s.currentPath][2], onComplete = s.destinationReached})
+				transition.to(s.bounds,{time = 	s.path[s.currentPath][3], 
+												x=s.path[s.currentPath][1], 
+												y=s.path[s.currentPath][2], 
+												onComplete = s.destinationReached})
 				print("Hi")
 			end
 		end
@@ -35,7 +39,11 @@ local S = {}
 
 		local function start( )
 			print("satan started")
-			transition.to( s.bounds, {time = 3000, x=s.path[s.currentPath][1], y=s.path[s.currentPath][2], onComplete = s.destinationReached} )
+			transition.to( 	s.bounds, 
+							{time = 3000, 
+							x=s.path[s.currentPath][1], 
+							y=s.path[s.currentPath][2], 
+							onComplete = s.destinationReached} )
 		end
 
 		s.start = start

@@ -13,7 +13,8 @@ G = {}
 	G.ccx = display.contentCenterX
 	G.ccy = display.contentCenterY
 	G.level = 1
-	G.health = 2
+	G.health = 7
 	G.maxGore = 20
+	G.drawMode = "normal"
 
 return G

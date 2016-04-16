@@ -43,7 +43,7 @@ local colFilters = require "collisionFilters"
 				i.animate(i.targetAngle, "Run", "Hit")
 			elseif(i.hasTarget == true) then
 				local move = require "movementFunctions"
-				local distance = move.calculateDistance(i.targetX, 
+				local distance = i.move.calculateDistance(i.targetX, 
 														i.targetY, 
 														i.bounds.x, 
 														i.bounds.y)

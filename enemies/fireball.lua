@@ -25,6 +25,7 @@ function spawn(angle, x, y)
 
 	local fireball = display.newSprite( fireballSheet, fireballSeq )
 	fireball:play()
+	fireball.enemyType = "fireball"
 	fireball.x = math.cos(math.rad(angle - 90))*100 + x -- need to determine actual angle
 	fireball.y = math.sin(math.rad(angle - 90))*100 + y -- need to determine actual angle
 	fireball.myName = "p_fireball"

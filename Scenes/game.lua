@@ -62,7 +62,7 @@ function createMap()
 	camera:add(map.level, 4)
 	camera:add(map.player.shotgun.blast, 1)
 	camera:add(map.player.shotgun.bounds, 1)
-	camera:add(map.satan.bounds, 2)
+	camera:add(map.satan.bounds, 1)
 	camera:add(map.enemiesDisplay, 2)
 	camera:add(map.trapsDisplay, 4)
 	camera:add(map.floor,5)
@@ -258,7 +258,7 @@ end
 function scene:create( event )
 	physics.start()
 	physics.setGravity(0,0)
-	physics.setDrawMode( "hybrid" )
+	physics.setDrawMode( g.drawMode)
 	g.pause = false
 	sceneGroup = self.view
 	createMap()

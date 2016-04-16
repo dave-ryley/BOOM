@@ -2,10 +2,11 @@ local S = {}
 	local g = require "globals"
 	local function spawn()
 		local V = {}
+		local v = require "SpriteSeq.satanSeq"
 		V.anim = ""
 		V.sounds = {}
 		
-		V.bounds = require "SpriteSeq.satanSeq"
+		V.bounds = v.spawn()
 
 		local function animate(angle, ext) -- angle i.e 90, ext is the extension onto the animation, i.e "Shoot" or "Stand"
 			-- Animate Upper Body
