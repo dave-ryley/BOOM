@@ -1,56 +1,259 @@
-local col = require "collisionFilters"
 local composer = require( "composer" )
-local g = require "globals"
 local scene = composer.newScene()
+local col = require "collisionFilters"
+local g = require "globals"
 local joysticks = require "joystick"
 local perspective = require("perspective")
-local camera = perspective.createView()
-local enemy = require "enemy"
-local imp = require "imp"
-local move = require "movementFunctions"
 local goreCount = 0
-
---local performance = require('performance')
---performance:newPerformanceMeter()
-
 local physics = require "physics"
-physics.start()
-physics.setGravity(0,0)
-physics.setDrawMode( "normal" )
-local levelBuilder = require "levelBuilder"
------Map-----
-local satan = require "satan"
-local params = levelBuilder.buildLevel(g.level)
-local level = params.level
-local enemies = params.enemies
-local floor = params.floor
-local satan1 = satan.spawn(params.satanPath)
-local traps = params.traps
-local gore = {}
-satan1.start()
+local playerBuilder = require "playerMechanics"
+local satanBuilder = require "satan"
+
+
 local controllerMapping = require "controllerMapping"
-local player = require "playerMechanics"
-player.bounds:translate(0,0)
+local levelBuilder = require "levelBuilder"
+local camera = perspective.createView()
 
-camera:add(player.parent, 1)
-camera:add(player.cameraLock, 1)
-camera:add(player.shotgun.blast, 1)
-camera:add(player.shotgun.bounds, 1)
-camera:add(player.bounds, 1)
-camera:add(satan1.bounds, 2)
-camera:add(traps, 4)
---print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
-camera:add(floor,5)
-camera:add(level, 3)
-camera:add(player.torchLight, 5)
-camera:add(enemies.group, 2)
+local map = {
+	params = {},
+	enemies = {},
+	traps = {},
+	player = {},
+	satan = {},
+	level = display.newGroup( ),
+	floor = display.newGroup( ),
+	trapsDisplay = display.newGroup( ),
+	enemiesDisplay = display.newGroup( ),
+	gore = {},
+	fireballs = {}
+}
 
--- INITIALIZING CAMERA
-camera:prependLayer()
-camera.damping = 10
-camera:setFocus(player.cameraLock)
-camera:track()
 
+<<<<<<< HEAD
+function updateGUI()
+	sceneGroup:insert(player.shotgun.displayPower())
+	if(playerTextSpeed)then
+		playerTextSpeed:removeSelf()
+	end
+	playerTextSpeed = display.newText( sceneGroup, tostring(player.maxSpeed/50).." KMPH", 400, 100, "Curse of the Zombie", 50 )
+	playerTextSpeed:setFillColor( 1,1,0 )
+end
+-- "scene:show()"
+function scene:show( event )
+=======
+>>>>>>> 6f8eb361664b31d40ea4e677aed7de4b30771916
+
+function createMap()
+	map.params = levelBuilder.buildLevel(g.level)
+	map.enemies = map.params.enemies
+	map.traps = map.params.traps
+	map.level = map.params.level
+	map.floor = map.params.floor
+	map.player = playerBuilder.spawn()
+
+	for i = 1, #map.enemies do
+		map.enemiesDisplay:insert(map.enemies[i].parent)
+	end
+
+	for i = 1, #map.traps do
+		map.trapsDisplay:insert(map.traps[i].bounds)
+	end
+
+	map.satan = satanBuilder.spawn(map.params.satanPath)
+	map.satan.start()
+	map.player.bounds:translate(0,0)
+
+	camera:add(map.player.parent, 1)
+	camera:add(map.player.bounds, 1)
+	camera:add(map.level, 4)
+	camera:add(map.player.shotgun.blast, 1)
+	camera:add(map.player.shotgun.bounds, 1)
+	camera:add(map.satan.bounds, 2)
+	camera:add(map.enemiesDisplay, 2)
+	camera:add(map.trapsDisplay, 4)
+	camera:add(map.floor,5)
+	camera:add(map.player.torchLight, 5)
+	--print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
+
+	-- INITIALIZING CAMERA
+	camera:prependLayer()
+	camera.damping = 10
+	camera:setFocus(map.player.cameraLock)
+	camera:track()
+end 
+
+
+
+function updateGUI()
+	sceneGroup:insert(map.player.shotgun.displayPower())
+end
+
+local function onAxisEvent( event )
+	-- Map event data to simple variables
+	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
+		local axis = controllerMapping.axis[event.axis.number]
+		--if g.pause then print("g.pause = true") else print("g.pause = false") end
+		if(g.pause == false) then
+			map.player.playerAxis(axis, event.normalizedValue)
+		end
+	end
+	return true
+end
+
+local function onKeyEvent( event )
+	local phase = event.phase
+	local keyName = event.keyName
+	local axis = ""
+	local value = 0
+
+	if (event.phase == "down") then
+		-- Adjust velocity for testing, remove for final game        
+		if ( event.keyName == "[" or event.keyName == "rightShoulderButton1" ) then
+			if (player.velocity > 0 ) then
+			player.maxSpeed = player.maxSpeed - 50
+				player.shotgun.powerUp(-1)
+			end
+		elseif ( event.keyName == "]" or event.keyName == "leftShoulderButton1" ) then
+			player.maxSpeed = player.maxSpeed + 50
+			player.shotgun.powerUp(1)
+			if (map.player.velocity > 0 ) then
+			--player.velocity = player.velocity - 1
+				map.player.shotgun.powerUp(-1)
+			end
+		elseif ( event.keyName == "]" or event.keyName == "leftShoulderButton1" ) then
+			--player.velocity = player.velocity + 1
+			map.player.shotgun.powerUp(1)
+		end
+		-- WASD and ArrowKeys pressed down
+		if ( event.keyName == "w" ) then
+			value = -1.0
+			axis = "left_y"
+		elseif ( event.keyName == "s") then
+			value = 1
+			axis = "left_y"
+		elseif ( event.keyName == "a") then
+			value = -1
+			axis = "left_x"
+		elseif ( event.keyName == "d") then
+			value = 1
+			axis = "left_x"
+		elseif ( event.keyName == "up") then
+			value = -1
+			axis = "right_y"
+		elseif ( event.keyName == "down") then
+			value = 1
+			axis = "right_y"
+		elseif ( event.keyName == "left") then
+			value = -1
+			axis = "right_x"
+		elseif ( event.keyName == "right") then
+			value = 1
+			axis = "right_x"
+		elseif ( event.keyName == "space") then
+			value = 1
+			axis = "left_trigger"
+		end
+	else
+		-- WASD and Arrow keys pressed up
+		if ( event.keyName == "w" ) then
+			value = 0
+			axis = "left_y"
+		elseif ( event.keyName == "s") then
+			value = 0
+			axis = "left_y"
+		elseif ( event.keyName == "a") then
+			value = 0
+			axis = "left_x"
+		elseif ( event.keyName == "d") then
+			value = 0
+			axis = "left_x"
+		elseif ( event.keyName == "up") then
+			value = 0
+			axis = "right_y"
+		elseif ( event.keyName == "down") then
+			value = 0
+			axis = "right_y"
+		elseif ( event.keyName == "left") then
+			value = 0
+			axis = "right_x"
+		elseif ( event.keyName == "right") then
+			value = 0
+			axis = "right_x"
+		elseif (event.keyName == "l") then
+			composer.gotoScene( g.scenePath.."death")
+		end
+	end
+
+	if (g.pause == false) then 
+		print(map.player.myName)
+		map.player.playerAxis(axis, value) 
+	end
+
+	return false
+end
+
+local function makeGore( event )
+	timer.performWithDelay( 10,
+		function ()
+			local go = event.splat(map.player.thisAimAngle, event.bounds.x, event.bounds.y)
+			goreCount = goreCount + 1
+			if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
+				map.gore[math.fmod(goreCount, g.maxGore)]:removeSelf()
+				map.gore[math.fmod(goreCount, g.maxGore)] = nil
+			end
+				map.gore[math.fmod(goreCount, g.maxGore)] = go
+			if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil)then
+				print("making gore")
+				camera:add(map.gore[math.fmod(goreCount, g.maxGore)], 3)
+			end
+			--display.remove( go )
+		end
+	)
+end
+
+local function fireball( event )
+	--timer.performWithDelay( 10, 
+	--	function ()
+			map.fireballs[#map.fireballs + 1] = event.f
+			if(map.fireballs[#map.fireballs] ~= nil)then
+				camera:add(map.fireballs[#map.fireballs] , 3)
+			end
+	--	end
+	--)
+end
+
+
+local function youWin( event )
+	print("you win")
+end
+
+local function youDied( event )
+	print("you Died")
+	g.pause = true
+	composer.gotoScene( g.scenePath.."death")
+
+end
+
+local function getPlayerLocation( event )
+	if(map.player.isAlive == true) then
+		local p = event.updatePlayerLocation(map.player.bounds.x, map.player.bounds.y)
+		return p
+	end
+end
+
+local function gameLoop( event )
+	--print("in game loop")
+	if g.pause == false and axis ~= "" then
+		
+		--local shotgunOMeter = map.player.shotgun.displayPower()
+		--updateGUI()
+		if(g.android) then
+			map.player.virtualJoystickInput(leftJoystick.angle, leftJoystick.xLoc/70, leftJoystick.yLoc/70, rightJoystick.angle, rightJoystick.distance/70, rightJoystick.xLoc/70, rightJoystick.yLoc/70)
+		end
+		map.player.movePlayer()
+	end
+	return true
+end
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
 -- unless "composer.removeScene()" is called.
@@ -58,9 +261,13 @@ camera:track()
 
 -- local forward references should go here
 -- "scene:create()"
-local sceneGroup
 function scene:create( event )
+	physics.start()
+	physics.setGravity(0,0)
+	physics.setDrawMode( "hybrid" )
+	g.pause = false
 	sceneGroup = self.view
+	createMap()
 	sceneGroup:insert(camera)
 	
 	local bgOptions =
@@ -98,7 +305,6 @@ function scene:create( event )
 		leftJoystick.activate()
 	end
 	local pauseButton = display.newCircle(0,0,200)
-	pauseButton:setFillColor(1,1,0)
 	sceneGroup:insert(pauseButton)
 	pauseButton.id = 1
 	pauseButton.touch = buttonPress
@@ -108,14 +314,6 @@ function scene:create( event )
 	-- Example: add display objects to "sceneGroup", add touch listeners, etc.
 end
 
-function updateGUI()
-	sceneGroup:insert(player.shotgun.displayPower())
-	if(playerTextSpeed)then
-		playerTextSpeed:removeSelf()
-	end
-	playerTextSpeed = display.newText( sceneGroup, tostring(player.maxSpeed/50).." KMPH", 400, 100, "Curse of the Zombie", 50 )
-	playerTextSpeed:setFillColor( 1,1,0 )
-end
 -- "scene:show()"
 function scene:show( event )
 
@@ -151,191 +349,87 @@ end
 -- "scene:destroy()"
 function scene:destroy( event )
 
+	g.pause = true
 	local sceneGroup = self.view
+	local phase = event.phase
+	
 
+	Runtime:removeEventListener( "enterFrame", gameLoop )
+ 	Runtime:removeEventListener( "key", onKeyEvent )
+  	Runtime:removeEventListener( "axis", onAxisEvent )
+  	Runtime:removeEventListener( "makeGore", makeGore)
+	Runtime:removeEventListener( "fireball", fireball)
+	Runtime:removeEventListener( "youWin", youWin)
+	Runtime:removeEventListener( "youDied", youDied)
+	Runtime:removeEventListener( "getPlayerLocation", getPlayerLocation)
 
+	map.player.die()
+	map.player = nil
+	map.player = {}
+	display.remove( map.enemiesDisplay )
+	for i = 1, #map.enemies do
+		if(map.enemies[i] ~= nil) then
+			map.enemies[i].die(false)
+		end
+	end
+	display.remove( map.level )
+	transition.cancel( map.satan.bounds )
+	display.remove( map.satan.bounds )
+	map.satan = nil
+	map.satan = {}
+	display.remove( map.floor )
+	display.remove( map.trapsDisplay )
+	map.params = nil
+	map.params = {}
+	for i = 1, #map.gore do
+		if(map.gore[i] ~= nil) then
+			display.remove(map.gore[i])
+			map.gore[i] = nil
+		end
+	end
+	for i = 1, #map.fireballs do
+		if(map.fireballs[i] ~= nil) then
+			map.fireballs[i].die()
+			map.fireballs[i] = nil
+		end
+	end
+	camera.destroy()
+	timer.performWithDelay( 10, 
+		function()
+			physics.stop( )
+		end
+	)
+	
+	--scene:removeEventListener( "create", scene )
+	--scene:removeEventListener( "show", scene )
+	--scene:removeEventListener( "hide", scene )
+	--scene:removeEventListener( "destroy", scene )
+	--]]
+	
 -- Called prior to the removal of scene's view ("sceneGroup").
 -- Insert code here to clean up the scene.
 -- Example: remove display objects, save state, etc.
 end
 ---------------------------------------------------------------------------------
 
-local function onAxisEvent( event )
-	-- Map event data to simple variables
-	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
-		local axis = controllerMapping.axis[event.axis.number]
-		--if g.pause then print("g.pause = true") else print("g.pause = false") end
-		if(g.pause == false) then
-			player.playerAxis(axis, event.normalizedValue)
-		end
-	end
-	return true
-end
 
-local function onKeyEvent( event )
-	local phase = event.phase
-	local keyName = event.keyName
-	local axis = ""
-	local value = 0
-
-	if (event.phase == "down") then
-		-- Adjust velocity for testing, remove for final game        
-		if ( event.keyName == "[" or event.keyName == "rightShoulderButton1" ) then
-			if (player.velocity > 0 ) then
-			player.maxSpeed = player.maxSpeed - 50
-				player.shotgun.powerUp(-1)
-			end
-		elseif ( event.keyName == "]" or event.keyName == "leftShoulderButton1" ) then
-			player.maxSpeed = player.maxSpeed + 50
-			player.shotgun.powerUp(1)
-		end
-		-- WASD and ArrowKeys pressed down
-		if ( event.keyName == "w" ) then
-			value = -1.0
-			axis = "left_y"
-		elseif ( event.keyName == "s") then
-			value = 1
-			axis = "left_y"
-		elseif ( event.keyName == "a") then
-			value = -1
-			axis = "left_x"
-		elseif ( event.keyName == "d") then
-			value = 1
-			axis = "left_x"
-		elseif ( event.keyName == "up") then
-			value = -1
-			axis = "right_y"
-		elseif ( event.keyName == "down") then
-			value = 1
-			axis = "right_y"
-		elseif ( event.keyName == "left") then
-			value = -1
-			axis = "right_x"
-		elseif ( event.keyName == "right") then
-			value = 1
-			axis = "right_x"
-		elseif ( event.keyName == "space") then
-			value = 1
-			axis = "left_trigger"
-		end
-	else
-		-- WASD and Arrow keys pressed up
-		if ( event.keyName == "w" ) then
-		value = 0
-		axis = "left_y"
-		elseif ( event.keyName == "s") then
-		value = 0
-		axis = "left_y"
-		elseif ( event.keyName == "a") then
-		value = 0
-		axis = "left_x"
-		elseif ( event.keyName == "d") then
-		value = 0
-		axis = "left_x"
-		elseif ( event.keyName == "up") then
-		value = 0
-		axis = "right_y"
-		elseif ( event.keyName == "down") then
-		value = 0
-		axis = "right_y"
-		elseif ( event.keyName == "left") then
-		value = 0
-		axis = "right_x"
-		elseif ( event.keyName == "right") then
-		value = 0
-		axis = "right_x"
-		end
-	end
-
-	if (g.pause == false) then 
-		player.playerAxis(axis, value) 
-	end
-
-	return false
-end
-
-local function makeGore( event )
-	timer.performWithDelay( 10, 
-		function ()
-			local go = event.splat(player.thisAimAngle, event.bounds.x, event.bounds.y)
-			goreCount = goreCount + 1
-			if(gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
-				gore[math.fmod(goreCount, g.maxGore)]:removeSelf()
-				gore[math.fmod(goreCount, g.maxGore)] = nil
-			end
-				gore[math.fmod(goreCount, g.maxGore)] = go
-			if(gore[math.fmod(goreCount, g.maxGore)] ~= nil)then
-				camera:add(gore[math.fmod(goreCount, g.maxGore)], 3)
-			end
-		end
-	)
-end
-Runtime:addEventListener( "makeGore", makeGore)
-
-local function fireball( event )
-	--timer.performWithDelay( 10, 
-	--	function ()
-			local f = event.f
-			if(f ~= nil)then
-				camera:add(f, 3)
-			end
-	--	end
-	--)
-end
-Runtime:addEventListener( "fireball", fireball)
-
-local function youWin( event )
-	print("you win")
-end
-Runtime:addEventListener( "youWin", youWin)
-
-local function youDied( event )
-	print("you Died")
-	--physics.pause( )
-	--composer.gotoScene( g.scenePath.."death")
-
-end
-Runtime:addEventListener( "youDied", youDied)
-
-local function getPlayerLocation( event )
-	return event.updatePlayerLocation(player.bounds.x, player.bounds.y)
-end
-Runtime:addEventListener( "getPlayerLocation", getPlayerLocation)
-
-local function gameLoop( event )
-	local shotgunOMeter = player.shotgun.displayPower()
-	updateGUI()
-	if g.pause == false and axis ~= "" then
-		if(g.android) then
-			player.virtualJoystickInput(leftJoystick.angle, leftJoystick.xLoc/70, leftJoystick.yLoc/70, rightJoystick.angle, rightJoystick.distance/70, rightJoystick.xLoc/70, rightJoystick.yLoc/70)
-		end
-		player.movePlayer()
---[[
-		for k,v in pairs(enemies) do
-			if(v.health <= 0 ) then
-				print("killing: "..v.bounds.myName)
-				local gore = v.splat(player.getAimAngle(), v.getX(), v.getY())
-				camera:add(gore, 2)
-				v.parent:removeSelf( )
-				table.remove( enemies, k )
-			end
-		end
-	]]		--v.updatePlayerLocation(player.getX(), player.getY())
-	end
-	return true
-end
 ---------------------------------------------------------------------------------
 
 -- Listener setup
+Runtime:addEventListener( "makeGore", makeGore)
+Runtime:addEventListener( "fireball", fireball)
+Runtime:addEventListener( "youWin", youWin)
+Runtime:addEventListener( "youDied", youDied)
+Runtime:addEventListener( "getPlayerLocation", getPlayerLocation)
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
+Runtime:addEventListener( "enterFrame", gameLoop )
 if(g.android == false) then 
   Runtime:addEventListener( "key", onKeyEvent )
   Runtime:addEventListener( "axis", onAxisEvent )
 end
-Runtime:addEventListener( "enterFrame", gameLoop )
 ---------------------------------------------------------------------------------
 
 return scene

@@ -7,11 +7,15 @@ local C = {}
 	startY:		Starting Y position in the game world
 	data:		Table containing initialization data for specified enemy
 ]]
+	local g = require "globals"
 	local path = "enemies."
 	--initializing id
 	C.id = 1
 	C.splatSound = audio.loadSound( "Sounds/Enemies/Splat.ogg" )
 	local function spawn(enemyType, startX, startY, data)
+
+		local m = require "movementFunctions"
+		C.move = m.spawn()
 		local enemy = require(  path .. enemyType .. "Visuals")
 		C.id = C.id + 1
 		--require for the gory splatter effects
@@ -117,10 +121,9 @@ local C = {}
 	    e.getY = getY
 
 	    function updatePlayerLocation(x, y)
-			local move = require "movementFunctions"
 			e.targetX = x
 			e.targetY = y
-			e.targetAngle = move.calculateLineAngle(
+			e.targetAngle = C.move.calculateLineAngle(
 									e.bounds.x,
 									e.bounds.y,
 									e.targetX,
@@ -158,38 +161,42 @@ local C = {}
 
 		--onFrameEnter event
 		e.update = function( event )
-			e.sensorArea.x = e.bounds.x
-			e.sensorArea.y = e.bounds.y
-			if(e.hasTarget) then
-				--e.updatePlayerLocation(other.getX(), other.getY())
-				Runtime:dispatchEvent({	name="getPlayerLocation", 
-										updatePlayerLocation=e.updatePlayerLocation})
-				--print("x: "..x..", y: "..y.. " :dispatch")
-				--e.updatePlayerLocation(x, y)
+			if(g.pause == false) then
+				e.sensorArea.x = e.bounds.x
+				e.sensorArea.y = e.bounds.y
+				--print("updating enemy")
+				if(e.hasTarget) then
+					--e.updatePlayerLocation(other.getX(), other.getY())
+					Runtime:dispatchEvent({	name="getPlayerLocation", 
+											updatePlayerLocation=e.updatePlayerLocation})
+					--print("x: "..x..", y: "..y.. " :dispatch")
+					--e.updatePlayerLocation(x, y)
+				end
 			end
+		
 		end
 		Runtime:addEventListener( "enterFrame", e.update )
 
 		--kill enemy and safely remove him
-		local function die()
-			--passing data to game.lua so gore can be added to camera and
-			--player aimAngle can be accessed
-			Runtime:removeEventListener( "enterFrame", e.update )
-			Runtime:removeEventListener( "enterFrame", e.AI )
-			e.bounds:removeEventListener( "collision", e.onCollision )
-			e.sensorArea:removeEventListener( "collision", e.detectPlayer )
-			Runtime:dispatchEvent( { name="makeGore", bounds=e.bounds, splat=e.splat })
-
-			--need to remove eventListeners before remove dispaly objects
-			--slight delay to let any running functions to finish
-			timer.performWithDelay( 20,
-				function ()
-					--removing visual aspects
-					display.remove( e.parent )
-					--deleting enemy from memory
-					e = nil
+		local function die(gore)
+			if(e~= nil) then
+				Runtime:removeEventListener( "enterFrame", e.update )
+				Runtime:removeEventListener( "enterFrame", e.AI )
+				if(gore == true) then
+					Runtime:dispatchEvent( { name="makeGore", bounds=e.bounds, splat=e.splat })
 				end
-			)
+				--need to remove eventListeners before remove display objects
+				--slight delay to let any running functions to finish
+				timer.performWithDelay( 20,
+					function ()
+						--removing visual aspects
+						display.remove( e.parent )
+						--deleting enemy from memory
+						e = nil
+					end
+				)
+			end
+			
 		end
 		e.die = die
 
@@ -198,7 +205,7 @@ local C = {}
 			e.hit = true
 			--print(e.myName.. " took hit: health = " .. e.health)
 			if(e.health <= 0) then
-				e.die()
+				e.die(true)
 			else
 				timer.performWithDelay( 500, 
 					function ()

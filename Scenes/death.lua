@@ -19,6 +19,7 @@ end
 
 function scene:create( event )
 
+
 	local sceneGroup = self.view
 	myText = display.newText( "YOU DIED!", 
 									g.ccy, 
@@ -43,7 +44,7 @@ function scene:show( event )
 
 	local sceneGroup = self.view
 	local phase = event.phase
-
+	composer.removeScene( g.scenePath.."game", false )
 	if ( phase == "will" ) then
 	-- Called when the scene is still off screen (but is about to come on screen).
 	elseif ( phase == "did" ) then

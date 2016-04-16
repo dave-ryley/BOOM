@@ -3,6 +3,7 @@ F = {}
 local g = require "globals"
 function spawn(angle, x, y)
 	local col = require "collisionFilters"
+	local t
 	local fireballSheetOptions =
 	{
 		width = 120,
@@ -53,9 +54,12 @@ function spawn(angle, x, y)
 	fireball.super = fireball
 	
 	local function die()
-		fireball:removeEventListener( collision, fireball.onCollision )
-		fireball:removeSelf( )
-		fireball = nil
+		if(fireball ~= nil) then
+			fireball:removeEventListener( "collision", fireball.onCollision )
+			fireball:removeSelf( )
+			fireball = nil
+			timer.cancel( t )
+		end
 	end
 	fireball.die = die
 
@@ -63,20 +67,22 @@ function spawn(angle, x, y)
 		if (event.phase == "began" and event.other ~= nil) then
 			local other = event.other.super
 			if(other.myName == "player") then
-				print("Fireball killing player")
+				--print("Fireball killing player")
 			end
-			die()
+			fireball.die()
 		end
 	end
-	fireball:addEventListener( "collision", fireball.onCollision )
-	timer.performWithDelay( 10000, 
+	t = timer.performWithDelay( 10000, 
 		function ()
 			--print("fireball removing self")
 			if(fireball ~= nil) then
-				die()
+				fireball.die()
 			end
 		end
 	)
+
+	fireball:addEventListener( "collision", fireball.onCollision )
+
 	return fireball
 	end
 	F.spawn = spawn
