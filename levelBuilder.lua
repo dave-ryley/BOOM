@@ -116,7 +116,7 @@ local B = {}
 				if(enemyType == 11)then
 					b.enemies.group:insert(imp.spawn(location[1],location[2]).parent)
 				elseif(enemyType == 12)then
-					--spawn dog
+					b.enemies.group:insert(spot.spawn(location[1],location[2]).parent)
 				elseif(enemyType == 13)then
 					--spawn rosy
 				end
