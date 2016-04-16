@@ -17,6 +17,7 @@ physics.setGravity(0,0)
 physics.setDrawMode( "normal" )
 local levelBuilder = require "levelBuilder"
 -----Map-----
+
 local params = levelBuilder.buildLevel(g.level)
 local level = params.level
 local enemies = params.enemies
