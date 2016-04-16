@@ -56,7 +56,7 @@ local P = {}
 	P.torchLight = display.newRect(P.bounds.x, P.bounds.y,51200,51200)
 	display.setDefault( "textureWrapX", "clampToEdge" )
 	display.setDefault( "textureWrapY", "clampToEdge" )
-	P.torchLight.fill = {type = "image",filename ="/Graphics/Animation/torchRad.png"}
+	P.torchLight.fill = {type = "image",filename ="Graphics/Animation/torchRad.png"}
 	P.torchLight.fill.scaleX = 0.02
 	P.torchLight.fill.scaleY = 0.02
 	P.torchLight.alpha = 0.75

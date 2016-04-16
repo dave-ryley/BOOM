@@ -59,10 +59,15 @@ local B = {}
 		b.floor = display.newRect(g.ccx, g.ccy,500000,500000)
 		display.setDefault( "textureWrapX", "repeat" )
 		display.setDefault( "textureWrapY", "repeat" )
-		b.floor.fill = {type = "image",filename ="/Graphics/Background/FloorTile.png"}
-		--b.floor.fill.scaleX = 0.001
-		--b.floor.fill.scaleY = 0.001
-
+		b.floor.fill = {type = "image",filename =g.backgroundPath.."floorTile.png"}
+		b.floor.fill.scaleX = 0.001
+		b.floor.fill.scaleY = 0.001
+--[[
+		local floorImage = {type = "image",	filename = g.backgroundPath.."FloorTile.png"}
+		floorImage.scaleX = 0.001
+		floorImage.scaleY = 0.001
+		b.floor.fill = floorImage
+]]
 		local path = system.pathForFile(levelName,system.ResourceDirectory)
 		local file = io.open(path,"r")
 		function explode(div,str)
@@ -87,7 +92,6 @@ local B = {}
 		local objectFileName = {"lavaTile","lavaTile","wall_diagonal","wall_flat"}
 		local physlevel = {}
 		for mapCounter=1,table.getn(map),1 do
-			print("here")
 			if (tonumber(map[mapCounter][1]) <11 and tonumber(map[mapCounter][1]) >0) then
 				physlevel[mapCounter] = display.newPolygon( b.level,
 															tonumber((map[mapCounter][3])-448)*size,

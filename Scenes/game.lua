@@ -25,13 +25,7 @@ local floor = params.floor
 
 local controllerMapping = require "controllerMapping"
 local player = require "playerMechanics"
-local slowtrap = require "Traps.slowtrap"
---local s1 = slowtrap.spawn(500, 0)
---local imp = require "imp"
-local sausage = require "sausage"
---local wintile = win.spawn(1)
-local satan = require "satan"
---local satan1 = satan.spawn()
+
 player.bounds:translate(0,0)
 
 --enemies.group:insert(imp.spawn(-1500, 500).parent)
@@ -56,9 +50,9 @@ camera:add(player.cameraLock, 1)
 camera:add(player.shotgun.blast, 1)
 camera:add(player.shotgun.bounds, 1)
 camera:add(player.bounds, 1)
-camera:add(level, 3)
 --print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
 camera:add(floor,5)
+camera:add(level, 3)
 camera:add(player.torchLight, 5)
 camera:add(enemies.group, 2)
 
@@ -268,19 +262,23 @@ local function makeGore( event )
 	timer.performWithDelay( 10, 
 		function ()
 			local gore = event.splat(player.thisAimAngle, event.bounds.x, event.bounds.y)
-			camera:add(gore, 4)
+			if(gore ~= nil)then
+				camera:add(gore, 3)
+			end
 		end
 	)
 end
 Runtime:addEventListener( "makeGore", makeGore)
 
 local function fireball( event )
-	timer.performWithDelay( 10, 
-		function ()
+	--timer.performWithDelay( 10, 
+	--	function ()
 			local f = event.f
-			camera:add(f, 3)
-		end
-	)
+			if(f ~= nil)then
+				camera:add(f, 3)
+			end
+	--	end
+	--)
 end
 Runtime:addEventListener( "fireball", fireball)
 
