@@ -28,23 +28,6 @@ local player = require "playerMechanics"
 
 player.bounds:translate(0,0)
 
---enemies.group:insert(imp.spawn(-1500, 500).parent)
---enemies.group:insert(imp.spawn(1000, 1000).parent)
---player.bounds:translate(-2000, 500)
-
-
---local spot = require "spot"
---local puppy = spot.spawn(300, 0)
---local wintile = require "Traps.winTrap"
---local win1 = wintile.spawn(1000, 0)
-
--- (1) move square to bottom right corner; subtract half side-length
---camera:add(puppy.parent, 2)
---camera:add(satan1.bounds, 2)
---print(satan1.path[1].x)
---transition.to( satan1.bounds, satan1.path[1] )
---camera:add(win1.bounds, 4)
---camera:add(s1.bounds, 3)
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
 camera:add(player.shotgun.blast, 1)

@@ -89,13 +89,16 @@ local C = {}
 
 		--create splatter parts
 		local function splat( angle, x, y)
-			print("in splat")
-			local c = audio.findFreeChannel()
-			audio.play(C.splatSound,{ 
+			timer.performWithDelay( 125,
+				function()
+					local c = audio.findFreeChannel()
+					audio.play(C.splatSound,{ 
 							channel = c,
 							loops = 0, 
 							fadein = 0,
 							})
+				end
+			 )
 			return splatterParts.spawn(angle, x, y)
 		end
 		e.splat = splat
