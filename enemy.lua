@@ -12,6 +12,7 @@ local C = {}
 	C.id = 1
 	local function spawn(enemyType, startX, startY, data)
 		local enemy = require(  path .. enemyType .. "Visuals")
+		C.splatSound = audio.loadSound( "Sounds/Enemies/Splat.ogg" )
 		C.id = C.id + 1
 		--require for the gory splatter effects
 		local splatterParts = require "splatterParts"
@@ -89,6 +90,12 @@ local C = {}
 		--create splatter parts
 		local function splat( angle, x, y)
 			print("in splat")
+			local c = audio.findFreeChannel()
+			audio.play(C.splatSound,{ 
+							channel = c,
+							loops = 0, 
+							fadein = 0,
+							})
 			return splatterParts.spawn(angle, x, y)
 		end
 		e.splat = splat
