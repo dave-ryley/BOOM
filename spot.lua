@@ -1,6 +1,7 @@
 local S = {}
 local colFilters = require "collisionFilters"
-
+local dogHappy = audio.loadSound( "Sounds/Enemies/DogBarkHappy.ogg")
+local dogAngry = audio.loadSound( "Sounds/Enemies/DogBarkAngry.ogg")
 	local constructor = require "enemy"
 	local spotShape = { -60,-90, 60,-90, 60,90, -60,90 }
 	local radius = 1200
@@ -46,6 +47,7 @@ local colFilters = require "collisionFilters"
 														i.bounds.x, 
 														i.bounds.y)
 				if(distance <= i.diveRange and i.evil == false) then
+					audio.play(dogAngry,{channel = audio.findFreeChannel()})
 					i.speedMod = 2
 					i.evil = true
 					i.animationParam = "Evil"

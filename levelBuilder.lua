@@ -7,6 +7,7 @@ local B = {}
 		local enemy = require "enemy"
 		local imp = require "imp"
 		local spot = require "spot"
+		local slowTrap = require "Traps.slowTrap"
 		b.level = display.newGroup( )
 		b.enemies = {group = display.newGroup()}
 		local levelName = "level"..levelNo..".BOOMMAP"
@@ -56,10 +57,10 @@ local B = {}
 		end
 		
 
-		b.floor = display.newRect(g.ccx, g.ccy,500000,500000)
-		display.setDefault( "textureWrapX", "repeat" )
+		b.floor = display.newRect(g.ccx, g.ccy,512000,512000)
+		display.setDefault( "textureWrapX", "repeat" )			
 		display.setDefault( "textureWrapY", "repeat" )
-		b.floor.fill = {type = "image",filename =g.backgroundPath.."floorTile.png"}
+		b.floor.fill = {type = "image",filename = g.backgroundPath.."floorTile.png"}
 		b.floor.fill.scaleX = 0.001
 		b.floor.fill.scaleY = 0.001
 --[[
@@ -126,8 +127,9 @@ local B = {}
 				end
 			elseif(tonumber(map[mapCounter][1]) <31)then
 				--spawn items/deco
-			elseif(tonumber(map[mapCounter][1]) <41)then
-				--satans trailpath
+			elseif(tonumber(map[mapCounter][1]) <51)then
+				--traps
+				slowTrap.spawn( tonumber((map[mapCounter][3])-448)*size, tonumber((map[mapCounter][4])-448)*size)
 			end
 		end
 
