@@ -5,6 +5,10 @@ local scene = composer.newScene()
 grid = display.newGroup()
 -- "scene:create()"
 
+local function mapPoint(object,rotation,xValue,yValue)
+    writeMap[mapSize] = {obj = object, rot= rotation, x = xValue, y = yValue}
+end
+
 local function getVertices(type,rotation)
     if(type <= 1)then
       vertices = {0,0,0,128,128,128,128,0}
@@ -42,71 +46,67 @@ local function getVertices(type,rotation)
     return vertices
 end
 
-local function mapPoint(object,rotation,xValue,yValue)
-    writeMap[mapSize] = {obj = object, rot= rotation, x = xValue, y = yValue}
-end
-
 function scene:create( event )
   local sceneGroup = self.view
   overlay = display.newGroup( )
 
-  myText = display.newText(overlay, "LEVEL EDITOR", display.contentCenterX, 40, "Curse of the Zombie.ttf", 80 )
-  menu = display.newRect( overlay, display.contentWidth/16, display.contentHeight/2, display.contentWidth/8, display.contentHeight )
+myText = display.newText(overlay, "LEVEL EDITOR", display.contentCenterX, 40, "Curse of the Zombie.ttf", 80 )
+menu = display.newRect( overlay, display.contentWidth/16, display.contentHeight/2, display.contentWidth/8, display.contentHeight )
 
-  writeMap = {}
+writeMap = {}
 
-  map = {}
-  mapSize = 0
-  selectedImage = ""
-  initPosX = 0
-  initPosY = 0
+map = {}
+mapSize = 0
+selectedImage = ""
+initPosX = 0
+initPosY = 0
 
-  blocked = false
+blocked = false
 
-  --objno,rotation,x,y
+--objno,rotation,x,y
 
-  objectFileName = {"lavaTile","lavaTile","wall_diagonal","wall_flat"}
-  enemyFileName = {"imp","spot","rosy"}
-  miscFileName = {}
+objectFileName = {"lavaTile","lavaTile","wall_diagonal","wall_flat","winTile"}
+enemyFileName = {"Imp","HellPup","Minator"}
+trapFileName = {"Slow","Fire", "FlameThrower"}
+miscFileName = {}
 
+objectColours = {{0,0,1},{0,1,0},{0,1,1},{1,0,0}}
+selectedObject = 1
+rotation = 1
 
-  objectColours = {{0,0,1},{0,1,0},{0,1,1},{1,0,0}}
-  selectedObject = 1
-  rotation = 1
+--initial wall in corner
+selectedShape = display.newPolygon( overlay, display.contentWidth/16,display.contentHeight-100, getVertices(selectedObject,rotation) )
+selectedShape.fill = { type="image", filename="Graphics/Background/"..objectFileName[selectedObject].."1.png" }
 
-  --initial wall in corner
-  selectedShape = display.newPolygon( overlay, display.contentWidth/16,display.contentHeight-100, getVertices(selectedObject,rotation) )
-  selectedShape.fill = { type="image", filename="Graphics/Background/"..objectFileName[selectedObject].."1.png" }
+mapDone = false
 
-  mapDone = false
+top = 0
+bottom = display.contentHeight
+left = 0
+right = display.contentWidth
+squareSize = 128
 
-  top = 0
-  bottom = display.contentHeight
-  left = 0
-  right = display.contentWidth
-  squareSize = 128
+--Draw Grid
+for i = 1, (right)/squareSize, 1 do
+    gridLines = display.newLine(i*(left+squareSize), top, i* (left+squareSize), bottom )
+    gridLines:setStrokeColor( 1, 1, 1, 0.3 )
+    gridLines.strokeWidth = 2
+end
+for i = 1, (bottom)/squareSize, 1 do
+    gridLines = display.newLine(left, i*squareSize, right, i*squareSize )
+    gridLines:setStrokeColor( 1, 1, 1, 0.3)
+    gridLines.strokeWidth = 2
+end
 
-  --Draw Grid
-  for i = 1, (right)/squareSize, 1 do
-      gridLines = display.newLine(i*(left+squareSize), top, i* (left+squareSize), bottom )
-      gridLines:setStrokeColor( 1, 1, 1, 0.3 )
-      gridLines.strokeWidth = 2
-  end
-  for i = 1, (bottom)/squareSize, 1 do
-      gridLines = display.newLine(left, i*squareSize, right, i*squareSize )
-      gridLines:setStrokeColor( 1, 1, 1, 0.3)
-      gridLines.strokeWidth = 2
-  end
-  
-  mapSize = mapSize +1
-  map[mapSize] = display.newPolygon( grid, 448, 448, getVertices(0,1))
-  map[mapSize]:setFillColor( 1,0,0)
-  mapPoint(0,rotation,448,448)
+mapSize = mapSize +1
+map[mapSize] = display.newPolygon( grid, 448, 448, getVertices(0,1))
+map[mapSize]:setFillColor( 1,0,0)
+mapPoint(0,rotation,448,448)
 
-  mapSize = mapSize +1
-  map[mapSize] = display.newPolygon( grid, 1216, 448, getVertices(0,1))
-  map[mapSize]:setFillColor(0,1,0)
-  mapPoint(0,rotation,1216,448)
+mapSize = mapSize +1
+map[mapSize] = display.newPolygon( grid, 1216, 448, getVertices(0,1))
+map[mapSize]:setFillColor(0,1,0)
+mapPoint(0,rotation,1216,448)
 end
  
 -- "scene:show()"
@@ -150,7 +150,6 @@ function scene:destroy( event )
 end
  
 ---------------------------------------------------------------------------------
-
 local function writeBoomMap()
       local path = system.pathForFile( "level.BOOMMAP", system.ResourceDirectory )
       local file = io.open(path, "w")
@@ -195,17 +194,26 @@ local function onMouseEvent( event )
                 end
               end
               map[mapSize] = display.newPolygon( grid, squareX, squareY, getVertices(selectedObject,rotation))
-              --map[mapSize]:setFillColor(1,0,0)
               map[mapSize].fill = { type="image", filename="Graphics/Background/"..objectFileName[selectedObject]..tonumber(rotation)..".png" }
               mapPoint(selectedObject,rotation,squareX,squareY)
-              print("Block placed")
-              --print(mapSize)
           end
           blocked = false
+        elseif(selectedObject == 666)then
+            mapSize = mapSize +1
+            map[mapSize] = display.newRect( grid, squareX, squareY, 12,12)
+            map[mapSize]:setFillColor(1,0,0)
+            mapPoint(selectedObject,rotation,squareX,squareY)
+            print("Path placed")
+        elseif(selectedObject == 100)then
+            mapSize = mapSize +1
+            map[mapSize] = display.newRect( grid, squareX, squareY, 128,128)
+            map[mapSize]:setFillColor(0,1,0)
+            mapPoint(selectedObject,rotation,squareX,squareY)
+            print("win placed")
         else
           mapSize = mapSize +1
           map[mapSize] = display.newRect( grid, localX, localY, 10,10)
-          --map[mapSize]:setFillColor(1,0,0)
+          map[mapSize]:setFillColor(1,0,1)
           mapPoint(selectedObject,rotation,localX,localY)
         end
     end
@@ -248,13 +256,14 @@ local function onKeyEvent( event )
     end
     
     if ( event.keyName == "w" and event.phase == "down") then
+        if(selectedObject > table.getn(objectFileName)-1)then selectedObject = 1 end
         if(selectedObject > 1)then selectedObject = selectedObject -1 
-        else selectedObject = table.getn(objectFileName)
+        else selectedObject = table.getn(objectFileName)-1
         end
     end
     
     if ( event.keyName == "s" and event.phase == "down") then
-        if(selectedObject < table.getn(objectFileName))then selectedObject = selectedObject +1 
+        if(selectedObject < table.getn(objectFileName)-1)then selectedObject = selectedObject +1 
         else selectedObject = 1
         end
     end
@@ -262,15 +271,52 @@ local function onKeyEvent( event )
       selectedObject = selectedObject+1
       if(selectedObject < 11)then
         selectedObject = 11
-      elseif(selectedObject>20)then
+      elseif(selectedObject>table.getn(enemyFileName)+10)then
         selectedObject = 11
       end
     end
-    if(event.phase == "down" and selectedObject < 5)then
-        if(selectedShape)then selectedShape:removeSelf()end
-        print(selectedObject,rotation)
+
+    if(event.keyName == "q" and event.phase == "down")then
+      selectedObject = selectedObject+1
+      if(selectedObject < 41)then
+        selectedObject = 41
+      elseif(selectedObject>table.getn(enemyFileName)+40)then
+        selectedObject = 41
+      end
+    end
+
+    if(event.keyName == "y" and event.phase == "down")then
+      selectedObject = 100
+    end
+
+    if(event.keyName == "t" and event.phase == "down")then
+      selectedObject = selectedObject+1
+      if(selectedObject < 666)then
+        selectedObject = 666
+      elseif(selectedObject >= 666)then
+        selectedObject = 1
+      end
+    end
+
+    if(event.phase == "down")then
+      if(selectedShape)then selectedShape:removeSelf()end
+      if(selectedObject < 11)then
+        --print(selectedObject,rotation)
         selectedShape = display.newPolygon( overlay, display.contentWidth/16,display.contentHeight-100, getVertices(selectedObject,rotation) )
         selectedShape.fill = { type="image", filename="Graphics/Background/"..objectFileName[selectedObject]..tostring(rotation)..".png" }
+      elseif(selectedObject < 21)then
+        selectedShape = display.newPolygon( overlay, display.contentWidth/16,display.contentHeight-100, getVertices(1,1) )
+        selectedShape.fill = { type="image", filename="Graphics/Art/"..enemyFileName[selectedObject-10]..".png" }
+      elseif(selectedObject < 51)then
+        selectedShape = display.newPolygon( overlay, display.contentWidth/16,display.contentHeight-100, getVertices(1,1) )
+        selectedShape:setFillColor( 1,0,1)
+      elseif(selectedObject == 666)then
+        selectedShape = display.newPolygon( overlay, display.contentWidth/16,display.contentHeight-100, getVertices(1,1) )
+        selectedShape:setFillColor( 1,0,0)
+      elseif(selectedObject == 100)then
+        selectedShape = display.newPolygon( overlay, display.contentWidth/16,display.contentHeight-100, getVertices(1,1) )
+        selectedShape:setFillColor( 0,1,0)
+      end
     end
 
     if(event.keyName == "/" and event.phase == "down")then
