@@ -278,7 +278,9 @@ local function fireball( event )
 	timer.performWithDelay( 10, 
 		function ()
 			local f = event.f
-			camera:add(f, 3)
+			if(f~=nil)then
+				camera:add(f, 3)
+			end
 		end
 	)
 end
