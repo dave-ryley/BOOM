@@ -36,7 +36,7 @@ function createMap()
 	map.level = map.params.level
 	map.floor = map.params.floor
 	map.player = playerBuilder.spawn()
-
+	g.gameState = "intro"
 	for i = 1, #map.enemies do
 		map.enemiesDisplay:insert(map.enemies[i].parent)
 	end
@@ -49,6 +49,7 @@ function createMap()
 	map.satan.start()
 	map.player.bounds:translate(0,0)
 
+	-- INITIALIZING CAMERA
 	camera:add(map.level, 4)
 	camera:add(map.enemiesDisplay, 2)
 	camera:add(map.trapsDisplay, 4)
@@ -66,9 +67,27 @@ function createMap()
 	camera:add(map.player.shotgun.blast, 1)
 	camera:add(map.player.shotgun.bounds, 1)
 	camera:add(map.satan.bounds, 1)
-	-- INITIALIZING CAMERA
-end 
 
+	-- BEGIN GAME
+	timer.performWithDelay(2000, 
+		-- Stays on satan for 2 seconds
+		function() 
+			g.gameState = "introTransition" 
+			-- Pans over to the player
+			transition.to( 	map.player.cameraLock, 
+							{time = 1000, 
+							x = map.player.bounds.x, 
+							y = map.player.bounds.y, 
+							onComplete = 
+								-- Game begins
+								function()
+									g.gameState = "playing"
+								end
+							} )
+		end
+	)
+
+end 
 
 
 function updateGUI()
@@ -91,6 +110,13 @@ local function onAxisEvent( event )
 		end
 	end
 	return true
+end
+
+local function youWin( event )
+	print("you win")
+	g.level = g.level + 1
+	g.gameState = "win"
+	composer.gotoScene( g.scenePath.."levelTransition")
 end
 
 local function onKeyEvent( event )
@@ -170,7 +196,8 @@ local function onKeyEvent( event )
 			value = 0
 			axis = "right_x"
 		elseif (event.keyName == "l") then
-			composer.gotoScene( g.scenePath.."death")
+			--composer.gotoScene( g.scenePath.."death")
+			youWin()
 		end
 	end
 
@@ -215,14 +242,10 @@ local function fireball( event )
 end
 
 
-local function youWin( event )
-	print("you win")
-	
-end
 
 local function youDied( event )
 	print("you Died")
-	g.pause = true
+	g.gameState = "dead"
 	composer.gotoScene( g.scenePath.."death")
 
 end
@@ -235,15 +258,15 @@ local function getPlayerLocation( event )
 end
 
 local function gameLoop( event )
-	--print("in game loop")
-	if g.pause == false and axis ~= "" then
-		
-		local shotgunOMeter = map.player.shotgun.displayPower()
-		updateGUI()
+
+	if g.pause == false and g.gameState == "playing" then
+
 		if(g.android) then
 			map.player.virtualJoystickInput(leftJoystick.angle, leftJoystick.xLoc/70, leftJoystick.yLoc/70, rightJoystick.angle, rightJoystick.distance/70, rightJoystick.xLoc/70, rightJoystick.yLoc/70)
 		end
-		map.player.movePlayer()
+		map.player.update()
+	elseif g.gameState == "intro" then
+		map.player.cameraLock.x, map.player.cameraLock.y = map.satan.bounds.x, map.satan.bounds.y
 	end
 	return true
 end
@@ -343,9 +366,7 @@ end
 function scene:destroy( event )
 
 	g.pause = true
-	local sceneGroup = self.view
-	local phase = event.phase
-	
+	print("here in destroy")
 	timer.performWithDelay( 10, 
 		function()
 			Runtime:removeEventListener( "enterFrame", gameLoop )
@@ -364,6 +385,12 @@ function scene:destroy( event )
 	map.player = nil
 	map.player = {}
 	display.remove( map.enemiesDisplay )
+	display.remove( map.trapsDisplay )
+	for i = 1, #map.traps do
+		if(map.traps[i] ~= nil) then
+			map.traps[i] = nil
+		end
+	end
 	for i = 1, #map.enemies do
 		if(map.enemies[i] ~= nil) then
 			map.enemies[i].die(false)
@@ -375,7 +402,6 @@ function scene:destroy( event )
 	map.satan = nil
 	map.satan = {}
 	display.remove( map.floor )
-	display.remove( map.trapsDisplay )
 	map.params = nil
 	map.params = {}
 	for i = 1, #map.gore do

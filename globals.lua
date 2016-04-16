@@ -13,8 +13,10 @@ G = {}
 	G.ccx = display.contentCenterX
 	G.ccy = display.contentCenterY
 	G.level = 1
-	G.health = 700
+	G.health = 2
 	G.maxGore = 20
 	G.drawMode = "normal"
+
+	G.gameState = "intro" --intro/introTrans/win/
 
 return G

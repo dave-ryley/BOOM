@@ -15,7 +15,10 @@ local S = {}
 														filter=col.sensorCol
 													})
 			T.win = function(event)
-				Runtime:dispatchEvent( { name="youWin"})
+				if(g.gameState == "playing") then
+					print("in win tile")
+					--Runtime:dispatchEvent( { name="youWin"})
+				end
 			end
 			T.bounds:addEventListener( "collision", T.win )
 			

@@ -7,7 +7,7 @@ local g = require "globals"
 ---------------------------------------------------------------------------------
 
 -- local forward references should go here
-
+local myText
 ---------------------------------------------------------------------------------
 
 -- "scene:create()"
@@ -21,6 +21,7 @@ function scene:create( event )
 								70 )
 	myText:setFillColor( 1,0,0 )
 	sceneGroup:insert(myText)
+
 	-- Initialize the scene here.
 	-- Example: add display objects to "sceneGroup", add touch listeners, etc.
 
@@ -35,6 +36,12 @@ function scene:show( event )
 	if ( phase == "will" ) then
 	-- Called when the scene is still off screen (but is about to come on screen).
 	elseif ( phase == "did" ) then
+		composer.removeScene( g.scenePath.."game", false )
+		timer.performWithDelay( 2000, 
+		function()
+			composer.gotoScene( g.scenePath.."game")
+		end
+	 )
 	-- Called when the scene is now on screen.
 	-- Insert code here to make the scene come alive.
 	-- Example: start timers, begin animation, play audio, etc.
@@ -58,7 +65,8 @@ end
 
 -- "scene:destroy()"
 function scene:destroy( event )
-
+	myText:removeSelf()
+	myText = nil
 	local sceneGroup = self.view
 
 -- Called prior to the removal of scene's view ("sceneGroup").
