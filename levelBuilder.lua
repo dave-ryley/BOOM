@@ -60,8 +60,8 @@ local B = {}
 		display.setDefault( "textureWrapX", "repeat" )
 		display.setDefault( "textureWrapY", "repeat" )
 		b.floor.fill = {type = "image",filename ="/Graphics/Background/FloorTile.png"}
-		b.floor.fill.scaleX = 0.001
-		b.floor.fill.scaleY = 0.001
+		--b.floor.fill.scaleX = 0.001
+		--b.floor.fill.scaleY = 0.001
 
 		local path = system.pathForFile(levelName,system.ResourceDirectory)
 		local file = io.open(path,"r")
