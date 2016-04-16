@@ -8,8 +8,10 @@ local camera = perspective.createView()
 local enemy = require "enemy"
 local imp = require "imp"
 local move = require "movementFunctions"
+local goreCount = 0
 
-
+--local performance = require('performance')
+--performance:newPerformanceMeter()
 
 local physics = require "physics"
 physics.start()
@@ -17,15 +19,17 @@ physics.setGravity(0,0)
 physics.setDrawMode( "normal" )
 local levelBuilder = require "levelBuilder"
 -----Map-----
-
+local satan = require "satan"
 local params = levelBuilder.buildLevel(g.level)
 local level = params.level
 local enemies = params.enemies
 local floor = params.floor
-
+local satan1 = satan.spawn(params.satanPath)
+local traps = params.traps
+local gore = {}
+satan1.start()
 local controllerMapping = require "controllerMapping"
 local player = require "playerMechanics"
-
 player.bounds:translate(0,0)
 
 camera:add(player.parent, 1)
@@ -33,6 +37,8 @@ camera:add(player.cameraLock, 1)
 camera:add(player.shotgun.blast, 1)
 camera:add(player.shotgun.bounds, 1)
 camera:add(player.bounds, 1)
+camera:add(satan1.bounds, 2)
+camera:add(traps, 4)
 --print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
 camera:add(floor,5)
 camera:add(level, 3)
@@ -141,6 +147,7 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 
+
 -- Called prior to the removal of scene's view ("sceneGroup").
 -- Insert code here to clean up the scene.
 -- Example: remove display objects, save state, etc.
@@ -244,9 +251,15 @@ end
 local function makeGore( event )
 	timer.performWithDelay( 10, 
 		function ()
-			local gore = event.splat(player.thisAimAngle, event.bounds.x, event.bounds.y)
-			if(gore ~= nil)then
-				camera:add(gore, 3)
+			local go = event.splat(player.thisAimAngle, event.bounds.x, event.bounds.y)
+			goreCount = goreCount + 1
+			if(gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
+				gore[math.fmod(goreCount, g.maxGore)]:removeSelf()
+				gore[math.fmod(goreCount, g.maxGore)] = nil
+			end
+				gore[math.fmod(goreCount, g.maxGore)] = go
+			if(gore[math.fmod(goreCount, g.maxGore)] ~= nil)then
+				camera:add(gore[math.fmod(goreCount, g.maxGore)], 3)
 			end
 		end
 	)

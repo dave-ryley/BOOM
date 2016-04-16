@@ -14,5 +14,6 @@ G = {}
 	G.ccy = display.contentCenterY
 	G.level = 1
 	G.health = 2
+	G.maxGore = 20
 
 return G
