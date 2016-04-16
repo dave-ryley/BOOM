@@ -8,10 +8,13 @@ local B = {}
 		local imp = require "imp"
 		local spot = require "spot"
 		local slowTrap = require "Traps.slowTrap"
+		local winTrap = require "Traps.winTrap"
 		b.level = display.newGroup( )
 		b.enemies = {group = display.newGroup()}
 		local levelName = "level"..levelNo..".BOOMMAP"
 		local map = {}
+		local satanPath = {}
+		local satanPathLength = 0
 		local imps = display.newGroup()
 		local spots = display.newGroup()
 		local minotaurs = display.newGroup()
@@ -130,11 +133,14 @@ local B = {}
 			elseif(tonumber(map[mapCounter][1]) <51)then
 				--traps
 				slowTrap.spawn( tonumber((map[mapCounter][3])-448)*size, tonumber((map[mapCounter][4])-448)*size)
+			elseif(tonumber(map[mapCounter][1]) ==100)then
+				winTrap.spawn(tonumber((map[mapCounter][3])-448)*size, tonumber((map[mapCounter][4])-448)*size)
+			elseif(tonumber(map[mapCounter][1]) ==666)then
+				satanPathLength = satanPathLength+1
+				satanPath[satanPathLength] = {tonumber((map[mapCounter][3])-448)*size, tonumber((map[mapCounter][4])-448)*size}
 			end
 		end
-
-		zerozero = display.newRect( b.level, 0, 0, 100, 100 )
-		zerozero:setFillColor( 0,0,1 )
+		
 		return b
 	end
 	B.buildLevel = buildLevel
