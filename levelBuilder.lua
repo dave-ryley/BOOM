@@ -7,10 +7,14 @@ local B = {}
 		local enemy = require "enemy"
 		local imp = require "imp"
 		local spot = require "spot"
+		local slowTrap = require "Traps.slowTrap"
+		local winTrap = require "Traps.winTrap"
 		b.level = display.newGroup( )
 		b.enemies = {group = display.newGroup()}
 		local levelName = "level"..levelNo..".BOOMMAP"
 		local map = {}
+		local satanPath = {}
+		local satanPathLength = 0
 		local imps = display.newGroup()
 		local spots = display.newGroup()
 		local minotaurs = display.newGroup()
@@ -56,10 +60,10 @@ local B = {}
 		end
 		
 
-		b.floor = display.newRect(g.ccx, g.ccy,500000,500000)
-		display.setDefault( "textureWrapX", "repeat" )
+		b.floor = display.newRect(g.ccx, g.ccy,512000,512000)
+		display.setDefault( "textureWrapX", "repeat" )			
 		display.setDefault( "textureWrapY", "repeat" )
-		b.floor.fill = {type = "image",filename ="/Graphics/Background/FloorTile.png"}
+		b.floor.fill = {type = "image",filename = g.backgroundPath.."floorTile.png"}
 		b.floor.fill.scaleX = 0.001
 		b.floor.fill.scaleY = 0.001
 
@@ -87,7 +91,6 @@ local B = {}
 		local objectFileName = {"lavaTile","lavaTile","wall_diagonal","wall_flat"}
 		local physlevel = {}
 		for mapCounter=1,table.getn(map),1 do
-			print("here")
 			if (tonumber(map[mapCounter][1]) <11 and tonumber(map[mapCounter][1]) >0) then
 				physlevel[mapCounter] = display.newPolygon( b.level,
 															tonumber((map[mapCounter][3])-448)*size,
@@ -122,13 +125,20 @@ local B = {}
 				end
 			elseif(tonumber(map[mapCounter][1]) <31)then
 				--spawn items/deco
-			elseif(tonumber(map[mapCounter][1]) <41)then
-				--satans trailpath
+			elseif(tonumber(map[mapCounter][1]) <51)then
+				--traps
+				slowTrap.spawn( tonumber((map[mapCounter][3])-448)*size, tonumber((map[mapCounter][4])-448)*size)
+			elseif(tonumber(map[mapCounter][1]) ==100)then
+				winTrap.spawn(tonumber((map[mapCounter][3])-448)*size, tonumber((map[mapCounter][4])-448)*size)
+			elseif(tonumber(map[mapCounter][1]) ==666)then
+				satanPathLength = satanPathLength+1
+				satanPath[satanPathLength] = {
+									x=tonumber((map[mapCounter][3])-448)*size, 
+									y=tonumber((map[mapCounter][4])-448)*size}
+
 			end
 		end
-
-		zerozero = display.newRect( b.level, 0, 0, 100, 100 )
-		zerozero:setFillColor( 0,0,1 )
+		b.satanPath = satanPath
 		return b
 	end
 	B.buildLevel = buildLevel

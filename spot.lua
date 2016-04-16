@@ -1,6 +1,5 @@
 local S = {}
 local colFilters = require "collisionFilters"
-
 	local constructor = require "enemy"
 	local spotShape = { -60,-90, 60,-90, 60,90, -60,90 }
 	local radius = 1200
@@ -32,6 +31,9 @@ local colFilters = require "collisionFilters"
 		i.diveRange = 500
 		i.moving = false
 		i.evil = false
+		i.dogHappy = audio.loadSound( "Sounds/Enemies/DogBarkHappy.ogg")
+		i.dogAngry = audio.loadSound( "Sounds/Enemies/DogBarkAngry.ogg")
+
 		i.AI = function()
 			
 			if(i.health <= 0) then
@@ -46,6 +48,7 @@ local colFilters = require "collisionFilters"
 														i.bounds.x, 
 														i.bounds.y)
 				if(distance <= i.diveRange and i.evil == false) then
+					audio.play(i.dogAngry,{channel = audio.findFreeChannel()})
 					i.speedMod = 2
 					i.evil = true
 					i.animationParam = "Evil"
@@ -56,7 +59,6 @@ local colFilters = require "collisionFilters"
 					i.speedMod = 1
 				end
 					i.animate(i.targetAngle, "Run", i.animationParam)
-
 				if (i.moving == false) then
 					i.moving = true
 					i.currentAngle = i.targetAngle

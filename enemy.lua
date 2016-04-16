@@ -10,9 +10,9 @@ local C = {}
 	local path = "enemies."
 	--initializing id
 	C.id = 1
+	C.splatSound = audio.loadSound( "Sounds/Enemies/Splat.ogg" )
 	local function spawn(enemyType, startX, startY, data)
 		local enemy = require(  path .. enemyType .. "Visuals")
-		C.splatSound = audio.loadSound( "Sounds/Enemies/Splat.ogg" )
 		C.id = C.id + 1
 		--require for the gory splatter effects
 		local splatterParts = require "splatterParts"
@@ -89,13 +89,16 @@ local C = {}
 
 		--create splatter parts
 		local function splat( angle, x, y)
-			print("in splat")
-			local c = audio.findFreeChannel()
-			audio.play(C.splatSound,{ 
+			timer.performWithDelay( 125,
+				function()
+					local c = audio.findFreeChannel()
+					audio.play(C.splatSound,{ 
 							channel = c,
 							loops = 0, 
 							fadein = 0,
 							})
+				end
+			 )
 			return splatterParts.spawn(angle, x, y)
 		end
 		e.splat = splat
@@ -171,15 +174,15 @@ local C = {}
 		local function die()
 			--passing data to game.lua so gore can be added to camera and
 			--player aimAngle can be accessed
-			Runtime:dispatchEvent( { name="makeGore", bounds=e.bounds, splat=e.splat })
-
-			--need to remove eventListeners before remove dispaly objects
 			Runtime:removeEventListener( "enterFrame", e.update )
 			Runtime:removeEventListener( "enterFrame", e.AI )
 			e.bounds:removeEventListener( "collision", e.onCollision )
 			e.sensorArea:removeEventListener( "collision", e.detectPlayer )
+			Runtime:dispatchEvent( { name="makeGore", bounds=e.bounds, splat=e.splat })
+
+			--need to remove eventListeners before remove dispaly objects
 			--slight delay to let any running functions to finish
-			timer.performWithDelay( 10,
+			timer.performWithDelay( 20,
 				function ()
 					--removing visual aspects
 					display.remove( e.parent )
@@ -193,12 +196,15 @@ local C = {}
 		local function takeHit()
 			e.health = e.health - 1
 			e.hit = true
+			--print(e.myName.. " took hit: health = " .. e.health)
 			if(e.health <= 0) then
 				e.die()
 			else
-				timer.performWithDelay( 200, 
+				timer.performWithDelay( 500, 
 					function ()
-						e.hit = false
+						if(e ~= nil) then
+							e.hit = false
+						end
 					end
 				)
 			end

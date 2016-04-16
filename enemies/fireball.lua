@@ -69,7 +69,7 @@ function spawn(angle, x, y)
 		end
 	end
 	fireball:addEventListener( "collision", fireball.onCollision )
-	timer.performWithDelay( 5000, 
+	timer.performWithDelay( 10000, 
 		function ()
 			--print("fireball removing self")
 			if(fireball ~= nil) then

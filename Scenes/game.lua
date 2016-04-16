@@ -10,6 +10,8 @@ local imp = require "imp"
 local move = require "movementFunctions"
 
 
+--local performance = require('performance')
+--performance:newPerformanceMeter()
 
 local physics = require "physics"
 physics.start()
@@ -17,48 +19,27 @@ physics.setGravity(0,0)
 physics.setDrawMode( "normal" )
 local levelBuilder = require "levelBuilder"
 -----Map-----
-
+local satan = require "satan"
 local params = levelBuilder.buildLevel(g.level)
 local level = params.level
 local enemies = params.enemies
 local floor = params.floor
-
+local satan1 = satan.spawn(params.satanPath)
+satan1.start()
 local controllerMapping = require "controllerMapping"
 local player = require "playerMechanics"
-local slowtrap = require "Traps.slowtrap"
---local s1 = slowtrap.spawn(500, 0)
---local imp = require "imp"
-local sausage = require "sausage"
---local wintile = win.spawn(1)
-local satan = require "satan"
---local satan1 = satan.spawn()
+
 player.bounds:translate(0,0)
 
---enemies.group:insert(imp.spawn(-1500, 500).parent)
---enemies.group:insert(imp.spawn(1000, 1000).parent)
---player.bounds:translate(-2000, 500)
-
-
---local spot = require "spot"
---local puppy = spot.spawn(300, 0)
---local wintile = require "Traps.winTrap"
---local win1 = wintile.spawn(1000, 0)
-
--- (1) move square to bottom right corner; subtract half side-length
---camera:add(puppy.parent, 2)
---camera:add(satan1.bounds, 2)
---print(satan1.path[1].x)
---transition.to( satan1.bounds, satan1.path[1] )
---camera:add(win1.bounds, 4)
---camera:add(s1.bounds, 3)
 camera:add(player.parent, 1)
 camera:add(player.cameraLock, 1)
 camera:add(player.shotgun.blast, 1)
 camera:add(player.shotgun.bounds, 1)
 camera:add(player.bounds, 1)
-camera:add(level, 3)
+camera:add(satan1.bounds, 2)
 --print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
 camera:add(floor,5)
+camera:add(level, 3)
 camera:add(player.torchLight, 5)
 camera:add(enemies.group, 2)
 
@@ -268,19 +249,23 @@ local function makeGore( event )
 	timer.performWithDelay( 10, 
 		function ()
 			local gore = event.splat(player.thisAimAngle, event.bounds.x, event.bounds.y)
-			camera:add(gore, 4)
+			if(gore ~= nil)then
+				camera:add(gore, 3)
+			end
 		end
 	)
 end
 Runtime:addEventListener( "makeGore", makeGore)
 
 local function fireball( event )
-	timer.performWithDelay( 10, 
-		function ()
+	--timer.performWithDelay( 10, 
+	--	function ()
 			local f = event.f
-			camera:add(f, 3)
-		end
-	)
+			if(f ~= nil)then
+				camera:add(f, 3)
+			end
+	--	end
+	--)
 end
 Runtime:addEventListener( "fireball", fireball)
 

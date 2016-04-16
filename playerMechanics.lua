@@ -56,7 +56,7 @@ local P = {}
 	P.torchLight = display.newRect(P.bounds.x, P.bounds.y,51200,51200)
 	display.setDefault( "textureWrapX", "clampToEdge" )
 	display.setDefault( "textureWrapY", "clampToEdge" )
-	P.torchLight.fill = {type = "image",filename ="/Graphics/Animation/torchRad.png"}
+	P.torchLight.fill = {type = "image",filename ="Graphics/Animation/torchRad.png"}
 	P.torchLight.fill.scaleX = 0.02
 	P.torchLight.fill.scaleY = 0.02
 	P.torchLight.alpha = 0.75
@@ -190,10 +190,10 @@ local P = {}
 	P.onCollision = function( event )
 		if (event.phase == "began" and event.other ~= nil) then
 			local other = event.other.super
-			print("in player collided with: ".. other.myName)
+			--print("in player collided with: ".. other.myName)
 			local s = string.sub(other.myName, 1, 2)
 			if(s == "e_" or s == "p_") then
-				print(P.health)
+				--print(P.health)
 				P.health = P.health -1
 			end
 			if(P.health == 0) then
