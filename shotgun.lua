@@ -19,6 +19,7 @@ local P = {}
 		C.aimAngle = 0
 		C.bounds.xScale = C.power/10
 		C.bounds.yScale = C.power/10
+		C.shotgunOMeter = display.newGroup( )
 		--[[
 		physics.addBody( C.bounds, "dynamic", {     
 													density = 0.0, 
@@ -150,6 +151,7 @@ local P = {}
 		C.bounds:addEventListener( "collision", C.onCollision )
 
 		local function powerUp( value )
+			print("int powerup: " ..value)
 			if value > 0 then
 				if value + C.power > C.max then
 					C.power = C.max
@@ -173,7 +175,7 @@ local P = {}
 
 		C.powerUp = powerUp
 
-		function createBlastBounds()
+		local function createBlastBounds()
 			physics.addBody( C.bounds, "dynamic", {     
 													density=0.0, 
 													friction=0.0, 
@@ -186,15 +188,15 @@ local P = {}
 		end
 		C.createBlastBounds = createBlastBounds
 
-		function displayPower()
-			if(shotgunOMeter)then shotgunOMeter:removeSelf()end
-			blocks = {}
-			shotgunOMeter = display.newGroup()
+		local function displayPower()
+			C.shotgunOMeter:removeSelf()
+			local blocks = {}
+			C.shotgunOMeter = display.newGroup()
 			for i=1,C.power-9,1 do
-				blocks[i]=display.newRect( shotgunOMeter,(i*42)+250, 40, 40,40 )
+				blocks[i]=display.newRect( C.shotgunOMeter,(i*42)+250, 40, 40,40 )
 				blocks[i]:setFillColor((i/5),5/i,0,0.9)
 			end
-			return shotgunOMeter
+			return C.shotgunOMeter
 		end
 		C.displayPower = displayPower
 		return C

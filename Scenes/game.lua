@@ -8,7 +8,7 @@ local goreCount = 0
 local physics = require "physics"
 local playerBuilder = require "playerMechanics"
 local satanBuilder = require "satan"
-
+local playerTextSpeed
 
 local controllerMapping = require "controllerMapping"
 local levelBuilder = require "levelBuilder"
@@ -28,14 +28,6 @@ local map = {
 	fireballs = {}
 }
 
-function updateGUI()
-	sceneGroup:insert(player.shotgun.displayPower())
-	if(playerTextSpeed)then
-		playerTextSpeed:removeSelf()
-	end
-	playerTextSpeed = display.newText( sceneGroup, tostring(player.maxSpeed/50).." KMPH", 400, 100, "Curse of the Zombie", 50 )
-	playerTextSpeed:setFillColor( 1,1,0 )
-end
 
 function createMap()
 	map.params = levelBuilder.buildLevel(g.level)
@@ -80,6 +72,12 @@ end
 
 function updateGUI()
 	sceneGroup:insert(map.player.shotgun.displayPower())
+	if(playerTextSpeed)then
+		playerTextSpeed:removeSelf()
+	end
+	playerTextSpeed = display.newText( sceneGroup, tostring(map.player.maxSpeed/50)..
+										" KMPH", 400, 100, "Curse of the Zombie", 50 )
+	playerTextSpeed:setFillColor( 1,1,0 )
 end
 
 local function onAxisEvent( event )
@@ -103,20 +101,17 @@ local function onKeyEvent( event )
 	if (event.phase == "down") then
 		-- Adjust velocity for testing, remove for final game        
 		if ( event.keyName == "[" or event.keyName == "rightShoulderButton1" ) then
-			if (player.velocity > 0 ) then
-			player.maxSpeed = player.maxSpeed - 50
-				player.shotgun.powerUp(-1)
-			end
-		elseif ( event.keyName == "]" or event.keyName == "leftShoulderButton1" ) then
-			player.maxSpeed = player.maxSpeed + 50
-			player.shotgun.powerUp(1)
 			if (map.player.velocity > 0 ) then
-			--player.velocity = player.velocity - 1
+			map.player.maxSpeed = map.player.maxSpeed - 50
 				map.player.shotgun.powerUp(-1)
 			end
 		elseif ( event.keyName == "]" or event.keyName == "leftShoulderButton1" ) then
-			--player.velocity = player.velocity + 1
+			map.player.maxSpeed = map.player.maxSpeed + 50
 			map.player.shotgun.powerUp(1)
+			if (map.player.velocity > 0 ) then
+			--player.velocity = player.velocity - 1
+				--map.player.shotgun.powerUp(-1)
+			end
 		end
 		-- WASD and ArrowKeys pressed down
 		if ( event.keyName == "w" ) then
@@ -189,16 +184,18 @@ end
 local function makeGore( event )
 	timer.performWithDelay( 10,
 		function ()
-			local go = event.splat(map.player.thisAimAngle, event.bounds.x, event.bounds.y)
-			goreCount = goreCount + 1
-			if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
-				map.gore[math.fmod(goreCount, g.maxGore)]:removeSelf()
-				map.gore[math.fmod(goreCount, g.maxGore)] = nil
-			end
-				map.gore[math.fmod(goreCount, g.maxGore)] = go
-			if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil)then
-				print("making gore")
-				camera:add(map.gore[math.fmod(goreCount, g.maxGore)], 3)
+			if(g.pause == false) then
+				local go = event.splat(map.player.thisAimAngle, event.bounds.x, event.bounds.y)
+				goreCount = goreCount + 1
+				if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
+					map.gore[math.fmod(goreCount, g.maxGore)]:removeSelf()
+					map.gore[math.fmod(goreCount, g.maxGore)] = nil
+				end
+					map.gore[math.fmod(goreCount, g.maxGore)] = go
+				if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil)then
+					print("making gore")
+					camera:add(map.gore[math.fmod(goreCount, g.maxGore)], 3)
+				end
 			end
 			--display.remove( go )
 		end
@@ -239,8 +236,8 @@ local function gameLoop( event )
 	--print("in game loop")
 	if g.pause == false and axis ~= "" then
 		
-		--local shotgunOMeter = map.player.shotgun.displayPower()
-		--updateGUI()
+		local shotgunOMeter = map.player.shotgun.displayPower()
+		updateGUI()
 		if(g.android) then
 			map.player.virtualJoystickInput(leftJoystick.angle, leftJoystick.xLoc/70, leftJoystick.yLoc/70, rightJoystick.angle, rightJoystick.distance/70, rightJoystick.xLoc/70, rightJoystick.yLoc/70)
 		end
@@ -347,15 +344,19 @@ function scene:destroy( event )
 	local sceneGroup = self.view
 	local phase = event.phase
 	
-
-	Runtime:removeEventListener( "enterFrame", gameLoop )
- 	Runtime:removeEventListener( "key", onKeyEvent )
-  	Runtime:removeEventListener( "axis", onAxisEvent )
-  	Runtime:removeEventListener( "makeGore", makeGore)
-	Runtime:removeEventListener( "fireball", fireball)
-	Runtime:removeEventListener( "youWin", youWin)
-	Runtime:removeEventListener( "youDied", youDied)
-	Runtime:removeEventListener( "getPlayerLocation", getPlayerLocation)
+	timer.performWithDelay( 10, 
+		function()
+			Runtime:removeEventListener( "enterFrame", gameLoop )
+			Runtime:removeEventListener( "key", onKeyEvent )
+			Runtime:removeEventListener( "axis", onAxisEvent )
+			Runtime:removeEventListener( "makeGore", makeGore)
+			Runtime:removeEventListener( "fireball", fireball)
+			Runtime:removeEventListener( "youWin", youWin)
+			Runtime:removeEventListener( "youDied", youDied)
+			Runtime:removeEventListener( "getPlayerLocation", getPlayerLocation)
+		end
+	 )
+	
 
 	map.player.die()
 	map.player = nil

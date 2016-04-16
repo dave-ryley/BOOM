@@ -2,6 +2,7 @@ local T = {}
     local g = require "globals"
     local function spawn()
         local V = {}
+        local s = require "SpriteSeq.spotSeq"
         V.anim = ""
         V.sounds = {}
         local spot_sheetOptions =
@@ -11,7 +12,7 @@ local T = {}
             numFrames = 64
         }
         local spot_sheet_nice = graphics.newImageSheet( g.animationPath.."spotRun.png", spot_sheetOptions )
-        local spot_sequences = require "SpriteSeq.spotSeq"
+        local spot_sequences = s.spawn()
         
         V.bounds = display.newSprite( spot_sheet_nice, spot_sequences )
 
