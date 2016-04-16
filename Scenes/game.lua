@@ -49,23 +49,24 @@ function createMap()
 	map.satan.start()
 	map.player.bounds:translate(0,0)
 
-	camera:add(map.player.parent, 1)
-	camera:add(map.player.bounds, 1)
 	camera:add(map.level, 4)
-	camera:add(map.player.shotgun.blast, 1)
-	camera:add(map.player.shotgun.bounds, 1)
-	camera:add(map.satan.bounds, 1)
 	camera:add(map.enemiesDisplay, 2)
 	camera:add(map.trapsDisplay, 4)
 	camera:add(map.floor,5)
 	camera:add(map.player.torchLight, 5)
 	--print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
-
-	-- INITIALIZING CAMERA
 	camera:prependLayer()
 	camera.damping = 10
 	camera:setFocus(map.player.cameraLock)
 	camera:track()
+
+
+	camera:add(map.player.parent, 1)
+	camera:add(map.player.bounds, 1)
+	camera:add(map.player.shotgun.blast, 1)
+	camera:add(map.player.shotgun.bounds, 1)
+	camera:add(map.satan.bounds, 1)
+	-- INITIALIZING CAMERA
 end 
 
 
@@ -216,6 +217,7 @@ end
 
 local function youWin( event )
 	print("you win")
+	
 end
 
 local function youDied( event )

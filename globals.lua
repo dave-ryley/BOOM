@@ -13,7 +13,7 @@ G = {}
 	G.ccx = display.contentCenterX
 	G.ccy = display.contentCenterY
 	G.level = 1
-	G.health = 7
+	G.health = 700
 	G.maxGore = 20
 	G.drawMode = "normal"
 
