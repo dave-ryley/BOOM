@@ -14,6 +14,11 @@ local controllerMapping = require "controllerMapping"
 local levelBuilder = require "levelBuilder"
 local camera = perspective.createView()
 
+local music = {
+	"HeadShredder.mp3",
+	"Death Cell.mp3"
+}
+
 local map = {
 	params = {},
 	enemies = {},
@@ -75,27 +80,31 @@ function createMap()
 			g.gameState = "introTransition" 
 			-- Pans over to the player
 			transition.to( 	map.player.cameraLock, 
-							{time = 1000, 
-							x = map.player.bounds.x, 
-							y = map.player.bounds.y, 
-							onComplete = 
-								-- Game begins
-								function()
-									local startText = display.newText(sceneGroup,"RUN!", g.ccx, g.ccy-40, "BLOODY.ttf", 180 )
-									startText:setFillColor( 1,1,0 )
-									local runMortal = audio.loadSound("/sounds/Satan/Satan_RunMortal.ogg")
-									audio.play(runMortal)
-									g.gameState = "playing"
-									timer.performWithDelay(2000, 
-										function()
-											startText:removeSelf()
-											startText = nil 
-											--runMortal:removeSelf()
-											--runMortal = nil
-										end
-									)
-								end
-							} )
+				{time = 1000, 
+				x = map.player.bounds.x, 
+				y = map.player.bounds.y, 
+				onComplete = 
+					-- Game begins
+					function()
+						local startText = display.newText(sceneGroup,"RUN!", 
+											g.ccx, 
+											g.ccy-40, 
+											"BLOODY.ttf", 
+											180 )
+						startText:setFillColor( 1,0,0 )
+						local runMortal = audio.loadSound("/sounds/Satan/Satan_RunMortal.ogg")
+						audio.play(runMortal)
+						g.gameState = "playing"
+						timer.performWithDelay(2000, 
+							function()
+								startText:removeSelf()
+								startText = nil 
+								--runMortal:removeSelf()
+								--runMortal = nil
+							end
+						)
+					end
+				} )
 		end
 	)
 
@@ -296,11 +305,17 @@ local function gameLoop( event )
 	if g.pause == false and g.gameState == "playing" then
 
 		if(g.android) then
-			map.player.virtualJoystickInput(leftJoystick.angle, leftJoystick.xLoc/70, leftJoystick.yLoc/70, rightJoystick.angle, rightJoystick.distance/70, rightJoystick.xLoc/70, rightJoystick.yLoc/70)
+			map.player.virtualJoystickInput(leftJoystick.angle, 
+											leftJoystick.xLoc/70, 
+											leftJoystick.yLoc/70, 
+											rightJoystick.angle, 
+											rightJoystick.distance/70, 
+											rightJoystick.xLoc/70, 
+											rightJoystick.yLoc/70)
 		end
 		map.player.update()
 	elseif g.gameState == "intro" then
-		map.player.cameraLock.x, map.player.cameraLock.y = map.satan.bounds.x, map.satan.bounds.y
+		map.player.cameraLock.x, map.player.cameraLock.y = map.satan.bounds.x, map.satan.bounds.y - 300
 	end
 	return true
 end
@@ -327,7 +342,7 @@ function scene:create( event )
 		fadein = 1000,
 	}
 	audio.setVolume( 0.2, { channel=20 } )
-	local bgMusic = audio.loadStream( "Sounds/Music/HeadShredder.mp3")
+	local bgMusic = audio.loadStream( g.musicPath..music[g.level])
 	audio.play(bgMusic,bgOptions)
 	
 	function buttonPress( self, event )
@@ -399,6 +414,7 @@ end
 -- "scene:destroy()"
 function scene:destroy( event )
 
+	audio.stop(g.level - 1)
 	g.pause = true
 	print("here in destroy")
 	timer.performWithDelay( 10, 

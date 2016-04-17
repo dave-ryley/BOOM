@@ -6,6 +6,7 @@ G = {}
 	G.animationPath = "Graphics/Animation/"
 	G.gorePath = "Graphics/Animation/Gore/"
 	G.backgroundPath = "Graphics/Background/"
+	G.musicPath = "Sounds/Music/"
 	G.cw = display.contentWidth
 	G.ch = display.contentHeight
 	G.acw = display.actualContentWidth
