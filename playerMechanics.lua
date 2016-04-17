@@ -225,7 +225,8 @@ local Q = {}
 					end
 				end
 				if(P.health == 0) then
-					Runtime:dispatchEvent( {name="youDied"} )
+					print("Killed by: "..other.enemyType)
+					Runtime:dispatchEvent( {name="youDied",killer = other.enemyType} )
 				end
 			end
 		end

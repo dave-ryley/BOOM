@@ -18,14 +18,23 @@ local function buttonPress( self, event )
 end
 
 function scene:create( event )
-
+	local killer = event.params.killer
+	print (killer)
 	local sceneGroup = self.view
-	myText = display.newText( "YOU DIED!", 
+	local deathImage = display.newImage( sceneGroup,"Graphics/Death/"..killer..".png", g.ccx,g.ccy ,isFullResolution )
+
+	myText1 = display.newText(sceneGroup, "YOU", 
+									g.ccx-500, 
 									g.ccy, 
+									"BLOODY", 
+									300 )
+	myText2 = display.newText(sceneGroup, "DIED", 
+									g.ccx+500, 
 									g.ccy, 
-									"Curse of the Zombie", 
-									80 )
-	sceneGroup:insert(myText)
+									"BLOODY", 
+									300 )
+	myText1:setFillColor(1,0,0)
+	myText2:setFillColor(1,0,0)
 	button = display.newRect( 	g.ccx,
 								g.ach - 100,
 								g.acw*3/20,

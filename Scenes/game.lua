@@ -81,8 +81,8 @@ function createMap()
 							onComplete = 
 								-- Game begins
 								function()
-									local startText = display.newText(sceneGroup,"RUN!", g.ccx, g.ccy-40, "BLOODY.ttf", 180 )
-									startText:setFillColor( 1,1,0 )
+									local startText = display.newText(sceneGroup,"RUN!", g.ccx, g.ccy-40, "Curse of the Zombie", 180 )
+									startText:setFillColor( 1,0,0 )
 									local runMortal = audio.loadSound("/sounds/Satan/Satan_RunMortal.ogg")
 									audio.play(runMortal)
 									g.gameState = "playing"
@@ -127,8 +127,8 @@ end
 local function youDied( event )
 	print("you Died")
 	g.gameState = "dead"
-	composer.gotoScene( g.scenePath.."death")
-
+	print("your killer is"..event.killer)
+	composer.gotoScene( g.scenePath.."death",{params = {killer = event.killer}})
 end
 
 local function youWin( event )
