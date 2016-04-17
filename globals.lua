@@ -1,5 +1,7 @@
 G = {}
-	G.android = (system.getInfo("platformName") == "Android")
+	--G.android = (system.getInfo("platformName") == "Android")
+	G.android = false
+	--G.android = (system.getInfo("platformName") == "Android")
 	--G.android = true
 	G.pause = false
 	G.scenePath = "Scenes."
