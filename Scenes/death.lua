@@ -9,7 +9,9 @@ local g = require "globals"
 -- local forward references should go here
 local myText1
 local myText2
-local button
+local buttons = {}
+local buttonLabels = {"RETRY","MAIN MENU"}
+local buttonText = {}
 local deathImage
 ---------------------------------------------------------------------------------
 
@@ -40,27 +42,31 @@ function scene:create( event )
     	if event.phase == "began" then
     		audio.play(press, {channel = 31})
     		if self.id == 1 then
-    			composer.removeScene( g.scenePath.."game", false )
+    			composer.removeScene( g.scenePath.."death", false )
 				composer.gotoScene( g.scenePath.."game" )
     		elseif self.id == 2 then
-    			composer.removeScene( g.scenePath.."game", false )
+    			composer.removeScene( g.scenePath.."death", false )
     			composer.gotoScene( g.scenePath.."menu" )
     		end
     		return true
     	end
 	end
 
-	buttons = {}
-	buttonLabels = {"RETRY","MAIN MENU"}
-	buttonText = {}
+	
 	for i=1,2 do 
-		buttons[i] = display.newRect(sceneGroup,g.ccx-300+(i%2*600),g.ccy+400,500,150)
+		buttons[i] = display.newRect(sceneGroup,
+									g.ccx-300+(i%2*600),
+									g.ccy+400,500,150)
 		buttons[i]:setFillColor( 1, 0, 0 )
 		buttons[i].id = i
 		buttons[i].touch = buttonPress
 		buttons[i]:addEventListener( "touch", buttons[i] )
 		
-		buttonText[i] = display.newText(sceneGroup,buttonLabels[i], g.ccx-300+(i%2*600),g.ccy+400, "Curse of the Zombie", 50 )
+		buttonText[i] = display.newText(sceneGroup,buttonLabels[i], 
+										g.ccx-300+(i%2*600),
+										g.ccy+400, 
+										"Curse of the Zombie", 
+										50 )
 		buttonText[i]:setFillColor(1,1,0)
 	end
 end
@@ -98,11 +104,16 @@ end
 
 -- "scene:destroy()"
 function scene:destroy( event )
+	buttons[1]:removeEventListener( "touch", buttons[1] )
+	buttons[2]:removeEventListener( "touch", buttons[2] )
 	display.remove( myText1 )
 	display.remove( myText2 )
-	display.remove( button )
+	display.remove( buttons[1] )
+	display.remove( buttons[2] )
 	display.remove( deathImage )
-	buttons:removeEventListener( "touch", button )
+	buttons = nil
+	buttonLabels = nil
+	buttonText = nil
 	local sceneGroup = self.view
 
 -- Called prior to the removal of scene's view ("sceneGroup").
