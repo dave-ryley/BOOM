@@ -285,18 +285,11 @@ local function makeGore( event )
 end
 
 local function fireball( event )
-	--timer.performWithDelay( 10, 
-	--	function ()
-			map.fireballs[#map.fireballs + 1] = event.f
-			if(map.fireballs[#map.fireballs] ~= nil)then
-				camera:add(map.fireballs[#map.fireballs] , 3)
-			end
-	--	end
-	--)
+	map.fireballs[#map.fireballs + 1] = event.f
+	if(map.fireballs[#map.fireballs] ~= nil)then
+		camera:add(map.fireballs[#map.fireballs] , 3)
+	end
 end
-
-
-
 
 local function getPlayerLocation( event )
 	if(map.player.isAlive == true) then
