@@ -9,6 +9,7 @@ local goreCount = 0
 local physics = require "physics"
 local playerBuilder = require "playerMechanics"
 local satanBuilder = require "satan"
+local powerups = require "powerup"
 local playerTextSpeed
 
 local controllerMapping = require "controllerMapping"
@@ -37,7 +38,8 @@ local map = {
 	trapsDisplay = display.newGroup( ),
 	enemiesDisplay = display.newGroup( ),
 	gore = {},
-	fireballs = {}
+	fireballs = {},
+	powerups = {}
 }
 
 
@@ -272,7 +274,15 @@ local function onKeyEvent( event )
 end
 
 local function makeGore( event )
-				
+	local x = event.x
+	local y = event.y
+	math.randomseed( os.time() )
+	local r = math.random(1, 10)
+	if(r > 7) then
+		map.powerups[#map.powerups + 1] = powerups.spawn(x, y)
+		camera:add(map.powerups[#map.powerups].bounds, 1)
+		print("adding powerup at: "..x .." , " .. y)
+	end
 	goreCount = goreCount + 1
 	if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
 		map.gore[math.fmod(goreCount, g.maxGore)]:removeSelf()
