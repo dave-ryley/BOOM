@@ -14,12 +14,6 @@ local deathImage
 ---------------------------------------------------------------------------------
 
 -- "scene:create()"
-local function buttonPress( self, event )
-	composer.removeScene( g.scenePath.."death", false )
-	composer.gotoScene( g.scenePath.."menu" )
-	return true
-end
-
 function scene:create( event )
 	local killer = event.params.killer
 	print (killer)
@@ -41,15 +35,34 @@ function scene:create( event )
 									300 )
 	myText1:setFillColor(1,0,0)
 	myText2:setFillColor(1,0,0)
-	button = display.newRect( 	g.ccx,
-								g.ach - 100,
-								g.acw*3/20,
-								100)
-	sceneGroup:insert(button)
-	button.touch = buttonPress
-	button:addEventListener( "touch", button )
-	-- Initialize the scene here.
-	-- Example: add display objects to "sceneGroup", add touch listeners, etc.
+
+	function buttonPress( self, event )
+    	if event.phase == "began" then
+    		audio.play(press, {channel = 31})
+    		if self.id == 1 then
+    			composer.removeScene( g.scenePath.."game", false )
+				composer.gotoScene( g.scenePath.."game" )
+    		elseif self.id == 2 then
+    			composer.removeScene( g.scenePath.."game", false )
+    			composer.gotoScene( g.scenePath.."menu" )
+    		end
+    		return true
+    	end
+	end
+
+	buttons = {}
+	buttonLabels = {"RETRY","MAIN MENU"}
+	buttonText = {}
+	for i=1,2 do 
+		buttons[i] = display.newRect(sceneGroup,g.ccx-300+(i%2*600),g.ccy+400,500,150)
+		buttons[i]:setFillColor( 1, 0, 0 )
+		buttons[i].id = i
+		buttons[i].touch = buttonPress
+		buttons[i]:addEventListener( "touch", buttons[i] )
+		
+		buttonText[i] = display.newText(sceneGroup,buttonLabels[i], g.ccx-300+(i%2*600),g.ccy+400, "Curse of the Zombie", 50 )
+		buttonText[i]:setFillColor(1,1,0)
+	end
 end
 
 
@@ -89,7 +102,7 @@ function scene:destroy( event )
 	display.remove( myText2 )
 	display.remove( button )
 	display.remove( deathImage )
-	button:removeEventListener( "touch", button )
+	buttons:removeEventListener( "touch", button )
 	local sceneGroup = self.view
 
 -- Called prior to the removal of scene's view ("sceneGroup").
