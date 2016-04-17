@@ -1,6 +1,6 @@
 G = {}
 	--G.android = (system.getInfo("platformName") == "Android")
-	G.android = true
+	G.android = false
 	G.pause = false
 	G.scenePath = "Scenes."
 	G.animationPath = "Graphics/Animation/"

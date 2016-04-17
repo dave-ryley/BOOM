@@ -4,7 +4,7 @@ local S = {}
 		local g = require "globals"
 		local col = require "collisionFilters"
 		local T = {}
-			T.bounds = display.newImageRect( "Graphics/Temp/powerup.png", 100, 100 )
+			T.bounds = display.newImageRect( "Graphics/Temp/speedUp.png", 100, 100 )
 			T.bounds.myName = "powerup"
 			T.bounds.x = x
 			T.bounds.y = y
@@ -17,7 +17,7 @@ local S = {}
 													})
 			T.powerup = function(event)
 				local other = event.other.super
-				other.shotgun.powerUp(2)
+				other.maxSpeed = other.maxSpeed + 50
 				display.remove( T.bounds )
 			end
 			T.bounds:addEventListener( "collision", T.powerup )

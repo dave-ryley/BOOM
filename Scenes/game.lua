@@ -9,7 +9,8 @@ local goreCount = 0
 local physics = require "physics"
 local playerBuilder = require "playerMechanics"
 local satanBuilder = require "satan"
-local powerups = require "powerup"
+local speedUp = require "Powerups.speedUp"
+local powerUp = require "Powerups.powerUp"
 local playerTextSpeed
 
 local controllerMapping = require "controllerMapping"
@@ -277,11 +278,15 @@ local function makeGore( event )
 	local x = event.x
 	local y = event.y
 	math.randomseed( os.time() )
-	local r = math.random(1, 10)
-	if(r > 7) then
-		map.powerups[#map.powerups + 1] = powerups.spawn(x, y)
+	local r = math.random(1, 25)
+	if(r < 6) then
+		map.powerups[#map.powerups + 1] = powerUp.spawn(x, y)
 		camera:add(map.powerups[#map.powerups].bounds, 1)
-		print("adding powerup at: "..x .." , " .. y)
+		--print("adding powerup at: "..x .." , " .. y)
+	elseif(r < 12) then
+		map.powerups[#map.powerups + 1] = speedUp.spawn(x, y)
+		camera:add(map.powerups[#map.powerups].bounds, 1)
+		--print("adding powerup at: "..x .." , " .. y)
 	end
 	goreCount = goreCount + 1
 	if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
@@ -367,14 +372,14 @@ function scene:create( event )
 	end
 	if(g.android) then
 		rightJoystick = joysticks.joystick(sceneGroup, 
-							"Graphics/Animation/analogStickHead.png", 200, 200, 
-							"Graphics/Animation/analogStickBase.png", 280, 280, 2.5 )
+							"Graphics/UI/analogStickHead.png", 200, 200, 
+							"Graphics/UI/analogStickBase.png", 280, 280, 2.5 )
 		rightJoystick.x = g.acw -250
 		rightJoystick.y = g.ach -250
 		rightJoystick.activate()
 		leftJoystick = joysticks.joystick(sceneGroup, 
-							"Graphics/Animation/analogStickHead.png", 200, 200, 
-							"Graphics/Animation/analogStickBase.png", 280, 280, 1.0 )
+							"Graphics/UI/analogStickHead.png", 200, 200, 
+							"Graphics/UI/analogStickBase.png", 280, 280, 1.0 )
 		leftJoystick.x = 250
 		leftJoystick.y = g.ach -250
 		leftJoystick.activate()
@@ -446,6 +451,12 @@ function scene:destroy( event )
 	map.player = {}
 	display.remove( map.enemiesDisplay )
 	display.remove( map.trapsDisplay )
+	for i = 1, #map.powerups do
+		if(map.powerups[i] ~= nil) then
+			display.remove(map.powerups.bounds)
+			map.powerups[i] = nil
+		end
+	end
 	for i = 1, #map.traps do
 		if(map.traps[i] ~= nil) then
 			map.traps[i] = nil
