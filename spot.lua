@@ -2,7 +2,7 @@ local S = {}
 local colFilters = require "collisionFilters"
 	local constructor = require "enemy"
 	local spotShape = { -60,-90, 60,-90, 60,90, -60,90 }
-	local radius = 1100
+	local radius = 1200
 	local spotData = {
 				physicsData = 	{	
 									shape=spotShape,
@@ -28,7 +28,7 @@ local colFilters = require "collisionFilters"
 		i.speedMod = 1
 		i.animationParam = ""
 		i.currentAngle = 0
-		i.diveRange = 400
+		i.diveRange = 500
 		i.moving = false
 		i.evil = false
 		i.dogHappy = audio.loadSound( "Sounds/Enemies/DogBarkHappy.ogg")
@@ -49,7 +49,7 @@ local colFilters = require "collisionFilters"
 														i.bounds.y)
 				if(distance <= i.diveRange and i.evil == false) then
 					audio.play(i.dogAngry,{channel = audio.findFreeChannel()})
-					i.speedMod = 2
+					i.speedMod = 2.5
 					i.evil = true
 					i.animationParam = "Evil"
 					--print("spot is evil now!")
