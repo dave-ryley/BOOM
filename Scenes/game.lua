@@ -9,7 +9,8 @@ local goreCount = 0
 local physics = require "physics"
 local playerBuilder = require "playerMechanics"
 local satanBuilder = require "satan"
-local powerups = require "powerup"
+local speedUp = require "Powerups.speedUp"
+local powerUp = require "Powerups.powerUp"
 local playerTextSpeed
 
 local controllerMapping = require "controllerMapping"
@@ -278,11 +279,19 @@ local function makeGore( event )
 	local x = event.x
 	local y = event.y
 	math.randomseed( os.time() )
-	local r = math.random(1, 10)
-	if(r > 7) then
-		map.powerups[#map.powerups + 1] = powerups.spawn(x, y)
-		camera:add(map.powerups[#map.powerups].bounds, 1)
-		print("adding powerup at: "..x .." , " .. y)
+	local r = math.random(1, 25)
+	if(r < 6) then
+		if(map.powerups[#map.powerups] ~= nil) then
+			map.powerups[#map.powerups + 1] = powerUp.spawn(x, y)
+			camera:add(map.powerups[#map.powerups].bounds, 1)
+		end
+		--print("adding powerup at: "..x .." , " .. y)
+	elseif(r < 12) then
+		if(map.powerups[#map.powerups] ~= nil) then
+			map.powerups[#map.powerups + 1] = speedUp.spawn(x, y)
+			camera:add(map.powerups[#map.powerups].bounds, 1)
+		end
+		--print("adding powerup at: "..x .." , " .. y)
 	end
 	goreCount = goreCount + 1
 	if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
@@ -447,6 +456,12 @@ function scene:destroy( event )
 	map.player = {}
 	display.remove( map.enemiesDisplay )
 	display.remove( map.trapsDisplay )
+	for i = 1, #map.powerups do
+		if(map.powerups[i] ~= nil) then
+			display.remove(map.powerups.bounds)
+			map.powerups[i] = nil
+		end
+	end
 	for i = 1, #map.traps do
 		if(map.traps[i] ~= nil) then
 			map.traps[i] = nil

@@ -206,9 +206,7 @@ local C = {}
 							Runtime:dispatchEvent( { name="makeGore", gore=tempGore,
 																	x=x,
 																	y=y })
-							if(g.gameState == "playing")then	
-								display.remove( e.parent )
-							end
+							display.remove( e.parent )
 						--deleting enemy from memory
 							e = nil
 						end

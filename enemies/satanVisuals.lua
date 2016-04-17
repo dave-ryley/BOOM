@@ -41,7 +41,7 @@ local S = {}
 			anim = anim .. ext
 
 			if V.anim ~= anim then
-				V.visuals.xScale = V.flip
+				V.visuals.xScale = math.abs(V.visuals.xScale) * V.flip
 				V.visuals:setSequence(anim)
 				V.visuals:play()
 				V.anim = anim

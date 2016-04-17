@@ -41,10 +41,12 @@ function scene:create( event )
 	buttonText = {"PLAY", "SCOREBOARD", "LEVEL EDITOR","CREDITS","QUIT"}
 	buttons = {}
 	for i=1,numOfButtons do 
-		b = buttonMaker.spawn(g.acw/(numOfButtons*2) + (i-1)*g.acw/numOfButtons, g.ach - 100, buttonText[i])
-		buttons[i] = b.button
+		buttons[i] = buttonMaker.spawn(g.acw/(numOfButtons*2) + (i-1)*g.acw/numOfButtons, g.ach - 100, buttonText[i])
 		sceneGroup:insert(buttons[i])
 		sceneGroup:insert(buttons[i].text)
+		sceneGroup:insert(buttons[i].flames)
+		buttons[i]:toFront()
+		buttons[i].text:toFront()
 		buttons[i].id = i
 		buttons[i].touch = buttonPress
 		buttons[i]:addEventListener( "touch", buttons[i] )
@@ -67,6 +69,7 @@ function scene:show( event )
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
 		composer.removeScene( g.scenePath.."intro", false )
+		buttons[1].highlight(true)
 		--composer.removeScene( "game", false )
 		-- Called when the scene is now on screen
 		-- 
