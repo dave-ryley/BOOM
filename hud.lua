@@ -15,7 +15,7 @@ local HUD = {}
 		xDiff = satanX-playerX
 		yDiff = satanY-playerY
 		rotation = math.atan2(yDiff,xDiff)*(180/math.pi)
-		print(rotation)
+		--print(rotation)
 		satanIndicatorGroup.rotation = rotation
 	end
 	

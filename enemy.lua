@@ -203,7 +203,9 @@ local C = {}
 							local tempGore = e.splat(	angle, 
 														x, 
 														y)
-							Runtime:dispatchEvent( { name="makeGore", gore=tempGore })
+							Runtime:dispatchEvent( { name="makeGore", gore=tempGore,
+																	x=x,
+																	y=y })
 							if(g.gameState == "playing")then	
 								display.remove( e.parent )
 							end
