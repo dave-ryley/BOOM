@@ -22,7 +22,7 @@ local g = require "globals"
 								{	density=1, 
 									friction=0., 
 									bounce=0.5,
-									filter=colFilters.enemyCol
+									filter=colFilters.goreCol
 								})
 				l.linearDamping = 3
 				l.angularDamping = 3

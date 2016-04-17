@@ -154,10 +154,20 @@ local C = {}
 		e.onCollision = function( event )
 			if(event.other ~= nil) then
 				local other = event.other.super
+				--print("enemy collision with: ".. other.myName)
+				if(other.myName == "satan") then
+					local angle = e.move.calculateLineAngle(	other.bounds.x,
+														other.bounds.y,
+														e.bounds.x,
+														e.bounds.y
+														)
+					e.die(true, angle)
+				end
 				--if other.myName == shotgun
 				--print("from "..e.myName .. " colliding with " .. other.myName)
 
 			end
+			return true
 		end
 		e.bounds:addEventListener( "collision", e.onCollision )
 
