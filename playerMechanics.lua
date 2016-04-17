@@ -200,16 +200,16 @@ local Q = {}
 		local function die()
 			P.isAlive = false
 			audio.stop( 2 )
-			timer.performWithDelay( 20, 
-				function ()
+			--timer.performWithDelay( 20, 
+			--	function ()
 					display.remove( P.bounds )
 					display.remove( P.shotgun.shotgunOMeter )
 					display.remove( P.shotgun.blast )
 					display.remove( P.shotgun.bounds)
 					display.remove( P.torchLight)
 					display.remove( P.parent )
-				end
-				)
+			--	end
+			--	)
 			
 		end
 		P.die = die

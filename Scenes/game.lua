@@ -264,24 +264,17 @@ local function onKeyEvent( event )
 end
 
 local function makeGore( event )
-	timer.performWithDelay( 10,
-		function ()
-			if(map.player ~= nil) then
-				local go = event.splat(map.player.thisAimAngle, event.bounds.x, event.bounds.y)
-				goreCount = goreCount + 1
-				if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
-					map.gore[math.fmod(goreCount, g.maxGore)]:removeSelf()
-					map.gore[math.fmod(goreCount, g.maxGore)] = nil
-				end
-					map.gore[math.fmod(goreCount, g.maxGore)] = go
-				if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil)then
-					print("making gore")
-					camera:add(map.gore[math.fmod(goreCount, g.maxGore)], 3)
-				end
-			end
-			--display.remove( go )
-		end
-	)
+				
+	goreCount = goreCount + 1
+	if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
+		map.gore[math.fmod(goreCount, g.maxGore)]:removeSelf()
+		map.gore[math.fmod(goreCount, g.maxGore)] = nil
+	end
+		map.gore[math.fmod(goreCount, g.maxGore)] = event.gore
+	if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil)then
+		print("making gore")
+		camera:add(map.gore[math.fmod(goreCount, g.maxGore)], 3)
+	end
 end
 
 local function fireball( event )
