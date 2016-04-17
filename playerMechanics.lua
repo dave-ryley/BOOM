@@ -73,6 +73,7 @@ local Q = {}
         P.visuals.animate(90, 90, 0, 0)
 
 		local function update ( )
+			P.shotgun.aimAngle = P.thisAimAngle
 			if(P.isAlive == true ) then
 				P.parent.x, P.torchLight.x = P.bounds.x, P.bounds.x
 				P.parent.y, P.torchLight.y = P.bounds.y -50, P.bounds.y
@@ -200,7 +201,7 @@ local Q = {}
 		local function die()
 			P.isAlive = false
 			audio.stop( 2 )
-			timer.performWithDelay( 20, 
+			timer.performWithDelay( 10, 
 				function ()
 					display.remove( P.bounds )
 					display.remove( P.shotgun.shotgunOMeter )

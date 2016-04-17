@@ -12,7 +12,8 @@ local S = {}
 		s.bounds.anchorY = 0.75
 		s.animate(180, "Walk")
 		s.bounds.super = s
-
+		s.myName = "satan"
+		s.bounds.myName = "satan"
 		for i = 1, #path do
 			if(i>1)then 
 				distance = math.sqrt(math.pow((path[i].x-path[i-1].x),2)+math.pow((path[i].y-path[i-1].y),2))

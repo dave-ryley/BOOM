@@ -154,6 +154,7 @@ local C = {}
 		e.onCollision = function( event )
 			if(event.other ~= nil) then
 				local other = event.other.super
+				--if other.myName == shotgun
 				--print("from "..e.myName .. " colliding with " .. other.myName)
 
 			end
@@ -179,36 +180,40 @@ local C = {}
 		Runtime:addEventListener( "enterFrame", e.update )
 
 		--kill enemy and safely remove him
-		local function die(gore)
+		local function die(gore, angle)
 			if(e~= nil) then
+				local x = e.bounds.x
+				local y = e.bounds.y
 				Runtime:removeEventListener( "enterFrame", e.update )
 				Runtime:removeEventListener( "enterFrame", e.AI )
 				if(gore == true) then
-					Runtime:dispatchEvent( { name="makeGore", bounds=e.bounds, splat=e.splat })
-				end
 				--need to remove eventListeners before remove display objects
 				--slight delay to let any running functions to finish
-				timer.performWithDelay( 20,
-					function ()
-						--removing visual aspects
-						if(g.gameState == "playing")then	
-							display.remove( e.parent )
-						end
+					timer.performWithDelay( 5,
+						function ()
+							local tempGore = e.splat(	angle, 
+														x, 
+														y)
+							Runtime:dispatchEvent( { name="makeGore", gore=tempGore })
+							if(g.gameState == "playing")then	
+								display.remove( e.parent )
+							end
 						--deleting enemy from memory
-						e = nil
-					end
-				)
+							e = nil
+						end
+					)
+				end
 			end
 			
 		end
 		e.die = die
 
-		local function takeHit()
+		local function takeHit(angle)
 			e.health = e.health - 1
 			e.hit = true
 			--print(e.myName.. " took hit: health = " .. e.health)
 			if(e.health <= 0) then
-				e.die(true)
+				e.die(true, angle)
 			else
 				timer.performWithDelay( 500, 
 					function ()

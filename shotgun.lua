@@ -142,7 +142,7 @@ local P = {}
 					)
 					if(string.sub(other.myName, 1, 2) == "e_") then
 						--print(other.health)
-						other.takeHit()
+						other.takeHit(C.aimAngle)
 					end
 				end
 			end

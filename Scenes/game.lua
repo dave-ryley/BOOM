@@ -57,7 +57,7 @@ function createMap()
 	-- INITIALIZING CAMERA
 	camera:add(map.level, 3)
 	camera:add(map.enemiesDisplay, 2)
-	camera:add(map.trapsDisplay, 4)
+	camera:add(map.trapsDisplay, 3)
 	camera:add(map.floor,5)
 	camera:add(map.player.torchLight, 5)
 	--print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
@@ -264,39 +264,25 @@ local function onKeyEvent( event )
 end
 
 local function makeGore( event )
-	timer.performWithDelay( 10,
-		function ()
-			if(map.player ~= nil) then
-				local go = event.splat(map.player.thisAimAngle, event.bounds.x, event.bounds.y)
-				goreCount = goreCount + 1
-				if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
-					map.gore[math.fmod(goreCount, g.maxGore)]:removeSelf()
-					map.gore[math.fmod(goreCount, g.maxGore)] = nil
-				end
-					map.gore[math.fmod(goreCount, g.maxGore)] = go
-				if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil)then
-					print("making gore")
-					camera:add(map.gore[math.fmod(goreCount, g.maxGore)], 3)
-				end
-			end
-			--display.remove( go )
-		end
-	)
+				
+	goreCount = goreCount + 1
+	if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
+		map.gore[math.fmod(goreCount, g.maxGore)]:removeSelf()
+		map.gore[math.fmod(goreCount, g.maxGore)] = nil
+	end
+		map.gore[math.fmod(goreCount, g.maxGore)] = event.gore
+	if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil)then
+		print("making gore")
+		camera:add(map.gore[math.fmod(goreCount, g.maxGore)], 4)
+	end
 end
 
 local function fireball( event )
-	--timer.performWithDelay( 10, 
-	--	function ()
-			map.fireballs[#map.fireballs + 1] = event.f
-			if(map.fireballs[#map.fireballs] ~= nil)then
-				camera:add(map.fireballs[#map.fireballs] , 3)
-			end
-	--	end
-	--)
+	map.fireballs[#map.fireballs + 1] = event.f
+	if(map.fireballs[#map.fireballs] ~= nil)then
+		camera:add(map.fireballs[#map.fireballs] , 3)
+	end
 end
-
-
-
 
 local function getPlayerLocation( event )
 	if(map.player.isAlive == true) then
