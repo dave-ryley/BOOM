@@ -2,7 +2,7 @@ local S = {}
 local colFilters = require "collisionFilters"
 	local constructor = require "enemy"
 	local spotShape = { -60,-90, 60,-90, 60,90, -60,90 }
-	local radius = 1200
+	local radius = 1100
 	local spotData = {
 				physicsData = 	{	
 									shape=spotShape,
@@ -24,11 +24,11 @@ local colFilters = require "collisionFilters"
 		local i = constructor.spawn("spot", startX, startY, spotData)
 		i.xMove = 0
 		i.yMove = 0
-		i.baseSpeed = 10
+		i.baseSpeed = 8
 		i.speedMod = 1
 		i.animationParam = ""
 		i.currentAngle = 0
-		i.diveRange = 500
+		i.diveRange = 400
 		i.moving = false
 		i.evil = false
 		i.dogHappy = audio.loadSound( "Sounds/Enemies/DogBarkHappy.ogg")
@@ -69,7 +69,7 @@ local colFilters = require "collisionFilters"
 						math.sin(math.rad(i.currentAngle - 90))
 
 					--print("xMove: " .. i.xMove .. " : yMove: " .. i.yMove)
-					timer.performWithDelay( 500,
+					timer.performWithDelay( 200,
 						function()
 							--print("spot angle: "..i.targetAngle.." : frame: ".. i.bounds.sequence)
 							i.moving = false

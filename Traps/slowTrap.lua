@@ -9,7 +9,7 @@ local S = {}
 			local col = require "collisionFilters"
 			--T.joint = nil
 			print(col.sensorCol.categoryBits)
-			T.bounds = display.newImageRect( "Graphics/Temp/slowTrap.jpg", 300, 300 )
+			T.bounds = display.newImageRect( "Graphics/Temp/slowTrap.jpg", 280, 280 )
 			T.bounds.myName = "trap_slow"
 			T.bounds.x = x
 			T.bounds.y = y
