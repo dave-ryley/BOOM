@@ -47,7 +47,7 @@ local Q = {}
 		P.bounds.y = 0
         --P.bounds.x = display.contentCenterX
         --P.bounds.y = display.contentCenterY
-        P.bounds.linearDamping = 3
+        P.bounds.linearDamping = 5
         -- Camera lock object setup
         P.cameraLock = display.newRect(0,-200,50,50)
         P.cameraLock.alpha = 0.00
@@ -199,7 +199,9 @@ local Q = {}
 
 
 		local function die()
+			physics.stop( )
 			P.isAlive = false
+			g.pause = true
 			audio.stop( 2 )
 			timer.performWithDelay( 10, 
 				function ()
@@ -211,7 +213,6 @@ local Q = {}
 					display.remove( P.parent )
 				end
 				)
-			
 		end
 		P.die = die
 
@@ -224,7 +225,12 @@ local Q = {}
 					if(other.enemyType== "fireball") then
 						print("player health taking damage: "..P.health)
 						P.health = P.health - 1
-					elseif (other.enemyType == "spot" or other.enemyType == "satan") then
+					elseif (other.enemyType == "spot") then
+						P.health = 0
+						other.hasTarget = false
+						other.isDead = true
+						--other.die(false)
+					elseif( other.enemyType == "satan") then
 						P.health = 0
 					end
 				end

@@ -9,6 +9,7 @@ local HUD = {}
 	HUD.satanIndicator = display.newCircle( HUD.satanIndicatorGroup, g.ccx, g.ccy, 60 )
 	HUD.distanceText = display.newText( HUD.satanIndicatorGroup, tostring(HUD.distance).."m", g.ccx, g.ccy+60, native.systemFont,60)
 
+<<<<<<< HEAD
 	HUD.hudGroup:insert(HUD.satanIndicatorGroup)
 	HUD.satanIndicator:setFillColor(1,0,0)
 	HUD.pointer:setFillColor(1,0,0)
@@ -34,6 +35,15 @@ local HUD = {}
 		end
 		HUD.satanIndicatorGroup.x = xDiff
 		HUD.satanIndicatorGroup.y = yDiff
+=======
+	local function updateSatanPointer(satanX,satanY,playerX,playerY)
+		local distance = math.sqrt(math.pow((satanX-playerX),2)+math.pow((satanY-playerY),2))
+		xDiff = satanX-playerX
+		yDiff = satanY-playerY
+		rotation = math.atan2(yDiff,xDiff)*(180/math.pi)
+		--print(rotation)
+		satanIndicatorGroup.rotation = rotation
+>>>>>>> 67bfec0271286660b143d9da2b95aadec518215a
 	end
 	HUD.updateSatanPointer = updateSatanPointer
 

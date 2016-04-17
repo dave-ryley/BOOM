@@ -9,6 +9,7 @@ local goreCount = 0
 local physics = require "physics"
 local playerBuilder = require "playerMechanics"
 local satanBuilder = require "satan"
+local powerups = require "powerup"
 local playerTextSpeed
 
 local controllerMapping = require "controllerMapping"
@@ -17,7 +18,13 @@ local camera = perspective.createView()
 local startText
 local music = {
 	"HeadShredder.mp3",
-	"DeathCell.mp3"
+	"DeathCell.mp3",
+	"HeadShredder.mp3",
+	"HeadShredder.mp3",
+	"HeadShredder.mp3",
+	"HeadShredder.mp3",
+	"HeadShredder.mp3",
+	"HeadShredder.mp3",
 }
 
 local map = {
@@ -31,7 +38,8 @@ local map = {
 	trapsDisplay = display.newGroup( ),
 	enemiesDisplay = display.newGroup( ),
 	gore = {},
-	fireballs = {}
+	fireballs = {},
+	powerups = {}
 }
 
 
@@ -267,7 +275,15 @@ local function onKeyEvent( event )
 end
 
 local function makeGore( event )
-				
+	local x = event.x
+	local y = event.y
+	math.randomseed( os.time() )
+	local r = math.random(1, 10)
+	if(r > 7) then
+		map.powerups[#map.powerups + 1] = powerups.spawn(x, y)
+		camera:add(map.powerups[#map.powerups].bounds, 1)
+		print("adding powerup at: "..x .." , " .. y)
+	end
 	goreCount = goreCount + 1
 	if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
 		map.gore[math.fmod(goreCount, g.maxGore)]:removeSelf()
@@ -352,14 +368,14 @@ function scene:create( event )
 	end
 	if(g.android) then
 		rightJoystick = joysticks.joystick(sceneGroup, 
-							"Graphics/Animation/analogStickHead.png", 200, 200, 
-							"Graphics/Animation/analogStickBase.png", 280, 280, 2.5 )
+							"Graphics/UI/analogStickHead.png", 200, 200, 
+							"Graphics/UI/analogStickBase.png", 280, 280, 2.5 )
 		rightJoystick.x = g.acw -250
 		rightJoystick.y = g.ach -250
 		rightJoystick.activate()
 		leftJoystick = joysticks.joystick(sceneGroup, 
-							"Graphics/Animation/analogStickHead.png", 200, 200, 
-							"Graphics/Animation/analogStickBase.png", 280, 280, 1.0 )
+							"Graphics/UI/analogStickHead.png", 200, 200, 
+							"Graphics/UI/analogStickBase.png", 280, 280, 1.0 )
 		leftJoystick.x = 250
 		leftJoystick.y = g.ach -250
 		leftJoystick.activate()
@@ -436,16 +452,23 @@ function scene:destroy( event )
 			map.traps[i] = nil
 		end
 	end
+
 	for i = 1, #map.enemies do
 		if(map.enemies[i] ~= nil) then
-			map.enemies[i].die(false)
+			map.enemies[i].hasTarget = false
+			map.enemies[i].die(false, 0)
 		end
 	end
+
 	display.remove( map.level )
 	transition.cancel( map.satan.bounds )
-	display.remove( map.satan.bounds )
-	map.satan = nil
-	map.satan = {}
+	timer.performWithDelay( 10, 
+		function()
+			display.remove( map.satan.bounds )
+			map.satan = nil
+			map.satan = {}
+		end
+	)
 	display.remove( map.floor )
 	map.params = nil
 	map.params = {}
