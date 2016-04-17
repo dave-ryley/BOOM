@@ -182,24 +182,26 @@ local C = {}
 		--kill enemy and safely remove him
 		local function die(gore, angle)
 			if(e~= nil) then
+				local x = e.bounds.x
+				local y = e.bounds.y
 				Runtime:removeEventListener( "enterFrame", e.update )
 				Runtime:removeEventListener( "enterFrame", e.AI )
 				if(gore == true) then
 				--need to remove eventListeners before remove display objects
 				--slight delay to let any running functions to finish
-						timer.performWithDelay( 10,
-							function ()
-								local tempGore = e.splat(	angle, 
-															e.bounds.x, 
-															e.bounds.y)
-								Runtime:dispatchEvent( { name="makeGore", gore=tempGore })
-								if(g.gameState == "playing")then	
-									display.remove( e.parent )
-								end
-							--deleting enemy from memory
-								e = nil
+					timer.performWithDelay( 5,
+						function ()
+							local tempGore = e.splat(	angle, 
+														x, 
+														y)
+							Runtime:dispatchEvent( { name="makeGore", gore=tempGore })
+							if(g.gameState == "playing")then	
+								display.remove( e.parent )
 							end
-						)
+						--deleting enemy from memory
+							e = nil
+						end
+					)
 				end
 			end
 			
