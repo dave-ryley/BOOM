@@ -82,6 +82,7 @@ function createMap()
 	camera:add(map.player.shotgun.blast, 1)
 	camera:add(map.player.shotgun.bounds, 1)
 	camera:add(map.satan.parent, 1)
+	--camera:add(hud.satanIndicatorGroup,1)
 
 	-- BEGIN GAME
 	timer.performWithDelay(2000, 
@@ -327,11 +328,11 @@ local function gameLoop( event )
 											leftJoystick.xLoc/70, 
 											leftJoystick.yLoc/70, 
 											rightJoystick.angle, 
-											rightJoystick.distance/70, 
+											rightJoystick.distance/70,
 											rightJoystick.xLoc/70, 
 											rightJoystick.yLoc/70)
 		end
-		hud.updateSatanPointer(map.satan.bounds.x,map.satan.bounds.y,map.player.bounds.x,map.player.bounds.y)
+		hud.updateSatanPointer(map.satan.bounds.x,map.satan.bounds.y,map.player.bounds.x,map.player.bounds.y,map.player.cameraLock.x,map.player.cameraLock.y)
 		map.player.update()
 	elseif g.gameState == "intro" then
 		map.player.cameraLock.x, map.player.cameraLock.y = map.satan.bounds.x, map.satan.bounds.y - 300
