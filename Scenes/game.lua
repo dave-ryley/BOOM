@@ -3,6 +3,7 @@ local scene = composer.newScene()
 local col = require "collisionFilters"
 local g = require "globals"
 local joysticks = require "joystick"
+local hud = require "hud"
 local perspective = require("perspective")
 local goreCount = 0
 local physics = require "physics"
@@ -305,6 +306,7 @@ local function gameLoop( event )
 											rightJoystick.xLoc/70, 
 											rightJoystick.yLoc/70)
 		end
+		hud.updateSatanPointer(map.satan.bounds.x,map.satan.bounds.y,map.player.bounds.x,map.player.bounds.y)
 		map.player.update()
 	elseif g.gameState == "intro" then
 		map.player.cameraLock.x, map.player.cameraLock.y = map.satan.bounds.x, map.satan.bounds.y - 300
