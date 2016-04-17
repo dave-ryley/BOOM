@@ -1,8 +1,70 @@
 local composer = require( "composer" )
 local g = require "globals"
+local controllerMapping = require "controllerMapping"
 local buttonMaker = require "button"
-
+local buttons = {}
+local buttonSelect = 0
+local canSelect = true
 local scene = composer.newScene()
+
+local function onAxisEvent( event )
+	-- Map event data to simple variables
+	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
+		local axis = controllerMapping.axis[event.axis.number]
+		--if g.pause then print("g.pause = true") else print("g.pause = false") end
+		if ( "left_x" == axis ) then
+			if event.normalizedValue < 0.1 and event.normalizedValue > -0.1 then
+				canSelect = true
+			elseif canSelect then
+				canSelect = false
+				local value = 0
+				if event.normalizedValue > 0 then
+					value = 1
+				else
+					value = (-1)
+				end
+				buttonSelect = (((buttonSelect-1 + value) + #buttons) % #buttons) + 1
+				for i=1, #buttons do
+					if i ~= buttonSelect then
+						buttons[i].highlight(false)
+					else
+						buttons[i].highlight(true)
+					end
+				end
+			end
+			
+		end
+	end
+	return true
+end
+
+local function buttonFunction( key )
+	audio.play(press, {channel = 31})
+	if key == 1 then
+		composer.gotoScene( g.scenePath.."game" )
+	elseif key == 2 then
+		composer.gotoScene( g.scenePath.."leaderboard" )
+	elseif key == 3 then
+		composer.gotoScene( g.scenePath.."levelEditorScene" )
+	elseif key == 4 then
+		composer.gotoScene( g.scenePath.."credits" )
+	elseif key == 5 then
+		native.requestExit()
+	end
+end
+
+local function onKeyPress( event )
+	local phase = event.phase
+	local keyName = event.keyName
+
+	if (phase == "down") then
+		if (keyName == "buttonA") then
+			buttonFunction(buttonSelect)
+		end
+	end
+
+	return false
+end
 
 function scene:create( event )
 	local sceneGroup = self.view
@@ -12,7 +74,7 @@ function scene:create( event )
 												g.cw, 
 												g.ch )
 	sceneGroup:insert(background)
-	numOfButtons = 5
+	local numOfButtons = 5
 	if(g.android) then
 		numOfButtons = 4
 	else
@@ -23,23 +85,12 @@ function scene:create( event )
 
 	function buttonPress( self, event )
 		if event.phase == "began" then
-			audio.play(press, {channel = 31})
-			if self.id == 1 then
-				composer.gotoScene( g.scenePath.."game" )
-			elseif self.id == 2 then
-				composer.gotoScene( g.scenePath.."leaderboard" )
-			elseif self.id == 3 then
-				composer.gotoScene( g.scenePath.."levelEditorScene" )
-			elseif self.id == 4 then
-				composer.gotoScene( g.scenePath.."credits" )
-			elseif self.id == 5 then
-				native.requestExit()
-			end
+			buttonFunction(self.id)
 			return true
 		end
 	end
+
 	buttonText = {"PLAY", "SCOREBOARD", "LEVEL EDITOR","CREDITS","QUIT"}
-	buttons = {}
 	for i=1,numOfButtons do 
 		buttons[i] = buttonMaker.spawn(g.acw/(numOfButtons*2) + (i-1)*g.acw/numOfButtons, g.ach - 100, buttonText[i])
 		sceneGroup:insert(buttons[i])
@@ -51,6 +102,7 @@ function scene:create( event )
 		buttons[i].touch = buttonPress
 		buttons[i]:addEventListener( "touch", buttons[i] )
 	end
+	local buttonId = 1
 
 
 	background.anchorX = 0
@@ -94,7 +146,8 @@ end
 
 function scene:destroy( event )
 	local sceneGroup = self.view
-	
+	Runtime:removeEventListener( "axis", onAxisEvent )
+	Runtime:removeEventListener( "key", onKeyPress )
 	-- Called prior to the removal of scene's "view" (sceneGroup)
 	-- 
 	-- INSERT code here to cleanup the scene
@@ -110,7 +163,8 @@ scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
---Runtime:addEventListener( "key", onKeyPress )
+Runtime:addEventListener( "key", onKeyPress )
+Runtime:addEventListener( "axis", onAxisEvent )
 
 -----------------------------------------------------------------------------------------
 
