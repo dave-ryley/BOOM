@@ -56,8 +56,8 @@ function spawn(angle, x, y)
 	
 	local function die()
 		if(fireball ~= nil) then
-			fireball:removeEventListener( "collision", fireball.onCollision )
-			fireball:removeSelf( )
+			--fireball:removeEventListener( "collision", fireball.onCollision )
+			display.remove( fireball )
 			fireball = nil
 			timer.cancel( t )
 		end

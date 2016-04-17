@@ -172,7 +172,7 @@ local C = {}
 
 		--onFrameEnter event
 		e.update = function( event )
-			if(g.pause == false) then
+			if(g.pause == false and e.isDead == false) then
 				e.sensorArea.x = e.bounds.x
 				e.sensorArea.y = e.bounds.y
 				--print("updating enemy")
@@ -184,17 +184,17 @@ local C = {}
 					--e.updatePlayerLocation(x, y)
 				end
 			end
-		
 		end
 		Runtime:addEventListener( "enterFrame", e.update )
 
 		--kill enemy and safely remove him
 		local function die(gore, angle)
+			--e.isDead = true
 			if(e~= nil) then
+				Runtime:removeEventListener( "enterFrame", e.AI )
+				Runtime:removeEventListener( "enterFrame", e.update )
 				local x = e.bounds.x
 				local y = e.bounds.y
-				Runtime:removeEventListener( "enterFrame", e.update )
-				Runtime:removeEventListener( "enterFrame", e.AI )
 				if(gore == true) then
 				--need to remove eventListeners before remove display objects
 				--slight delay to let any running functions to finish

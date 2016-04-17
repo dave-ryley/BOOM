@@ -84,13 +84,6 @@ local S = {}
 		end
 
 		s.start = start
-
-		s.update = function(event)
-			--print("here")
-			--s.visuals.x, s.parent.x = s.bounds.x, s.bounds.x
-			--s.visuals.y, s.parent.y = s.bounds.y, s.bounds.y
-		end
-		Runtime:addEventListener( "enterFrame", s.update )
 		return s
 
 	end

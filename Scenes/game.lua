@@ -16,7 +16,13 @@ local camera = perspective.createView()
 local startText
 local music = {
 	"HeadShredder.mp3",
-	"DeathCell.mp3"
+	"DeathCell.mp3",
+	"HeadShredder.mp3",
+	"HeadShredder.mp3",
+	"HeadShredder.mp3",
+	"HeadShredder.mp3",
+	"HeadShredder.mp3",
+	"HeadShredder.mp3",
 }
 
 local map = {
@@ -433,16 +439,23 @@ function scene:destroy( event )
 			map.traps[i] = nil
 		end
 	end
+
 	for i = 1, #map.enemies do
 		if(map.enemies[i] ~= nil) then
-			map.enemies[i].die(false)
+			map.enemies[i].hasTarget = false
+			map.enemies[i].die(false, 0)
 		end
 	end
+
 	display.remove( map.level )
 	transition.cancel( map.satan.bounds )
-	display.remove( map.satan.bounds )
-	map.satan = nil
-	map.satan = {}
+	timer.performWithDelay( 10, 
+		function()
+			display.remove( map.satan.bounds )
+			map.satan = nil
+			map.satan = {}
+		end
+	)
 	display.remove( map.floor )
 	map.params = nil
 	map.params = {}
