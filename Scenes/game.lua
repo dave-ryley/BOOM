@@ -145,7 +145,7 @@ local function youDied( event )
 end
 
 local function youWin( event )
-	audio.fade( { channel=1, time=3000, volume=0 } )
+	audio.fade( { channel=20, time=3000, volume=0 } )
 	print("you win")
 	local nextLevel = ""
 	g.level = g.level + 1
