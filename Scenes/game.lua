@@ -50,7 +50,7 @@ function createMap()
 	map.player.bounds:translate(0,0)
 
 	-- INITIALIZING CAMERA
-	camera:add(map.level, 4)
+	camera:add(map.level, 3)
 	camera:add(map.enemiesDisplay, 2)
 	camera:add(map.trapsDisplay, 4)
 	camera:add(map.floor,5)
@@ -112,18 +112,36 @@ local function onAxisEvent( event )
 	return true
 end
 
+local function youDied( event )
+	print("you Died")
+	g.gameState = "dead"
+	composer.gotoScene( g.scenePath.."death")
+
+end
+
 local function youWin( event )
 	print("you win")
 	local nextLevel = ""
 	g.level = g.level + 1
-	print(g.level .. " : " .. g.lastLevel)
-	if(g.level > g.lastLevel) then
-		nextLevel = "win"
-	else
-		nextLevel = "levelTransition"
-	end
 	g.gameState = "win"
-	composer.gotoScene( g.scenePath..nextLevel)
+	-- Player runs off screen
+	map.player.visuals.animate(90, 90, 100, 1.0)
+	transition.to( 	map.player.parent, 
+					{time = 3000, 
+					x = map.player.bounds.x + 3000, 
+					y = map.player.bounds.y, 
+					onComplete = 
+						-- Game begins
+						function()
+							print(g.level .. " : " .. g.lastLevel)
+							if(g.level > g.lastLevel) then
+								nextLevel = "win"
+							else
+								nextLevel = "levelTransition"
+							end
+							composer.gotoScene( g.scenePath..nextLevel)
+						end
+					} )
 end
 
 local function onKeyEvent( event )
@@ -205,6 +223,9 @@ local function onKeyEvent( event )
 		elseif (event.keyName == "l") then
 			--composer.gotoScene( g.scenePath.."death")
 			youWin()
+			elseif (event.keyName == "k") then
+			--composer.gotoScene( g.scenePath.."death")
+			youDied()
 		end
 	end
 
@@ -250,12 +271,6 @@ end
 
 
 
-local function youDied( event )
-	print("you Died")
-	g.gameState = "dead"
-	composer.gotoScene( g.scenePath.."death")
-
-end
 
 local function getPlayerLocation( event )
 	if(map.player.isAlive == true) then

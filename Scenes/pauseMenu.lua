@@ -20,6 +20,7 @@ function scene:create( event )
     			g.pause = false
     			composer.hideOverlay()
     		elseif self.id == 2 then
+    			composer.removeScene( g.scenePath.."game", false )
     			composer.gotoScene( g.scenePath.."menu" )
     		end
     		return true

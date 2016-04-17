@@ -17,7 +17,7 @@ local S = {}
 			T.win = function(event)
 				if(g.gameState == "playing") then
 					print("in win tile")
-					--Runtime:dispatchEvent( { name="youWin"})
+					Runtime:dispatchEvent( { name="youWin"})
 				end
 			end
 			T.bounds:addEventListener( "collision", T.win )
