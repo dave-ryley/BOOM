@@ -357,14 +357,14 @@ function scene:create( event )
 	end
 	if(g.android) then
 		rightJoystick = joysticks.joystick(sceneGroup, 
-							"Graphics/Animation/analogStickHead.png", 200, 200, 
-							"Graphics/Animation/analogStickBase.png", 280, 280, 2.5 )
+							"Graphics/UI/analogStickHead.png", 200, 200, 
+							"Graphics/UI/analogStickBase.png", 280, 280, 2.5 )
 		rightJoystick.x = g.acw -250
 		rightJoystick.y = g.ach -250
 		rightJoystick.activate()
 		leftJoystick = joysticks.joystick(sceneGroup, 
-							"Graphics/Animation/analogStickHead.png", 200, 200, 
-							"Graphics/Animation/analogStickBase.png", 280, 280, 1.0 )
+							"Graphics/UI/analogStickHead.png", 200, 200, 
+							"Graphics/UI/analogStickBase.png", 280, 280, 1.0 )
 		leftJoystick.x = 250
 		leftJoystick.y = g.ach -250
 		leftJoystick.activate()

@@ -1,5 +1,6 @@
 local composer = require( "composer" )
 local g = require "globals"
+local buttonMaker = require "button"
 
 local scene = composer.newScene()
 
@@ -10,6 +11,7 @@ function scene:create( event )
 	local background = display.newImageRect( 	"Graphics/UI/menuBackground.png", 
 												g.cw, 
 												g.ch )
+	sceneGroup:insert(background)
 	numOfButtons = 5
 	if(g.android) then
 		numOfButtons = 4
@@ -36,15 +38,13 @@ function scene:create( event )
 			return true
 		end
 	end
-
+	buttonText = {"PLAY", "SCOREBOARD", "LEVEL EDITOR","CREDITS","QUIT"}
 	buttons = {}
 	for i=1,numOfButtons do 
-		buttons[i] = display.newRect(	g.acw/(numOfButtons*2) + (i-1)*g.acw/numOfButtons,
-										g.ach - 100,
-										g.acw*3/20,
-										100)
+		b = buttonMaker.spawn(g.acw/(numOfButtons*2) + (i-1)*g.acw/numOfButtons, g.ach - 100, buttonText[i])
+		buttons[i] = b.button
 		sceneGroup:insert(buttons[i])
-		buttons[i]:setFillColor( 1, 0, 0 )
+		sceneGroup:insert(buttons[i].text)
 		buttons[i].id = i
 		buttons[i].touch = buttonPress
 		buttons[i]:addEventListener( "touch", buttons[i] )
@@ -55,7 +55,7 @@ function scene:create( event )
 	background.anchorY = 0
 	background.x, background.y = 0, 0
 	
-	sceneGroup:insert(background)
+	
 
 end
 
@@ -63,20 +63,6 @@ function scene:show( event )
 	local sceneGroup = self.view
 	local phase = event.phase
 	if phase == "will" then
-		for i=1,numOfButtons do 
-			sceneGroup:insert(buttons[i])
-		end
-		buttonText = {"PLAY", "SCOREBOARD", "LEVEL EDITOR","CREDITS","QUIT"}
-		text = {}
-		for i=1,numOfButtons do
-			text[i] = display.newText(	buttonText[i], 
-										g.acw/(numOfButtons*2) + (i-1)*g.acw/numOfButtons,
-										g.ach - 100, 
-										"Curse of the Zombie",
-										40)
-			text[i]:setFillColor( 1, 1, 0 )
-			sceneGroup:insert(text[i])
-		end
 		
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
