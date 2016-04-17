@@ -1,12 +1,13 @@
 G = {}
-	--G.android = (system.getInfo("platformName") == "Android")
-	G.android = true
+	G.android = (system.getInfo("platformName") == "Android")
+	--G.android = true
 	G.pause = false
 	G.scenePath = "Scenes."
 	G.animationPath = "Graphics/Animation/"
 	G.gorePath = "Graphics/Animation/Gore/"
 	G.backgroundPath = "Graphics/Background/"
 	G.musicPath = "Sounds/Music/"
+	G.UIPath = "Graphics/UI/"
 	G.cw = display.contentWidth
 	G.ch = display.contentHeight
 	G.acw = display.actualContentWidth
