@@ -5,7 +5,9 @@ local S = {}
 		local s = {}
 		local c = require "enemies.satanVisuals"
 		local col = require "collisionFilters"
+		local m = require "movementFunctions"
 		s = c.spawn()
+		s.move = m.spawn()
 		s.currentPath = 1
 		s.speed = 0.77
 		s.path = {}
@@ -43,15 +45,22 @@ local S = {}
 			--print(s.path[currentPath].x.." : ".. s.path[currentPath].y)
 			if(s.currentPath < #s.path) then 
 				s.currentPath = s.currentPath + 1
+				local xDestination = s.path[s.currentPath][1]
+				local yDestination = s.path[s.currentPath][2]
+				local angle = s.move.calculateLineAngle(	s.bounds.x,
+															s.bounds.y,
+															xDestination,
+															yDestination)
 				transition.to(s.bounds,{time = 	s.path[s.currentPath][3], 
-												x=s.path[s.currentPath][1], 
-												y=s.path[s.currentPath][2], 
+												x=xDestination, 
+												y=yDestination, 
 												onComplete = s.destinationReached})
 				transition.to(s.visuals,{time = s.path[s.currentPath][3], 
-												x=s.path[s.currentPath][1], 
-												y=s.path[s.currentPath][2]
+												x=xDestination, 
+												y=yDestination
 												})
 												--onComplete = s.destinationReached})
+				s.animate(angle, "Walk")
 				
 			end
 		end
@@ -60,11 +69,18 @@ local S = {}
 
 		local function start( )
 			print("satan started")
+			local xDestination = s.path[s.currentPath][1]
+			local yDestination = s.path[s.currentPath][2]
+			local angle = s.move.calculateLineAngle(	s.bounds.x,
+														s.bounds.y,
+														xDestination,
+														yDestination)
 			transition.to( 	s.bounds, 
 							{time = 3000, 
-							x=s.path[s.currentPath][1], 
-							y=s.path[s.currentPath][2], 
+							x=xDestination, 
+							y=yDestination, 
 							onComplete = s.destinationReached} )
+			s.animate(angle, "Walk")
 		end
 
 		s.start = start

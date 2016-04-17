@@ -167,7 +167,6 @@ local C = {}
 				--print("from "..e.myName .. " colliding with " .. other.myName)
 
 			end
-			return true
 		end
 		e.bounds:addEventListener( "collision", e.onCollision )
 
