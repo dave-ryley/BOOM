@@ -7,7 +7,7 @@ function scene:create( event )
 	local sceneGroup = self.view
 	-- Called when the scene's view does not exist.
 	-- INSERT code here to initialize the scene
-	local background = display.newImageRect( 	"Graphics/Art/Boom.jpg", 
+	local background = display.newImageRect( 	"Graphics/UI/menuBackground.png", 
 												g.cw, 
 												g.ch )
 	numOfButtons = 5
