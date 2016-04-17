@@ -219,12 +219,12 @@ local Q = {}
 			if (event.phase == "began" and event.other ~= nil) then
 				local other = event.other.super
 				local s = string.sub(event.other.myName, 1, 2)
-				if(s == "e_" or s == "p_") then
+				if(s == "e_" or s == "p_" or other.enemyType == "satan") then
 					--print("in player collided with: ".. other.myName)
 					if(other.enemyType== "fireball") then
 						print("player health taking damage: "..P.health)
 						P.health = P.health - 1
-					elseif (other.enemyType == "spot") then
+					elseif (other.enemyType == "spot" or other.enemyType == "satan") then
 						P.health = 0
 					end
 				end

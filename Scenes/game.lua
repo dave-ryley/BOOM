@@ -13,7 +13,7 @@ local playerTextSpeed
 local controllerMapping = require "controllerMapping"
 local levelBuilder = require "levelBuilder"
 local camera = perspective.createView()
-
+local startText
 local music = {
 	"HeadShredder.mp3",
 	"DeathCell.mp3"
@@ -71,7 +71,7 @@ function createMap()
 	camera:add(map.player.bounds, 1)
 	camera:add(map.player.shotgun.blast, 1)
 	camera:add(map.player.shotgun.bounds, 1)
-	camera:add(map.satan.bounds, 1)
+	camera:add(map.satan.parent, 1)
 
 	-- BEGIN GAME
 	timer.performWithDelay(2000, 
@@ -86,7 +86,7 @@ function createMap()
 				onComplete = 
 					-- Game begins
 					function()
-						local startText = display.newText(sceneGroup,"RUN!", 
+						startText = display.newText("RUN!", 
 											g.ccx, 
 											g.ccy-40, 
 											"Curse of the Zombie", 
@@ -97,8 +97,9 @@ function createMap()
 						g.gameState = "playing"
 						timer.performWithDelay(2000, 
 							function()
-								startText:removeSelf()
-								startText = nil 
+								--startText:removeSelf()
+								--startText = nil 
+								startText.alpha = 0
 								--runMortal:removeSelf()
 								--runMortal = nil
 							end
@@ -409,6 +410,7 @@ function scene:destroy( event )
 	g.pause = true
 	audio.stop( 20 )
 	print("here in destroy")
+	display.remove( startText )
 	timer.performWithDelay( 10, 
 		function()
 			Runtime:removeEventListener( "enterFrame", gameLoop )

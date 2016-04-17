@@ -26,7 +26,7 @@ local g = require "globals"
 			        {	density = 0.5,
 			        	friction = 0.5,
 			        	bounce = 0.7,
-			        	filter=colFilters.enemyCol
+			        	filter=colFilters.goreCol
 			        })
 			    --p.isFixedRotation=true
 			    --[[

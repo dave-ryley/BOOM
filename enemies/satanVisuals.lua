@@ -6,7 +6,7 @@ local S = {}
 		V.anim = ""
 		V.sounds = {}
 		
-		V.bounds = v.spawn()
+		V.visuals = v.spawn()
 
 		local function animate(angle, ext) -- angle i.e 90, ext is the extension onto the animation, i.e "Shoot" or "Stand"
 			-- Animate Upper Body
@@ -33,8 +33,8 @@ local S = {}
 			anim = anim .. ext
 
 			if V.anim ~= anim then
-				V.bounds:setSequence(anim)
-				V.bounds:play()
+				V.visuals:setSequence(anim)
+				V.visuals:play()
 				V.anim = anim
 			end
 		end

@@ -16,7 +16,7 @@ G = {}
 	G.level = 1
 	G.health = 3
 	G.maxGore = 20
-	G.drawMode = "normal"
+	G.drawMode = "hybrid"
 	G.lastLevel = 2
 	G.gameState = "intro" --intro/introTrans/win/
 
