@@ -57,7 +57,7 @@ function createMap()
 	-- INITIALIZING CAMERA
 	camera:add(map.level, 3)
 	camera:add(map.enemiesDisplay, 2)
-	camera:add(map.trapsDisplay, 3)
+	camera:add(map.trapsDisplay, 4)
 	camera:add(map.floor,5)
 	camera:add(map.player.torchLight, 5)
 	--print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
@@ -407,6 +407,7 @@ end
 function scene:destroy( event )
 
 
+	camera.destroy()
 	g.pause = true
 	audio.stop( 20 )
 	print("here in destroy")
@@ -421,9 +422,6 @@ function scene:destroy( event )
 			Runtime:removeEventListener( "youWin", youWin)
 			Runtime:removeEventListener( "youDied", youDied)
 			Runtime:removeEventListener( "getPlayerLocation", getPlayerLocation)
-		end
-	 )
-	
 
 	map.player.die()
 	map.player = nil
@@ -460,12 +458,10 @@ function scene:destroy( event )
 			map.fireballs[i] = nil
 		end
 	end
-	camera.destroy()
-	timer.performWithDelay( 10, 
-		function()
-			physics.stop( )
+	physics.stop( )
+	
 		end
-	)
+	 )
 	
 	--scene:removeEventListener( "create", scene )
 	--scene:removeEventListener( "show", scene )

@@ -61,7 +61,7 @@ local S = {}
 												})
 												--onComplete = s.destinationReached})
 				s.animate(angle, "Walk")
-				
+				print("satan angle: " .. angle)
 			end
 		end
 

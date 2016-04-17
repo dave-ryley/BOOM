@@ -77,8 +77,8 @@ local Q = {}
 			if(P.isAlive == true ) then
 				P.parent.x, P.torchLight.x = P.bounds.x, P.bounds.x
 				P.parent.y, P.torchLight.y = P.bounds.y -50, P.bounds.y
-				P.cameraLock.x = P.parent.x + P.isRotatingX*250
-				P.cameraLock.y = P.parent.y + P.isRotatingY*250
+				P.cameraLock.x = P.parent.x + P.isRotatingX*350
+				P.cameraLock.y = P.parent.y + P.isRotatingY*350
 				P.visuals.footsteps()
             end
 
