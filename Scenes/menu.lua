@@ -77,6 +77,7 @@ function scene:show( event )
 			text[i]:setFillColor( 1, 1, 0 )
 			sceneGroup:insert(text[i])
 		end
+		
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
 		composer.removeScene( g.scenePath.."intro", false )

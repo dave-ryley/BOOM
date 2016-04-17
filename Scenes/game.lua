@@ -16,7 +16,7 @@ local camera = perspective.createView()
 
 local music = {
 	"HeadShredder.mp3",
-	"Death Cell.mp3"
+	"DeathCell.mp3"
 }
 
 local map = {
@@ -89,10 +89,10 @@ function createMap()
 						local startText = display.newText(sceneGroup,"RUN!", 
 											g.ccx, 
 											g.ccy-40, 
-											"BLOODY.ttf", 
+											"Curse of the Zombie", 
 											180 )
 						startText:setFillColor( 1,0,0 )
-						local runMortal = audio.loadSound("/sounds/Satan/Satan_RunMortal.ogg")
+						local runMortal = audio.loadSound("Sounds/Satan/satan_RunMortal.ogg")
 						audio.play(runMortal)
 						g.gameState = "playing"
 						timer.performWithDelay(2000, 
@@ -117,7 +117,11 @@ function updateGUI()
 		playerTextSpeed:removeSelf()
 	end
 	playerTextSpeed = display.newText( sceneGroup, tostring(map.player.maxSpeed/50)..
-										" KMPH", 400, 100, "Curse of the Zombie", 50 )
+										" KMPH", 
+										400, 
+										100, 
+										"Curse of the Zombie", 
+										50 )
 	playerTextSpeed:setFillColor( 1,1,0 )
 end
 
@@ -136,11 +140,12 @@ end
 local function youDied( event )
 	print("you Died")
 	g.gameState = "dead"
-	composer.gotoScene( g.scenePath.."death")
-
+	print("your killer is"..event.killer)
+	composer.gotoScene( g.scenePath.."death",{params = {killer = event.killer}})
 end
 
 local function youWin( event )
+	audio.fade( { channel=1, time=3000, volume=0 } )
 	print("you win")
 	local nextLevel = ""
 	g.level = g.level + 1
@@ -167,7 +172,7 @@ end
 
 local function onKeyEvent( event )
 	local phase = event.phase
-	local keyName = event.keyName
+	local keyName = event.keyNamea
 	local axis = ""
 	local value = 0
 
@@ -414,8 +419,9 @@ end
 -- "scene:destroy()"
 function scene:destroy( event )
 
-	audio.stop(g.level - 1)
+
 	g.pause = true
+	audio.stop( 20 )
 	print("here in destroy")
 	timer.performWithDelay( 10, 
 		function()

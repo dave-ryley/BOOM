@@ -14,9 +14,11 @@ local myText
 function scene:create( event )
 
 	local sceneGroup = self.view
+	local transImage = display.newImage( sceneGroup, "Graphics/Art/MorgueConcept.png",g.ccx,g.ccy,isFullResolution) 
+
 	myText = display.newText( 	"Entering level "..g.level,
 								g.ccx, 
-								g.ccy, 
+								g.ccy+250, 
 								"Bloody.ttf", 
 								70 )
 	myText:setFillColor( 1,0,0 )

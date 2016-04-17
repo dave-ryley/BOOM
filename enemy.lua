@@ -191,7 +191,9 @@ local C = {}
 				timer.performWithDelay( 20,
 					function ()
 						--removing visual aspects
-						display.remove( e.parent )
+						if(g.gameState == "playing")then	
+							display.remove( e.parent )
+						end
 						--deleting enemy from memory
 						e = nil
 					end

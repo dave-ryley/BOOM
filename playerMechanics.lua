@@ -199,6 +199,7 @@ local Q = {}
 
 		local function die()
 			P.isAlive = false
+			audio.stop( 2 )
 			timer.performWithDelay( 20, 
 				function ()
 					display.remove( P.bounds )
@@ -219,13 +220,16 @@ local Q = {}
 				local s = string.sub(event.other.myName, 1, 2)
 				if(s == "e_" or s == "p_") then
 					--print("in player collided with: ".. other.myName)
-					if(other.enemyType ~= "imp") then
+					if(other.enemyType== "fireball") then
 						print("player health taking damage: "..P.health)
 						P.health = P.health - 1
+					elseif (other.enemyType == "spot") then
+						P.health = 0
 					end
 				end
 				if(P.health == 0) then
-					Runtime:dispatchEvent( {name="youDied"} )
+					print("Killed by: "..other.enemyType)
+					Runtime:dispatchEvent( {name="youDied",killer = other.enemyType} )
 				end
 			end
 		end
