@@ -178,7 +178,7 @@ local function onKeyEvent( event )
 
 	if (event.phase == "down") then
 		-- Adjust velocity for testing, remove for final game        
-		if ( event.keyName == "[" or event.keyName == "rightShoulderButton1" ) then
+		if ( event.keyName == "[" ) then
 			if (map.player.velocity > 0 ) then
 			map.player.maxSpeed = map.player.maxSpeed - 50
 				map.player.shotgun.powerUp(-1)
@@ -216,7 +216,7 @@ local function onKeyEvent( event )
 		elseif ( event.keyName == "right") then
 			value = 1
 			axis = "right_x"
-		elseif ( event.keyName == "space") then
+		elseif ( event.keyName == "space" or event.keyName == "rightShoulderButton1" ) then
 			value = 1
 			axis = "left_trigger"
 		end
@@ -266,7 +266,7 @@ end
 local function makeGore( event )
 	timer.performWithDelay( 10,
 		function ()
-			if(g.pause == false) then
+			if(map.player ~= nil) then
 				local go = event.splat(map.player.thisAimAngle, event.bounds.x, event.bounds.y)
 				goreCount = goreCount + 1
 				if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
