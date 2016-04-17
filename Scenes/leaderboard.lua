@@ -1,6 +1,8 @@
 local composer = require( "composer" )
 local g = require "globals"
 local scene = composer.newScene()
+local buttonMaker = require "button"
+local canPress = false
 
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
@@ -8,12 +10,31 @@ local scene = composer.newScene()
 ---------------------------------------------------------------------------------
 
 -- local forward references should go here
+
 Leaderboard = {}
+
+local function onLBKeyPress( event )
+	local phase = event.phase
+	local keyName = event.keyName
+
+	if (phase == "down" and canPress) then
+		if (keyName == "buttonA") then
+			audio.play(press, {channel = 31})
+    		composer.gotoScene( g.scenePath.."menu" )
+		end
+	elseif (phase == "up") then
+		canPress = true
+	end
+
+	return false
+end
+
 ---------------------------------------------------------------------------------
 
 -- "scene:create()"
 function scene:create( event )
 -----Map-----
+	composer.removeScene(g.scenePath.."menu")
 	local path = system.pathForFile("LeaderBoard.BOOMFILE",system.ResourceDirectory)
 	local file = io.open(path,"r")
 	i = 1
@@ -49,30 +70,24 @@ function scene:create( event )
 	myText = display.newText( leaderBoardString, g.ccx, g.ccy, "Bloody", 50 )
 	myText:setFillColor(1,0,0)
 	sceneGroup:insert(myText)
-	-- Initialize the scene here.
-	-- Example: add display objects to "sceneGroup", add touch listeners, etc.
 
-	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
 	function buttonPress( self, event )
     	if event.phase == "began" then
     		audio.play(press, {channel = 31})
-    		if self.id == 1 then
-    			composer.gotoScene( g.scenePath.."menu" )
-    		end
+    		composer.gotoScene( g.scenePath.."menu" )
     		return true
     	end
 	end
 
-	button = display.newRect(125,37.5,250,75)
-	button:setFillColor( 1, 1, 0 )
-	button.id = 1
+	button = buttonMaker.spawn(g.acw-300, g.ach - 100, "BACK")
+	sceneGroup:insert(button)
+	sceneGroup:insert(button.text)
+	sceneGroup:insert(button.flames)
+	button:toFront()
+	button.text:toFront()
+	button.highlight(true)
 	button.touch = buttonPress
 	button:addEventListener( "touch", button )
-		
-	buttonText = display.newText( "MAIN MENU", 125,37.5, "Curse of the Zombie", 30 )
-	buttonText:setFillColor(1,0,0)
-	sceneGroup:insert(button)
-	sceneGroup:insert(buttonText)
 end
 
 -- "scene:show()"
@@ -110,6 +125,7 @@ function scene:destroy( event )
 	local sceneGroup = self.view
 		path = nil
 		file = nil
+	Runtime:removeEventListener( "key", onLBKeyPress )
 -- Called prior to the removal of scene's view ("sceneGroup").
 -- Insert code here to clean up the scene.
 -- Example: remove display objects, save state, etc.
@@ -122,6 +138,7 @@ scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
+Runtime:addEventListener( "key", onLBKeyPress )
 
 ---------------------------------------------------------------------------------
 

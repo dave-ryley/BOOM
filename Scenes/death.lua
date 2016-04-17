@@ -1,22 +1,85 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local g = require "globals"
+local controllerMapping = require "controllerMapping"
+local buttonMaker = require "button"
+local buttons = {}
+local buttonSelect = 0
+local canSelect = true
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
 -- unless "composer.removeScene()" is called.
 ---------------------------------------------------------------------------------
 
+
+local function onDeathAxisEvent( event )
+	print("axis event running")
+	-- Map event data to simple variables
+	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
+		local axis = controllerMapping.axis[event.axis.number]
+		--if g.pause then print("g.pause = true") else print("g.pause = false") end
+		if ( "left_x" == axis ) then
+			print("left axis")
+			if event.normalizedValue < 0.1 and event.normalizedValue > -0.1 then
+				canSelect = true
+			elseif canSelect then
+				canSelect = false
+				local value = 0
+				if event.normalizedValue > 0 then
+					value = 1
+				else
+					value = (-1)
+				end
+				buttonSelect = (((buttonSelect-1 + value) + #buttons) % #buttons) + 1
+				for i=1, #buttons do
+					if i ~= buttonSelect then
+						buttons[i].highlight(false)
+					else
+						buttons[i].highlight(true)
+					end
+				end
+			end
+			
+		end
+	end
+	return true
+end
+
+local function buttonFunction( key )
+	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
+	audio.play(press, {channel = 31})
+	if key == 1 then
+		composer.removeScene( g.scenePath.."death", false )
+		composer.gotoScene( g.scenePath.."game" )
+	elseif key == 2 then
+		composer.removeScene( g.scenePath.."death", false )
+    	composer.gotoScene( g.scenePath.."menu" )
+	end
+end
+
+local function onDeathKeyPress( event )
+	print("key pressed")
+	local phase = event.phase
+	local keyName = event.keyName
+
+	if (phase == "down") then
+		if (keyName == "buttonA") then
+			buttonFunction(buttonSelect)
+		end
+	end
+
+	return false
+end
+
 -- local forward references should go here
 local myText1
 local myText2
-local buttons = {}
-local buttonLabels = {"RETRY","MAIN MENU"}
-local buttonText = {}
 local deathImage
 ---------------------------------------------------------------------------------
 
 -- "scene:create()"
 function scene:create( event )
+	composer.removeScene( g.scenePath.."game", false )
 	local killer = event.params.killer
 	print (killer)
 	local sceneGroup = self.view
@@ -39,35 +102,23 @@ function scene:create( event )
 	myText2:setFillColor(1,0,0)
 
 	function buttonPress( self, event )
-    	if event.phase == "began" then
-    		audio.play(press, {channel = 31})
-    		if self.id == 1 then
-    			composer.removeScene( g.scenePath.."death", false )
-				composer.gotoScene( g.scenePath.."game" )
-    		elseif self.id == 2 then
-    			composer.removeScene( g.scenePath.."death", false )
-    			composer.gotoScene( g.scenePath.."menu" )
-    		end
-    		return true
-    	end
+		if event.phase == "began" then
+			buttonFunction(self.id)
+			return true
+		end
 	end
 
-	
+	local buttonLabels = {"RETRY","MAIN MENU"}
 	for i=1,2 do 
-		buttons[i] = display.newRect(sceneGroup,
-									g.ccx-300+(i%2*600),
-									g.ccy+400,500,150)
-		buttons[i]:setFillColor( 1, 0, 0 )
+		buttons[i] = buttonMaker.spawn(g.acw/(4) + (i-1)*g.acw/2, g.ach - 100, buttonLabels[i])
+		sceneGroup:insert(buttons[i])
+		sceneGroup:insert(buttons[i].text)
+		sceneGroup:insert(buttons[i].flames)
+		buttons[i]:toFront()
+		buttons[i].text:toFront()
 		buttons[i].id = i
 		buttons[i].touch = buttonPress
 		buttons[i]:addEventListener( "touch", buttons[i] )
-		
-		buttonText[i] = display.newText(sceneGroup,buttonLabels[i], 
-										g.ccx-300+(i%2*600),
-										g.ccy+400, 
-										"Curse of the Zombie", 
-										50 )
-		buttonText[i]:setFillColor(1,1,0)
 	end
 end
 
@@ -113,7 +164,8 @@ function scene:destroy( event )
 	display.remove( deathImage )
 	buttons = nil
 	buttonLabels = nil
-	buttonText = nil
+	Runtime:removeEventListener( "axis", onDeathAxisEvent )
+	Runtime:removeEventListener( "key", onDeathKeyPress )
 	local sceneGroup = self.view
 
 -- Called prior to the removal of scene's view ("sceneGroup").
@@ -128,7 +180,8 @@ scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
---R:addEventListener( "key", onKeyPress )
+Runtime:addEventListener( "key", onDeathKeyPress )
+Runtime:addEventListener( "axis", onDeathAxisEvent )
 
 ---------------------------------------------------------------------------------
 

@@ -21,7 +21,15 @@ function scene:create( event )
 
 	local sceneGroup = self.view
 	cinematics = true
-	myText = display.newText( "INTRO CINEMATICS.", g.ccx, g.ccy, "Curse of the Zombie", 80 )
+	local options = {
+	    text = "NARCOLEPTICK GAMES\nPRESENTS",
+	    font="Curse of the Zombie",
+	    fontSize = 80,
+	    align = "center"  
+	}
+	myText = display.newText( options )
+	myText.x = g.ccx
+	myText.y = g.ccy
 	-- Initialize the scene here.
 	-- Example: add display objects to "sceneGroup", add touch listeners, etc.
 end

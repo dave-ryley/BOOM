@@ -39,7 +39,10 @@ local function onAxisEvent( event )
 end
 
 local function buttonFunction( key )
-	audio.play(press, {channel = 31})
+	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
+	if key ~= 0 then
+		audio.play(press, {channel = 31})
+	end
 	if key == 1 then
 		composer.gotoScene( g.scenePath.."game" )
 	elseif key == 2 then
@@ -47,6 +50,7 @@ local function buttonFunction( key )
 	elseif key == 3 then
 		composer.gotoScene( g.scenePath.."levelEditorScene" )
 	elseif key == 4 then
+		print("credits")
 		composer.gotoScene( g.scenePath.."credits" )
 	elseif key == 5 then
 		native.requestExit()
@@ -67,6 +71,7 @@ local function onKeyPress( event )
 end
 
 function scene:create( event )
+	composer.removeScene(g.scenePath.."leaderboard")
 	local sceneGroup = self.view
 	-- Called when the scene's view does not exist.
 	-- INSERT code here to initialize the scene
@@ -81,8 +86,6 @@ function scene:create( event )
 		-- code in here to highlight the first button
 	end
 
-	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
-
 	function buttonPress( self, event )
 		if event.phase == "began" then
 			buttonFunction(self.id)
@@ -90,7 +93,7 @@ function scene:create( event )
 		end
 	end
 
-	buttonText = {"PLAY", "SCOREBOARD", "LEVEL EDITOR","CREDITS","QUIT"}
+	local buttonText = {"PLAY", "SCOREBOARD", "LEVEL EDITOR","CREDITS","QUIT"}
 	for i=1,numOfButtons do 
 		buttons[i] = buttonMaker.spawn(g.acw/(numOfButtons*2) + (i-1)*g.acw/numOfButtons, g.ach - 100, buttonText[i])
 		sceneGroup:insert(buttons[i])
@@ -102,7 +105,6 @@ function scene:create( event )
 		buttons[i].touch = buttonPress
 		buttons[i]:addEventListener( "touch", buttons[i] )
 	end
-	local buttonId = 1
 
 
 	background.anchorX = 0
@@ -121,8 +123,14 @@ function scene:show( event )
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
 		composer.removeScene( g.scenePath.."intro", false )
-		buttons[1].highlight(true)
-		--composer.removeScene( "game", false )
+		composer.removeScene( g.scenePath.."leaderboard", false )
+		composer.removeScene( g.scenePath.."credits", false )
+		composer.removeScene( g.scenePath.."game", false )
+		composer.removeScene( g.scenePath.."death", false )
+		composer.removeScene( g.scenePath.."levelEditorScene", false )
+		composer.removeScene( g.scenePath.."levelTransition", false )
+		composer.removeScene( g.scenePath.."pauseMenu", false )
+		composer.removeScene( g.scenePath.."win", false )
 		-- Called when the scene is now on screen
 		-- 
 		-- INSERT code here to make the scene come alive
