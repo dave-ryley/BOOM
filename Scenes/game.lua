@@ -280,12 +280,16 @@ local function makeGore( event )
 	math.randomseed( os.time() )
 	local r = math.random(1, 25)
 	if(r < 6) then
-		map.powerups[#map.powerups + 1] = powerUp.spawn(x, y)
-		camera:add(map.powerups[#map.powerups].bounds, 1)
+		if(map.powerups[#map.powerups] ~= nil) then
+			map.powerups[#map.powerups + 1] = powerUp.spawn(x, y)
+			camera:add(map.powerups[#map.powerups].bounds, 1)
+		end
 		--print("adding powerup at: "..x .." , " .. y)
 	elseif(r < 12) then
-		map.powerups[#map.powerups + 1] = speedUp.spawn(x, y)
-		camera:add(map.powerups[#map.powerups].bounds, 1)
+		if(map.powerups[#map.powerups] ~= nil) then
+			map.powerups[#map.powerups + 1] = speedUp.spawn(x, y)
+			camera:add(map.powerups[#map.powerups].bounds, 1)
+		end
 		--print("adding powerup at: "..x .." , " .. y)
 	end
 	goreCount = goreCount + 1
