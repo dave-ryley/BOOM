@@ -16,7 +16,7 @@ local S = {}
 													})
 			T.win = function(event)
 				if(g.gameState == "playing") then
-					print("in win tile")
+					--print("in win tile")
 					Runtime:dispatchEvent( { name="youWin"})
 				end
 			end

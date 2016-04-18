@@ -50,7 +50,7 @@ local function buttonFunction( key )
 	elseif key == 3 then
 		composer.gotoScene( g.scenePath.."levelEditorScene" )
 	elseif key == 4 then
-		print("credits")
+		--print("credits")
 		composer.gotoScene( g.scenePath.."credits" )
 	elseif key == 5 then
 		native.requestExit()

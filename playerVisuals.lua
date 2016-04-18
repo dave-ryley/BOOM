@@ -8,7 +8,7 @@ local P = {}
 		V.sounds.boomStick = audio.loadSound("Sounds/Player/BOOMSTICK.ogg")
 		V.sounds.step1 = audio.loadSound( "Sounds/Player/Step1.ogg" )
 		V.sounds.step2 = audio.loadSound( "Sounds/Player/Step2.ogg" )
-		V.sounds.torchIdle = audio.loadSound( "Sounds/Player/Torchidle.ogg" )
+		V.sounds.torchIdle = audio.loadSound( "Sounds/Player/torchidle.ogg" )
 		audio.play(V.sounds.torchIdle, { channel = 2, loops = -1, fadein = 0})
 		audio.setVolume( 0.1, {channel = 2} )
 		audio.setVolume( 1, {channel = 3} )
@@ -23,8 +23,8 @@ local P = {}
 		}
 		local lowerBodyRun_sheet = graphics.newImageSheet( "Graphics/Animation/RunnerLegs.png", runSheetOptions )
 		local lowerBodyRun_sequences = require "SpriteSeq.runnerLegsSeq"
-		lowerBodyRun_sprite = display.newSprite( V.lowerBody, lowerBodyRun_sheet, lowerBodyRun_sequences )
-		lowerBodyRun_sprite.y = 50
+		V.lowerBodyRun_sprite = display.newSprite( V.lowerBody, lowerBodyRun_sheet, lowerBodyRun_sequences )
+		V.lowerBodyRun_sprite.y = 50
 
 		-- Setting up the upper Body Animation
 		V.upperBody = display.newGroup()
@@ -39,9 +39,9 @@ local P = {}
 		local upperBodyRun_sequences = require "SpriteSeq.runnerTorsoSeq"
 		local upperBodyRun_sheet = graphics.newImageSheet( "Graphics/Animation/RunnerTorso.png", runUpperSheetOptions )
 
-		upperBodyRun_sprite = display.newSprite( V.upperBody, upperBodyRun_sheet, upperBodyRun_sequences )
+		V.upperBodyRun_sprite = display.newSprite( V.upperBody, upperBodyRun_sheet, upperBodyRun_sequences )
 
-		-- Setting up the torch Animation
+		-- Setting up the V.torch Animation
 
 		local torchSheetOptions =
 		{
@@ -49,8 +49,9 @@ local P = {}
 			height = 220,
 			numFrames = 8
 		}
-		torch_sheet = graphics.newImageSheet( "Graphics/Animation/torch.png", torchSheetOptions )
-		torch_sequences =
+		local torch_sheet = graphics.newImageSheet( "Graphics/Animation/torch.png", 
+													torchSheetOptions )
+		local torch_sequences =
 		{
 			{
 				name = "default",
@@ -62,9 +63,9 @@ local P = {}
 			}
 		}
 
-		torch = display.newSprite( torch_sheet, torch_sequences )
-		torch:play()
-		V.upperBody:insert( torch )
+		V.torch = display.newSprite( torch_sheet, torch_sequences )
+		V.torch:play()
+		V.upperBody:insert( V.torch )
 
 
 		local function animate(aimAngle, directionAngle, moving, velocity)
@@ -73,36 +74,36 @@ local P = {}
 			local lowerBodyAnim = ""
 			if aimAngle > 337 or aimAngle < 23 then
 				upperBodyAnim = "up"
-				torch.x = -70
-				torch.y = -100
+				V.torch.x = -70
+				V.torch.y = -100
 			elseif aimAngle < 68 then
 				upperBodyAnim = "upRight"
-				torch.x = -65
-				torch.y = -120
+				V.torch.x = -65
+				V.torch.y = -120
 			elseif aimAngle < 113 then
 				upperBodyAnim = "right"
-				torch.x = 65
-				torch.y = -135
+				V.torch.x = 65
+				V.torch.y = -135
 			elseif aimAngle < 158 then
 				upperBodyAnim = "downRight"
-				torch.x = 65
-				torch.y = -125
+				V.torch.x = 65
+				V.torch.y = -125
 			elseif aimAngle < 203 then
 				upperBodyAnim = "down"
-				torch.x = 60
-				torch.y = -105
+				V.torch.x = 60
+				V.torch.y = -105
 			elseif aimAngle < 248 then
 				upperBodyAnim = "downLeft"
-				torch.x = 30
-				torch.y = -120
+				V.torch.x = 30
+				V.torch.y = -120
 			elseif aimAngle < 293 then
 				upperBodyAnim = "left"
-				torch.x = -10
-				torch.y = -115
+				V.torch.x = -10
+				V.torch.y = -115
 			else
 				upperBodyAnim = "upLeft"
-				torch.x = -45
-				torch.y = -105
+				V.torch.x = -45
+				V.torch.y = -105
 			end
 			-- Animate Lower Body
 			-- 1. Get the direction moving compared to the direction facing
@@ -141,21 +142,21 @@ local P = {}
 			end
 
 			if V.upperBodyAnim ~= upperBodyAnim then
-				upperBodyRun_sprite:setSequence(upperBodyAnim)
-				upperBodyRun_sprite:play()
+				V.upperBodyRun_sprite:setSequence(upperBodyAnim)
+				V.upperBodyRun_sprite:play()
 				V.upperBodyAnim = upperBodyAnim
 			end
 			if V.lowerBodyAnim ~= lowerBodyAnim then
-				lowerBodyRun_sprite:setSequence(lowerBodyAnim)
-				lowerBodyRun_sprite:play()
+				V.lowerBodyRun_sprite:setSequence(lowerBodyAnim)
+				V.lowerBodyRun_sprite:play()
 				V.lowerBodyAnim = lowerBodyAnim
 			end
 			if moving >= 0.1 then
-				upperBodyRun_sprite.timeScale = math.min(moving/100, 2.0)
-				lowerBodyRun_sprite.timeScale = math.min(moving/100, 2.0)
+				V.upperBodyRun_sprite.timeScale = math.min(moving/100, 2.0)
+				V.lowerBodyRun_sprite.timeScale = math.min(moving/100, 2.0)
 			else
-				upperBodyRun_sprite.timeScale = 1.0
-				lowerBodyRun_sprite.timeScale = 1.0
+				V.upperBodyRun_sprite.timeScale = 1.0
+				V.lowerBodyRun_sprite.timeScale = 1.0
 			end
 		end
 
@@ -165,42 +166,42 @@ local P = {}
 			local anim = ""
 			if aimAngle > 337 or aimAngle < 23 then
 				anim = "up"
-				torch.x = -70
-				torch.y = -100
+				V.torch.x = -70
+				V.torch.y = -100
 			elseif aimAngle < 68 then
 				anim = "upRight"
-				torch.x = -65
-				torch.y = -120
+				V.torch.x = -65
+				V.torch.y = -120
 			elseif aimAngle < 113 then
 				anim = "right"
-				torch.x = 65
-				torch.y = -135
+				V.torch.x = 65
+				V.torch.y = -135
 			elseif aimAngle < 158 then
 				anim = "downRight"
-				torch.x = 65
-				torch.y = -125
+				V.torch.x = 65
+				V.torch.y = -125
 			elseif aimAngle < 203 then
 				anim = "down"
-				torch.x = 60
-				torch.y = -105
+				V.torch.x = 60
+				V.torch.y = -105
 			elseif aimAngle < 248 then
 				anim = "downLeft"
-				torch.x = 30
-				torch.y = -120
+				V.torch.x = 30
+				V.torch.y = -120
 			elseif aimAngle < 293 then
 				anim = "left"
-				torch.x = -10
-				torch.y = -115
+				V.torch.x = -10
+				V.torch.y = -115
 			else
 				anim = "upLeft"
-				torch.x = -45
-				torch.y = -105
+				V.torch.x = -45
+				V.torch.y = -105
 			end
 			anim = anim .. "Shoot"
-			upperBodyRun_sprite:setSequence(anim)
-			lowerBodyRun_sprite:setSequence(anim)
-			upperBodyRun_sprite:play()
-			lowerBodyRun_sprite:play()
+			V.upperBodyRun_sprite:setSequence(anim)
+			V.lowerBodyRun_sprite:setSequence(anim)
+			V.upperBodyRun_sprite:play()
+			V.lowerBodyRun_sprite:play()
 			V.upperBodyAnim = anim
 			V.lowerBodyAnim = anim
 		end
@@ -208,11 +209,11 @@ local P = {}
 		V.animateShotgunBlast = animateShotgunBlast
 
 		local function footsteps()
-			if string.sub( lowerBodyRun_sprite.sequence, -3 ) == "Run" then
+			if string.sub( V.lowerBodyRun_sprite.sequence, -3 ) == "Run" then
 				--print("run")
-				if(lowerBodyRun_sprite.frame == 3)then
+				if(V.lowerBodyRun_sprite.frame == 3)then
 					audio.play( V.sounds.step1, { channel = 1, loops=0})
-				elseif(lowerBodyRun_sprite.frame == 7)then
+				elseif(V.lowerBodyRun_sprite.frame == 7)then
 					--print("playing")
 					audio.play( V.sounds.step2, { channel = 3, loops=0})
 				end

@@ -1,10 +1,11 @@
 local composer = require( "composer" )
 local g = require "globals"
-
 local scene = composer.newScene()
+
 
 function scene:create( event )
 	local sceneGroup = self.view
+	parent = event.parent
 	-- Called when the scene's view does not exist.
 	-- INSERT code here to initialize the scene
 	if(system.getInfo("platformName") ~= "Android") then
@@ -13,19 +14,6 @@ function scene:create( event )
 	myText = display.newText( "PAUSED", g.ccx, g.ccy-200, "Curse of the Zombie", 80 )
 	myText:setFillColor(1,1,0,1)
 	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
-	function buttonPress( self, event )
-    	if event.phase == "began" then
-    		audio.play(press, {channel = 31})
-    		if self.id == 1 then
-    			g.pause = false
-    			composer.hideOverlay()
-    		elseif self.id == 2 then
-    			composer.removeScene( g.scenePath.."game", false )
-    			composer.gotoScene( g.scenePath.."menu" )
-    		end
-    		return true
-    	end
-	end
 	buttonLabels = {"RESUME","MAIN MENU"}
 	buttonText = {}
 	buttons = {}
@@ -38,6 +26,19 @@ function scene:create( event )
 		
 		buttonText[i] = display.newText( buttonLabels[i], g.ccx,g.ccy+(i-1)*200, "Curse of the Zombie", 50 )
 		buttonText[i]:setFillColor(1,1,0)
+	end
+end
+
+function buttonPress( self, event )
+	if event.phase == "began" then
+		audio.play(press, {channel = 31})
+		if self.id == 1 then
+			composer.hideOverlay()
+		elseif self.id == 2 then
+			composer.removeScene( g.scenePath.."game", false )
+			composer.gotoScene( g.scenePath.."menu" )
+		end
+		return true
 	end
 end
 
@@ -61,7 +62,9 @@ end
 function scene:hide( event )
 	local sceneGroup = self.view
 	local phase = event.phase
-	
+	local parent = event.parent
+	parent:unpause()
+
 	if event.phase == "will" then
 		-- Called when the scene is on screen and is about to move off screen
 		--

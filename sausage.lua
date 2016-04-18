@@ -41,7 +41,7 @@ local g = require "globals"
 											)
 					--print
 					group.myJoints[#group.myJoints].isLimitEnable = true
-					group.myJoints[#group.myJoints]:setRotationLimits( -20, 20 )
+					group.myJoints[#group.myJoints]:setRotationLimits( -40, 40 )
 				end
 			end
 		return group

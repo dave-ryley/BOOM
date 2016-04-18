@@ -1,4 +1,4 @@
-M = {}
+local M = {}
 
 -- Create table to map each controller's axis number to a usable name
 	M.axis = {}

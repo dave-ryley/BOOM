@@ -151,7 +151,7 @@ local P = {}
 		C.bounds:addEventListener( "collision", C.onCollision )
 
 		local function powerUp( value )
-			print("int powerup: " ..value)
+			--print("int powerup: " ..value)
 			if value > 0 then
 				if value + C.power > C.max then
 					C.power = C.max

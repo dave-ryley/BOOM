@@ -139,6 +139,7 @@ end
 
 local function onAxisEvent( event )
 	-- Map event data to simple variables
+	print("axis: "..event.axis.number)
 	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
 		local axis = controllerMapping.axis[event.axis.number]
 		--if g.pause then print("g.pause = true") else print("g.pause = false") end
@@ -150,15 +151,15 @@ local function onAxisEvent( event )
 end
 
 local function youDied( event )
-	print("you Died")
+	--print("you Died")
 	g.gameState = "dead"
-	print("your killer is"..event.killer)
+	--print("your killer is"..event.killer)
 	composer.gotoScene( g.scenePath.."death",{params = {killer = event.killer}})
 end
 
 local function youWin( event )
 	audio.fade( { channel=20, time=3000, volume=0 } )
-	print("you win")
+	--print("you win")
 	local nextLevel = ""
 	g.level = g.level + 1
 	g.gameState = "win"
@@ -171,7 +172,7 @@ local function youWin( event )
 					onComplete = 
 						-- Game begins
 						function()
-							print(g.level .. " : " .. g.lastLevel)
+							--print(g.level .. " : " .. g.lastLevel)
 							if(g.level > g.lastLevel) then
 								nextLevel = "win"
 							else
@@ -184,10 +185,10 @@ end
 
 local function onKeyEvent( event )
 	local phase = event.phase
-	local keyName = event.keyNamea
+	local keyName = event.keyName
 	local axis = ""
 	local value = 0
-
+	print(event.keyName)
 	if (event.phase == "down") then
 		-- Adjust velocity for testing, remove for final game        
 		if ( event.keyName == "[" ) then
@@ -261,14 +262,20 @@ local function onKeyEvent( event )
 		elseif (event.keyName == "l") then
 			--composer.gotoScene( g.scenePath.."death")
 			youWin()
-			elseif (event.keyName == "k") then
+		elseif (event.keyName == "k") then
 			--composer.gotoScene( g.scenePath.."death")
 			youDied()
+		elseif (event.keyName == "buttonStart") then
+			if(g.pause == false) then
+				scene:pause()
+			else
+				scene:unpause()
+			end
 		end
 	end
 
 	if (g.pause == false) then 
-		print(map.player.myName)
+		--print(map.player.myName)
 		map.player.playerAxis(axis, value) 
 	end
 
@@ -308,7 +315,7 @@ end
 local function fireball( event )
 	map.fireballs[#map.fireballs + 1] = event.f
 	if(map.fireballs[#map.fireballs] ~= nil)then
-		camera:add(map.fireballs[#map.fireballs] , 3)
+		camera:add(map.fireballs[#map.fireballs].fireball , 3)
 	end
 end
 
@@ -339,6 +346,54 @@ local function gameLoop( event )
 	end
 	return true
 end
+
+function scene:pause()
+	g.pause = true	
+	physics.pause( )
+	map.player.pause()
+	map.satan.pause()
+	audio.pause()
+	for i = 1, #map.enemies do
+		if(map.enemies[i] ~= nil) then
+			map.enemies[i].pause()
+		end
+	end
+	for i = 1, #map.fireballs do
+		if(map.fireballs[i] ~= nil) then
+			map.fireballs[i].pause()
+		end
+	end
+	composer.showOverlay(g.scenePath.."pauseMenu")
+end
+
+function scene:unpause()
+	g.pause = false
+	physics.start( )
+	map.player.unpause()
+	map.satan.unpause()
+	audio.resume()
+	for i = 1, #map.enemies do
+		if(map.enemies[i] ~= nil) then
+			map.enemies[i].unpause()
+		end
+	end
+	for i = 1, #map.fireballs do
+		if(map.fireballs[i] ~= nil) then
+			map.fireballs[i].unpause()
+		end
+	end
+end
+
+function buttonPress( self, event )
+	if event.phase == "began" then
+		audio.play(press, {channel = 31})
+		if self.id == 1 then
+			scene:pause()
+			
+		end
+		return true
+	end
+end
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
 -- unless "composer.removeScene()" is called.
@@ -365,16 +420,6 @@ function scene:create( event )
 	local bgMusic = audio.loadStream( g.musicPath..music[g.level])
 	audio.play(bgMusic,bgOptions)
 	
-	function buttonPress( self, event )
-		if event.phase == "began" then
-			audio.play(press, {channel = 31})
-			if self.id == 1 then
-				g.pause = true
-				composer.showOverlay(g.scenePath.."pauseMenu")
-			end
-			return true
-		end
-	end
 	if(g.android) then
 		rightJoystick = joysticks.joystick(sceneGroup, 
 							"Graphics/UI/analogStickHead.png", 200, 200, 
@@ -401,15 +446,15 @@ end
 
 -- "scene:show()"
 function scene:show( event )
-
+	print("in scene show")
 	local sceneGroup = self.view
 	local phase = event.phase
 
 	if ( phase == "will" ) then
 	-- Called when the scene is still off screen (but is about to come on screen).
 	elseif ( phase == "did" ) then
-	composer.removeScene( g.scenePath.."menu", false )
-	g.pause = false
+		composer.removeScene( g.scenePath.."menu", false )
+		g.pause = false
 	-- Called when the scene is now on screen.
 	-- Insert code here to make the scene come alive.
 	-- Example: start timers, begin animation, play audio, etc.
@@ -418,10 +463,10 @@ end
 
 -- "scene:hide()"
 function scene:hide( event )
+	print("in scene hide")
 
 	local sceneGroup = self.view
 	local phase = event.phase
-
 	if ( phase == "will" ) then
 	-- Called when the scene is on screen (but is about to go off screen).
 	-- Insert code here to "pause" the scene.
@@ -500,7 +545,6 @@ function scene:destroy( event )
 			map.fireballs[i] = nil
 		end
 	end
-	physics.stop( )
 	
 		end
 	 )

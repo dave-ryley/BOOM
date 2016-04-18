@@ -138,7 +138,7 @@ local C = {}
 			if (event.phase == "began" and event.other ~= nil) then
 				local other = event.other.super
 				e.updatePlayerLocation(other.getX(), other.getY())
-				print(e.sensorArea.myName.." colliding with: "..other.myName)
+				--print(e.sensorArea.myName.." colliding with: "..other.myName)
 				--print(e.myName.." updating target: "..other.getX() .. " : " .. other.getY())
 				e.hasTarget = true
 			end
@@ -172,7 +172,7 @@ local C = {}
 
 		--onFrameEnter event
 		e.update = function( event )
-			if(g.pause == false and e.isDead == false) then
+			if(g.pause == false and e ~= nil) then
 				e.sensorArea.x = e.bounds.x
 				e.sensorArea.y = e.bounds.y
 				--print("updating enemy")
@@ -187,6 +187,26 @@ local C = {}
 		end
 		Runtime:addEventListener( "enterFrame", e.update )
 
+		local function pause()
+			if(e ~= nil) then
+				--print("pausing enemy")
+				Runtime:removeEventListener( "enterFrame", e.update )
+				Runtime:removeEventListener( "enterFrame", e.AI )
+				e.bounds:pause()
+			end
+		end
+		e.pause = pause
+
+		local function unpause()
+			if(e ~= nil) then
+				--print("unpausing enemy")
+				Runtime:addEventListener( "enterFrame", e.update )
+				Runtime:addEventListener( "enterFrame", e.AI )
+				e.bounds:play()
+			end
+		end
+		e.unpause = unpause
+
 		--kill enemy and safely remove him
 		local function die(gore, angle)
 			--e.isDead = true
@@ -198,7 +218,7 @@ local C = {}
 				if(gore == true) then
 				--need to remove eventListeners before remove display objects
 				--slight delay to let any running functions to finish
-					timer.performWithDelay( 5,
+					timer.performWithDelay( 20,
 						function ()
 							local tempGore = e.splat(	angle, 
 														x, 
@@ -208,7 +228,7 @@ local C = {}
 																	y=y })
 							display.remove( e.parent )
 						--deleting enemy from memory
-							e = nil
+						e = nil	
 						end
 					)
 				end

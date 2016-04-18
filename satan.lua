@@ -41,7 +41,7 @@ local S = {}
 		end
 
 		local function destinationReached( obj )
-			print( "Transition 1 completed on object: " .. tostring( obj ) )
+			--print( "Transition 1 completed on object: " .. tostring( obj ) )
 			--print(s.path[currentPath].x.." : ".. s.path[currentPath].y)
 			if(s.currentPath < #s.path) then 
 				s.currentPath = s.currentPath + 1
@@ -61,14 +61,29 @@ local S = {}
 												})
 												--onComplete = s.destinationReached})
 				s.animate(angle, "Walk")
-				print("satan angle: " .. angle)
+				--print("satan angle: " .. angle)
 			end
 		end
 
 		s.destinationReached = destinationReached
 
+
+		local function pause()
+			transition.pause( s.bounds )
+			transition.pause( s.visuals )
+			s.visuals:pause()
+		end
+		s.pause = pause
+
+		local function unpause()
+			transition.resume( s.bounds )
+			transition.resume( s.visuals )
+			s.visuals:play()
+		end
+		s.unpause = unpause
+
 		local function start( )
-			print("satan started")
+			--print("satan started")
 			local xDestination = s.path[s.currentPath][1]
 			local yDestination = s.path[s.currentPath][2]
 			local angle = s.move.calculateLineAngle(	s.bounds.x,

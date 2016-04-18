@@ -13,13 +13,13 @@ local canSelect = true
 
 
 local function onDeathAxisEvent( event )
-	print("axis event running")
+	--print("axis event running")
 	-- Map event data to simple variables
 	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
 		local axis = controllerMapping.axis[event.axis.number]
 		--if g.pause then print("g.pause = true") else print("g.pause = false") end
 		if ( "left_x" == axis ) then
-			print("left axis")
+			--print("left axis")
 			if event.normalizedValue < 0.1 and event.normalizedValue > -0.1 then
 				canSelect = true
 			elseif canSelect then
@@ -58,7 +58,7 @@ local function buttonFunction( key )
 end
 
 local function onDeathKeyPress( event )
-	print("key pressed")
+	--print("key pressed")
 	local phase = event.phase
 	local keyName = event.keyName
 
@@ -81,7 +81,7 @@ local deathImage
 function scene:create( event )
 	composer.removeScene( g.scenePath.."game", false )
 	local killer = event.params.killer
-	print (killer)
+	--print (killer)
 	local sceneGroup = self.view
 	deathImage = display.newImage( sceneGroup,
 						"Graphics/Death/"..killer..".png", 

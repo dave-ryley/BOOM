@@ -54,7 +54,7 @@ local Q = {}
         P.cameraLock.x = P.parent.x
         P.cameraLock.y = P.parent.y
         P.bounds.super = P
-        print("making new player: " ..P.myName)
+        --print("making new player: " ..P.myName)
             --TORCH LIGHT--
 
         P.torchLight = display.newRect(P.bounds.x, P.bounds.y,51200,51200)
@@ -146,6 +146,20 @@ local Q = {}
 
 		P.playerAxis = playerAxis
 
+		local function pause()
+			P.visuals.torch:pause()
+			P.visuals.upperBodyRun_sprite:pause( )
+			P.visuals.lowerBodyRun_sprite:pause( )
+		end
+		P.pause = pause
+
+		local function unpause()
+			P.visuals.torch:play()
+			P.visuals.upperBodyRun_sprite:play( )
+			P.visuals.lowerBodyRun_sprite:play( )
+		end
+		P.unpause = unpause
+
 		local function blastDisppear( event )
 			P.shotgun.bounds.isAwake = false
 			P.shotgun.shooting = false
@@ -223,7 +237,7 @@ local Q = {}
 				if(s == "e_" or s == "p_" or other.enemyType == "satan") then
 					--print("in player collided with: ".. other.myName)
 					if(other.enemyType== "fireball") then
-						print("player health taking damage: "..P.health)
+						--print("player health taking damage: "..P.health)
 						P.health = P.health - 1
 					elseif (other.enemyType == "spot") then
 						P.health = 0
@@ -235,7 +249,7 @@ local Q = {}
 					end
 				end
 				if(P.health == 0) then
-					print("Killed by: "..other.enemyType)
+					--print("Killed by: "..other.enemyType)
 					Runtime:dispatchEvent( {name="youDied",killer = other.enemyType} )
 				end
 			end
