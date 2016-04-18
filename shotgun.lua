@@ -2,6 +2,7 @@ local P = {}
 	local function spawn()
 		local C = {}
 		local col = require "collisionFilters"
+		local hud = require "hud"
 		C.shooting = false
 		--C.collisionFilter = {categoryBits = 2, maskBits = 4}
 		local verts = { -20,0, -100,-300, 100,-300, 20,0 }
@@ -171,6 +172,7 @@ local P = {}
 			C.blast.xScale = C.power/10
 			C.blast.yScale = C.power/10
 			C.vertices = { -40,90, C.power*(-5)-25,C.power*(-25)+90, C.power*5+25,C.power*(-25)+90, 40,90 }
+			hud.updateShotgunOMeter(C.power)
 		end
 
 		C.powerUp = powerUp
@@ -187,18 +189,6 @@ local P = {}
 			
 		end
 		C.createBlastBounds = createBlastBounds
-
-		local function displayPower()
-			C.shotgunOMeter:removeSelf()
-			local blocks = {}
-			C.shotgunOMeter = display.newGroup()
-			for i=1,C.power-9,1 do
-				blocks[i]=display.newRect( C.shotgunOMeter,(i*42)+250, 40, 40,40 )
-				blocks[i]:setFillColor((i/5),5/i,0,0.9)
-			end
-			return C.shotgunOMeter
-		end
-		C.displayPower = displayPower
 		return C
 	end
 	P.spawn = spawn
