@@ -152,6 +152,10 @@ local function youWin( event )
 	g.gameState = "win"
 	-- Player runs off screen
 	map.player.visuals.animate(90, 90, 100, 1.0)
+	transition.to( 	map.player.torchLight, 
+					{time = 3000, 
+					x = map.player.bounds.x + 3000, 
+					y = map.player.bounds.y})
 	transition.to( 	map.player.parent, 
 					{time = 3000, 
 					x = map.player.bounds.x + 3000, 
