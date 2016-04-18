@@ -34,7 +34,7 @@ local g = require "globals"
 						if(firstSight == true)then
 							firstSight = false
 							local laughfx = audio.loadSound("Sounds/Enemies/ImpLaugh.ogg")
-							audio.play(laughfx,{channel = 16})
+							audio.play(laughfx,{channel = audio.findFreeChannel()})
 							audio.dispose( laughfx )
 						end
 						local impFire = audio.loadSound( "Sounds/Enemies/ImpFire.ogg" )
