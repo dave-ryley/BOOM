@@ -291,13 +291,13 @@ local function makeGore( event )
 	if(r < 6) then
 		if(map.powerups ~= nil) then
 			map.powerups[#map.powerups + 1] = powerUp.spawn(x, y)
-			camera:add(map.powerups[#map.powerups].bounds, 1)
+			camera:add(map.powerups[#map.powerups].bounds, 2)
 		end
 		--print("adding powerup at: "..x .." , " .. y)
 	elseif(r < 12) then
 		if(map.powerups ~= nil) then
 			map.powerups[#map.powerups + 1] = speedUp.spawn(x, y)
-			camera:add(map.powerups[#map.powerups].bounds, 1)
+			camera:add(map.powerups[#map.powerups].bounds, 2)
 		end
 		--print("adding powerup at: "..x .." , " .. y)
 	end
