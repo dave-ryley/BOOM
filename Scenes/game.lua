@@ -99,12 +99,13 @@ function createMap()
 					function()
 						startText = display.newText("RUN!", 
 											g.ccx, 
-											g.ccy-40, 
+											g.ccy-140, 
 											"Curse of the Zombie", 
 											180 )
+						hud.initializeHUD()
 						startText:setFillColor( 1,0,0 )
-						local runMortal = audio.loadSound("Sounds/Satan/satan_RunMortal.ogg")
-						audio.play(runMortal)
+						--local runMortal = audio.loadSound("Sounds/Satan/satan_RunMortal.ogg")
+						--audio.play(runMortal)
 						g.gameState = "playing"
 						timer.performWithDelay(2000, 
 							function()
@@ -483,6 +484,7 @@ function scene:destroy( event )
 	camera.destroy()
 	g.pause = true
 	audio.stop( 20 )
+	hud.killHUD()
 	print("here in destroy")
 	display.remove( startText )
 	timer.performWithDelay( 10, 
@@ -545,6 +547,7 @@ function scene:destroy( event )
 			map.fireballs[i] = nil
 		end
 	end
+	physics.stop()
 	
 		end
 	 )
