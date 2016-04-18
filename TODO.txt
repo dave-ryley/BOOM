@@ -1,0 +1,34 @@
+TODO!
+
+// Mark as done when complete
+
+1. HUD
+	a. Pause button replaced with graphic
+		i. Set up as sprite, switch between pause and play when entering/leaving pause menu
+	b. Shotgun graphic inserted
+	c. Speedometer inserted
+		i. Make sprites out of graphic
+		ii. Set up function to change sprites when given a number as a parameter
+	d. Timer
+		i. Take global timer value on start and begin increasing once game has started
+
+2. GRAPHICS
+	a. Slow Traps
+	b. Death Traps
+	c. You Win Illustration
+	d. Leaderboard Graphics
+	e. Speed Powerup
+	f. Shotgun Powerup
+
+3. WIN
+	a. Enter your name IO
+	b. "accept" button
+	c. write to file
+	d. take you to leaderboard scene
+
+4. LEADERBOARD
+	a. Graphics implemented
+	b. Player stats highlighted if on scoreboard
+
+5. BUGS
+	a. Satan still kills you after you exit the level
