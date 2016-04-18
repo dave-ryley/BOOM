@@ -130,7 +130,7 @@ local function onAxisEvent( event )
 	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
 		local axis = controllerMapping.axis[event.axis.number]
 		--if g.pause then print("g.pause = true") else print("g.pause = false") end
-		if(g.pause == false) then
+		if(g.gameState == "playing") then
 			map.player.playerAxis(axis, event.normalizedValue)
 		end
 	end

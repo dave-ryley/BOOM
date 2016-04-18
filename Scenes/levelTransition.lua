@@ -14,14 +14,14 @@ local myText
 function scene:create( event )
 
 	local sceneGroup = self.view
-	local transImage = display.newImage( sceneGroup, "Graphics/Art/MorgueConcept.png",g.ccx,g.ccy,isFullResolution) 
+	local transImage = display.newImage( sceneGroup, "Graphics/Art/MorgueConcept.png",g.ccx,g.ccy-50,isFullResolution) 
 
-	myText = display.newText( 	"Entering level "..g.level,
-								g.ccx, 
-								g.ccy+250, 
-								"Bloody.ttf", 
-								70 )
-	myText:setFillColor( 1,0,0 )
+	myText = display.newText( 	"Entering level "..g.level .. "  ",
+								g.ccx - 250, 
+								g.ccy + 250, 
+								"Avengeance Mightiest Avenger", 
+								100 )
+	myText:setFillColor( 1,1,0 )
 	sceneGroup:insert(myText)
 
 	-- Initialize the scene here.
@@ -40,6 +40,16 @@ function scene:show( event )
 	if ( phase == "will" ) then
 	-- Called when the scene is still off screen (but is about to come on screen).
 	elseif ( phase == "did" ) then
+		transition.to( 	myText, 
+				{time = 2000, 
+				x = myText.x + 500, 
+				y = myText.y, 
+				onComplete = 
+					-- Game begins
+					function()
+						composer.gotoScene( g.scenePath.."game")
+					end
+				} )
 
 		composer.removeScene( g.scenePath.."game", false )
 		timer.performWithDelay( 2000, 
