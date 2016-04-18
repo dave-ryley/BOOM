@@ -24,14 +24,19 @@ local g = require "globals"
 	local function spawn(startX, startY)
 		local i = constructor.spawn("imp", startX, startY, impData)
 		local fireball = require "enemies.fireball"
-
+		local firstSight = true
 		i.AI = function()
-			--print(i.hasTarget)
 			if(g.pause == false) then
 				if(i.hasTarget == true or i.shooting > 0) then
 					--print("frame "..i.bounds.frame.." : shooting "..i.shooting)
 					if i.shooting == 0 then
 						i.shooting = 1
+						if(firstSight == true)then
+							firstSight = false
+							local laughfx = audio.loadSound("Sounds/Enemies/ImpLaugh.ogg")
+							audio.play(laughfx,{channel = 16})
+							audio.dispose( laughfx )
+						end
 						local impFire = audio.loadSound( "Sounds/Enemies/ImpFire.ogg" )
 						audio.play(impFire,{ channel = audio.findFreeChannel(), loops = 0, fadein = 0})
 						i.animate(i.targetAngle, "Shoot")
