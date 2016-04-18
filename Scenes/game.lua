@@ -130,7 +130,7 @@ local function onAxisEvent( event )
 	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
 		local axis = controllerMapping.axis[event.axis.number]
 		--if g.pause then print("g.pause = true") else print("g.pause = false") end
-		if(g.pause == false) then
+		if(g.gameState == "playing") then
 			map.player.playerAxis(axis, event.normalizedValue)
 		end
 	end
@@ -153,6 +153,10 @@ local function youWin( event )
 	g.gameState = "win"
 	-- Player runs off screen
 	map.player.visuals.animate(90, 90, 100, 1.0)
+	transition.to( 	map.player.torchLight, 
+					{time = 3000, 
+					x = map.player.bounds.x + 3000, 
+					y = map.player.bounds.y})
 	transition.to( 	map.player.parent, 
 					{time = 3000, 
 					x = map.player.bounds.x + 3000, 

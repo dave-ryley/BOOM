@@ -5,7 +5,7 @@ TODO!
 1. HUD
 	a. Pause button replaced with graphic
 		i. Set up as sprite, switch between pause and play when entering/leaving pause menu
-	b. Shotgun graphic inserted
+	b. Shotgun graphic inserted // DONE
 	c. Speedometer inserted
 		i. Make sprites out of graphic
 		ii. Set up function to change sprites when given a number as a parameter
@@ -21,8 +21,8 @@ TODO!
 	f. Shotgun Powerup // DONE
 
 3. WIN
-	a. Enter your name IO
-	b. "accept" button
+	a. Enter your name // DONE
+	b. "accept" button // Done
 	c. write to file
 	d. take you to leaderboard scene
 
@@ -32,3 +32,8 @@ TODO!
 
 5. BUGS
 	a. Satan still kills you after you exit the level
+	b. when you start Bob is pushed down a little
+
+6. ADDITIONAL IMPLEMENTATION
+	a. stats stay when moving from level to level
+	b. stats reset on death
