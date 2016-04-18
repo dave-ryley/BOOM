@@ -3,7 +3,7 @@ local S = {}
 	local function spawn(id)
 
 		local T = {}
-			T.bounds = display.newImageRect( "Graphics/Temp/fireTrap.png", 300, 300 )
+			T.bounds = display.newImageRect( "Graphics/Traps/death.png", 300, 300 )
 			T.bounds.myName = "trap_fire"
 			physics.addBody( T.bounds, "kinematic", {
 														isSensor=true
