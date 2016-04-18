@@ -140,7 +140,7 @@ end
 
 local function onAxisEvent( event )
 	-- Map event data to simple variables
-	print("axis: "..event.axis.number)
+	--print("axis: "..event.axis.number)
 	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
 		local axis = controllerMapping.axis[event.axis.number]
 		--if g.pause then print("g.pause = true") else print("g.pause = false") end
@@ -154,6 +154,7 @@ end
 local function youDied( event )
 	--print("you Died")
 	g.gameState = "dead"
+	g.pause = true
 	--print("your killer is"..event.killer)
 	composer.gotoScene( g.scenePath.."death",{params = {killer = event.killer}})
 end
@@ -480,7 +481,6 @@ end
 -- "scene:destroy()"
 function scene:destroy( event )
 
-
 	camera.destroy()
 	g.pause = true
 	audio.stop( 20 )
@@ -498,59 +498,56 @@ function scene:destroy( event )
 			Runtime:removeEventListener( "youDied", youDied)
 			Runtime:removeEventListener( "getPlayerLocation", getPlayerLocation)
 
-	map.player.die()
-	map.player = nil
-	map.player = {}
-	display.remove( map.enemiesDisplay )
-	display.remove( map.trapsDisplay )
-	for i = 1, #map.powerups do
-		if(map.powerups[i] ~= nil) then
-			display.remove(map.powerups.bounds)
-			map.powerups[i] = nil
-		end
-	end
-	map.powerups = nil
-	for i = 1, #map.traps do
-		if(map.traps[i] ~= nil) then
-			map.traps[i] = nil
-		end
-	end
+			map.player.die()
+			map.player = nil
+			map.player = {}
+			for i = 1, #map.powerups do
+				if(map.powerups[i] ~= nil) then
+					display.remove(map.powerups.bounds)
+					map.powerups[i] = nil
+				end
+			end
+			map.powerups = nil
+			for i = 1, #map.traps do
+				if(map.traps[i] ~= nil) then
+					map.traps[i] = nil
+				end
+			end
 
-	for i = 1, #map.enemies do
-		if(map.enemies[i] ~= nil) then
-			map.enemies[i].hasTarget = false
-			map.enemies[i].die(false, 0)
-		end
-	end
+			for i = 1, #map.enemies do
+				if(map.enemies[i] ~= nil) then
+					map.enemies[i].hasTarget = false
+					--map.enemies[i].die(false, 0)
+					map.enemies[i] = nil
+				end
+			end
 
-	display.remove( map.level )
-	transition.cancel( map.satan.bounds )
-	timer.performWithDelay( 10, 
-		function()
+			display.remove( map.enemiesDisplay )
+			display.remove( map.trapsDisplay )
+			display.remove( map.level )
+			transition.cancel( map.satan.bounds )
 			display.remove( map.satan.bounds )
 			map.satan = nil
 			map.satan = {}
-		end
-	)
-	display.remove( map.floor )
-	map.params = nil
-	map.params = {}
-	for i = 1, #map.gore do
-		if(map.gore[i] ~= nil) then
-			display.remove(map.gore[i])
-			map.gore[i] = nil
-		end
-	end
-	for i = 1, #map.fireballs do
-		if(map.fireballs[i] ~= nil) then
-			map.fireballs[i].die()
-			map.fireballs[i] = nil
-		end
-	end
-	physics.stop()
-	
-		end
-	 )
+			display.remove( map.floor )
+			map.params = nil
+			map.params = {}
+			for i = 1, #map.gore do
+				if(map.gore[i] ~= nil) then
+					display.remove(map.gore[i])
+					map.gore[i] = nil
+				end
+			end
+			for i = 1, #map.fireballs do
+				if(map.fireballs[i] ~= nil) then
+					map.fireballs[i].die()
+					map.fireballs[i] = nil
+				end
+			end
+			physics.stop()
+		
+			end
+		 )
 	
 	--scene:removeEventListener( "create", scene )
 	--scene:removeEventListener( "show", scene )

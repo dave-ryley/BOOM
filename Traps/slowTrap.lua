@@ -4,7 +4,7 @@ local S = {}
 	local function spawn(x, y)
 
 		local T = {}
-			T.joints = {}
+			T = {}
 
 			local col = require "collisionFilters"
 			--T.joint = nil
@@ -26,7 +26,7 @@ local S = {}
 				if (event.phase == "began") then
 					print(event.phase.." caught in slow trap")
 					T.previousSpeed = other.maxSpeed
-					other.maxSpeed = other.maxSpeed * T.slow
+					other.maxSpeed = T.previousSpeed * T.slow
 				elseif (event.phase=="ended") then
 					print(event.phase.." left slow trap")
 					other.maxSpeed = T.previousSpeed

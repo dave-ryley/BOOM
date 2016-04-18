@@ -28,6 +28,7 @@ local C = {}
 		e.move = m.spawn()
 		--display group for physics components
 		e.parent = display.newGroup()
+		e.timers = {}
 		--parent:insert(e.animate)
 		--main physics component
 		--allows referencing of parent table for the bounds events
@@ -93,20 +94,6 @@ local C = {}
 		e.parent:insert( e.sensorArea, true )
 
 		--create splatter parts
-		local function splat( angle, x, y)
-			timer.performWithDelay( 125,
-				function()
-					local c = audio.findFreeChannel()
-					audio.play(C.splatSound,{ 
-							channel = c,
-							loops = 0, 
-							fadein = 0,
-							})
-				end
-			 )
-			return splatterParts.spawn(angle, x, y)
-		end
-		e.splat = splat
 
 
 		--return x position
@@ -161,7 +148,7 @@ local C = {}
 														e.bounds.x,
 														e.bounds.y
 														)
-					e.die(true, angle)
+					--e.die(true, angle)
 				end
 				--if other.myName == shotgun
 				--print("from "..e.myName .. " colliding with " .. other.myName)
@@ -172,7 +159,7 @@ local C = {}
 
 		--onFrameEnter event
 		e.update = function( event )
-			if(g.pause == false and e ~= nil) then
+			if(g.pause == false and e ~= nil and e.isDead == false) then
 				e.sensorArea.x = e.bounds.x
 				e.sensorArea.y = e.bounds.y
 				--print("updating enemy")
@@ -207,30 +194,49 @@ local C = {}
 		end
 		e.unpause = unpause
 
+		local function cleanup()
+			display.remove( e.bounds )
+			display.remove( e.sensorArea )
+			e = nil
+		end
+		e.cleanup = cleanup
+
+
+		local function splat( angle )
+			local x = e.bounds.x
+			local y = e.bounds.y
+			local gore = splatterParts.spawn(angle, x, y)
+			Runtime:dispatchEvent({name="makeGore", gore=gore, x = x, y = y})
+			e.cleanup()
+			timer.performWithDelay( 125,
+				function()
+					local c = audio.findFreeChannel()
+					audio.play(C.splatSound,{ 
+							channel = c,
+							loops = 0, 
+							fadein = 0,
+							}
+					)
+				end
+			 )
+		end
+		e.splat = splat
 		--kill enemy and safely remove him
 		local function die(gore, angle)
-			--e.isDead = true
+			
 			if(e~= nil) then
-				Runtime:removeEventListener( "enterFrame", e.AI )
-				Runtime:removeEventListener( "enterFrame", e.update )
-				local x = e.bounds.x
-				local y = e.bounds.y
+				e.pause()
+				--e.bounds.alpha = 0
 				if(gore == true) then
 				--need to remove eventListeners before remove display objects
 				--slight delay to let any running functions to finish
 					timer.performWithDelay( 20,
-						function ()
-							local tempGore = e.splat(	angle, 
-														x, 
-														y)
-							Runtime:dispatchEvent( { name="makeGore", gore=tempGore,
-																	x=x,
-																	y=y })
-							display.remove( e.parent )
-						--deleting enemy from memory
-						e = nil	
+						function()
+							e.splat(angle)
 						end
-					)
+						)
+				else
+					timer.performWithDelay( 20, e.cleanup )
 				end
 			end
 			
@@ -242,7 +248,9 @@ local C = {}
 			e.hit = true
 			--print(e.myName.. " took hit: health = " .. e.health)
 			if(e.health <= 0) then
+				e.isDead = true
 				e.die(true, angle)
+				--[[
 			else
 				timer.performWithDelay( 500, 
 					function ()
@@ -251,6 +259,7 @@ local C = {}
 						end
 					end
 				)
+]]
 			end
 		end
 		e.takeHit = takeHit

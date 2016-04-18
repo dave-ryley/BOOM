@@ -27,7 +27,7 @@ local Q = {}
 		P.maxSpeed = 1000.0
 		P.isAlive = true
 		P.health = g.health
-
+		P.isSlowed = false
 		-- Collision object setup
 		P.bounds = display.newRect(0,0,70,70)
 		P.bounds.alpha = 0.0
