@@ -13,9 +13,9 @@ TODO!
 		i. Take global timer value on start and begin increasing once game has started
 
 2. GRAPHICS
-	a. Slow Traps
-	b. Death Traps
-	c. You Win Illustration
+	a. Slow Traps // done
+	b. Death Traps // Done
+	c. You Win Illustration //DONE
 	d. Leaderboard Graphics
 	e. Speed Powerup // DONE
 	f. Shotgun Powerup // DONE

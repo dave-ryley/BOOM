@@ -103,6 +103,7 @@ function createMap()
 											"Curse of the Zombie", 
 											180 )
 						hud.initializeHUD()
+						hud.updateShotgunOMeter(10)
 						startText:setFillColor( 1,0,0 )
 						--local runMortal = audio.loadSound("Sounds/Satan/satan_RunMortal.ogg")
 						--audio.play(runMortal)
@@ -122,21 +123,6 @@ function createMap()
 	)
 
 end 
-
-
-function updateGUI()
-	sceneGroup:insert(map.player.shotgun.displayPower())
-	if(playerTextSpeed)then
-		playerTextSpeed:removeSelf()
-	end
-	playerTextSpeed = display.newText( sceneGroup, tostring(map.player.maxSpeed/50)..
-										" KMPH", 
-										400, 
-										100, 
-										"Curse of the Zombie", 
-										50 )
-	playerTextSpeed:setFillColor( 1,1,0 )
-end
 
 local function onAxisEvent( event )
 	-- Map event data to simple variables
@@ -292,13 +278,13 @@ local function makeGore( event )
 	if(r < 6) then
 		if(map.powerups ~= nil) then
 			map.powerups[#map.powerups + 1] = powerUp.spawn(x, y)
-			camera:add(map.powerups[#map.powerups].bounds, 1)
+			camera:add(map.powerups[#map.powerups].bounds, 2)
 		end
 		--print("adding powerup at: "..x .." , " .. y)
 	elseif(r < 12) then
 		if(map.powerups ~= nil) then
 			map.powerups[#map.powerups + 1] = speedUp.spawn(x, y)
-			camera:add(map.powerups[#map.powerups].bounds, 1)
+			camera:add(map.powerups[#map.powerups].bounds, 2)
 		end
 		--print("adding powerup at: "..x .." , " .. y)
 	end

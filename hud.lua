@@ -1,11 +1,11 @@
 local HUD = {}
 	hudInitialized = false
 	local g = require "globals"
+	local shotgun = require "shotgun"
 	local function initializeHUD()
 		hudInitialized = true
 		HUD.hudGroup = display.newGroup()
 		HUD.distance = 0
-
 		HUD.satanIndicatorGroup = display.newGroup()
 		HUD.pointer = display.newPolygon( HUD.satanIndicatorGroup, g.ccx, g.ccy, {0,0, 35,50,90,0,35,-50} )
 		--HUD.satanIndicator = display.newCircle( HUD.satanIndicatorGroup, g.ccx, g.ccy, 60 )
@@ -16,7 +16,6 @@ local HUD = {}
 			numFrames = 12
 		}
 		HUD.sheet_satanIndicator = graphics.newImageSheet("Graphics/UI/SatanIndicator.png", sheetOptions)
-		
 		local sequences_satanIndicator = 
 		{
 		    {
@@ -28,14 +27,12 @@ local HUD = {}
         		loopDirection = "forward"
 		    }
 		}
-		
 		HUD.satanIndicator = display.newSprite( HUD.satanIndicatorGroup, HUD.sheet_satanIndicator,sequences_satanIndicator)
 		HUD.satanIndicator.x = g.ccx
 		HUD.satanIndicator.y = g.ccy
 		HUD.satanIndicator:scale(0.75,0.75)
 		HUD.satanIndicator:setSequence("play")
 		HUD.satanIndicator:play()
-
 		HUD.distanceText = display.newText( HUD.satanIndicatorGroup, tostring(HUD.distance).."m", g.ccx, g.ccy+60, native.systemFont,60)
 		HUD.hudGroup:insert(HUD.satanIndicatorGroup)
 		HUD.satanIndicator.alpha = 0
@@ -43,6 +40,8 @@ local HUD = {}
 		HUD.distanceText:setFillColor( 1,1,0,0)
 		HUD.pointer.anchorX=-1
 
+		HUD.shotgunOMeter = display.newImage( HUD.hudGroup, "Graphics/UI/Shotgun.png",400,110,isFullResolution )
+		HUD.blocks = {}
 
 	end
 	HUD.initializeHUD = initializeHUD
@@ -78,11 +77,51 @@ local HUD = {}
 	end
 	HUD.updateSatanPointer = updateSatanPointer
 
+	local function updateShotgunOMeter(power)
+		for j = 1,table.getn(HUD.blocks),1 do
+				HUD.blocks[j]:removeSelf( )
+		end
+		for i=1,power-9,1 do
+			HUD.blocks[i]=display.newRect( HUD.hudGroup,(i*42)+340, 95, 40,40 )
+			HUD.blocks[i]:setFillColor((i/5),5/i,0,0.9)
+			HUD.blocks[i]:toBack()
+		end
+	end
+	HUD.updateShotgunOMeter = updateShotgunOMeter
+	
 	local function killHUD()
 		if (hudInitialized)then
-			HUD.satanIndicatorGroup:removeSelf( )
+			HUD.hudGroup:removeSelf( )
 		end
 	end
 	HUD.killHUD = killHUD
 
 return HUD
+
+
+
+--[[function updateGUI()
+	sceneGroup:insert(map.player.shotgun.displayPower())
+	if(playerTextSpeed)then
+		playerTextSpeed:removeSelf()
+	end
+	playerTextSpeed = display.newText( sceneGroup, tostring(map.player.maxSpeed/50)..
+										" KMPH", 
+										400, 
+										100, 
+										"Curse of the Zombie", 
+										50 )
+	playerTextSpeed:setFillColor( 1,1,0 )
+end
+local function displayPower()
+	C.shotgunOMeter:removeSelf()
+	local blocks = {}
+	C.shotgunOMeter = display.newGroup()
+	for i=1,C.power-9,1 do
+		blocks[i]=display.newRect( C.shotgunOMeter,(i*42)+250, 40, 40,40 )
+		blocks[i]:setFillColor((i/5),5/i,0,0.9)
+	end
+	return C.shotgunOMeter
+end
+C.displayPower = displayPower
+]]--

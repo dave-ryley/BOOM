@@ -4,10 +4,9 @@ local S = {}
 		local g = require "globals"
 		local col = require "collisionFilters"
 		local T = {}
-			T.bounds = display.newImageRect( "Graphics/Temp/win.png", 128*5, 128*5 )
+			T.bounds = display.newRect( x,y, 128*5, 128*5 )
 			T.bounds.myName = "trap_win"
-			T.bounds.x = x
-			T.bounds.y = y
+			T.bounds.alpha = 0.0
 			T.bounds.super = T
 			T.myName = "trap_win"
 			physics.addBody( T.bounds, "kinematic", {

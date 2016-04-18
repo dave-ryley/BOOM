@@ -16,7 +16,10 @@ local S = {}
 														filter=col.sensorCol
 													})
 			T.powerup = function(event)
+				local fx = audio.loadSound( "Sounds/PowerUps/SpeedPowerUp.ogg")
 				local other = event.other.super
+				audio.play(fx,{channel = audio.findFreeChannel()})
+				audio.dispose( fx )
 				other.maxSpeed = other.maxSpeed + 50
 				display.remove( T.bounds )
 			end
