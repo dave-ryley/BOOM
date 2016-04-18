@@ -12,6 +12,8 @@ local P = {}
 		audio.play(V.sounds.torchIdle, { channel = 2, loops = -1, fadein = 0})
 		audio.setVolume( 0.4, {channel = 2} )
 		audio.setVolume( 1, {channel = 3} )
+		audio.setVolume( 0.8, {channel = 28} )
+		audio.setVolume( 0.8, {channel = 29} )
 		-- Setting up the lower body Animation
 		V.lowerBody = display.newGroup()
 
@@ -210,12 +212,10 @@ local P = {}
 
 		local function footsteps()
 			if string.sub( V.lowerBodyRun_sprite.sequence, -3 ) == "Run" then
-				--print("run")
 				if(V.lowerBodyRun_sprite.frame == 3)then
-					audio.play( V.sounds.step1, { channel = 1, loops=0})
+					audio.play( V.sounds.step1, { channel = 28, loops=0})
 				elseif(V.lowerBodyRun_sprite.frame == 7)then
-					--print("playing")
-					audio.play( V.sounds.step2, { channel = 3, loops=0})
+					audio.play( V.sounds.step2, { channel = 29, loops=0})
 				end
 			end
 		end

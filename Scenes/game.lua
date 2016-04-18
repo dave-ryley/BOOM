@@ -317,7 +317,6 @@ end
 local function gameLoop( event )
 
 	if g.pause == false and g.gameState == "playing" then
-
 		if(g.android) then
 			map.player.virtualJoystickInput(leftJoystick.angle, 
 											leftJoystick.xLoc/70, 
