@@ -22,7 +22,7 @@ function scene:create( event )
 	local sceneGroup = self.view
 	cinematics = true
 	local options = {
-	    text = "NARCOLEPTICK GAMES\nPRESENTS",
+	    text = "NARCOLEPTICK GAMES \nPRESENTS",
 	    font="Curse of the Zombie",
 	    fontSize = 80,
 	    align = "center"  
