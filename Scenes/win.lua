@@ -82,6 +82,38 @@ function scene:create( event )
 	-- Example: add display objects to "sceneGroup", add touch listeners, etc.
 end
 
+local function updateText( key )
+	if key == "deleteBack" then
+		userInput.text = string.sub(userInput.text,1,-2)
+	elseif string.len(userInput.text) < 10 then
+		if key == "space" then
+			userInput.text = userInput.text .. " "
+		else
+			userInput.text = userInput.text .. key
+		end
+	end
+end
+
+local function onWinKeyPress( event )
+	local phase = event.phase
+	local keyName = event.keyName
+	print(keyName)
+	if (phase == "down" and canPress) then
+		canPress = false
+		if (keyName == "buttonA" or keyName == "enter") then
+			audio.play(press, {channel = 31})
+			composer.removeScene("win", false)
+    		composer.gotoScene( g.scenePath.."menu" )
+    		--NEED CODE FOR SENDING DATA TO LEADERBOARD
+		elseif( string.match("qwertyuiopasdfghjklzxcvbnm", string.lower(keyName)) ~= nil or keyName == "deleteBack" or keyName == "space" ) then
+			updateText( keyName )
+		end
+	elseif (phase == "up") then
+		canPress = true
+	end
+
+	return false
+end
 
 -- "scene:show()"
 function scene:show( event )
@@ -116,47 +148,29 @@ end
 
 -- "scene:destroy()"
 function scene:destroy( event )
+	display.remove( winText )
+	display.remove( winImage )
+	display.remove( enterText )
+	display.remove( button )
 	winText:removeSelf()
-	winText = nil
+	winImage:removeSelf()
+	enterText:removeSelf()
+	userInput:removeSelf()
+	button:removeSelf()
+	winText:removeSelf()
 	button:removeEventListener( "touch", button )
+	winText = nil
+	winImage = nil
+	enterText = nil
+	userInput = nil
+	button = nil
+	winText = nil
 	Runtime:removeEventListener( "key", onWinKeyPress )
 	local sceneGroup = self.view
 
 -- Called prior to the removal of scene's view ("sceneGroup").
 -- Insert code here to clean up the scene.
 -- Example: remove display objects, save state, etc.
-end
-
-local function updateText( key )
-	if key == "deleteBack" then
-		userInput.text = string.sub(userInput.text,1,-2)
-	elseif string.len(userInput.text) < 10 then
-		if key == "space" then
-			userInput.text = userInput.text .. " "
-		else
-			userInput.text = userInput.text .. key
-		end
-	end
-end
-
-local function onWinKeyPress( event )
-	local phase = event.phase
-	local keyName = event.keyName
-	print(keyName)
-	if (phase == "down" and canPress) then
-		canPress = false
-		if (keyName == "buttonA" or keyName == "enter") then
-			audio.play(press, {channel = 31})
-    		composer.gotoScene( g.scenePath.."menu" )
-    		--NEED CODE FOR SENDING DATA TO LEADERBOARD
-		elseif( string.match("qwertyuiopasdfghjklzxcvbnm", keyName) ~= nil or keyName == "deleteBack" or keyName == "space" ) then
-			updateText( keyName )
-		end
-	elseif (phase == "up") then
-		canPress = true
-	end
-
-	return false
 end
 
 ---------------------------------------------------------------------------------
