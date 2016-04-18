@@ -47,7 +47,9 @@ end
 
 local function buttonFunction( key )
 	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
-	audio.play(press, {channel = 31})
+	if key ~= 0 then
+		audio.play(press, {channel = 31})
+	end
 	if key == 1 then
 		composer.removeScene( g.scenePath.."death", false )
 		composer.gotoScene( g.scenePath.."game" )
@@ -91,12 +93,12 @@ function scene:create( event )
 	myText1 = display.newText(sceneGroup, "YOU", 
 									g.ccx-500, 
 									g.ccy, 
-									"BLOODY", 
+									"Bloody", 
 									300 )
 	myText2 = display.newText(sceneGroup, "DIED", 
 									g.ccx+500, 
 									g.ccy, 
-									"BLOODY", 
+									"Bloody", 
 									300 )
 	myText1:setFillColor(1,0,0)
 	myText2:setFillColor(1,0,0)
