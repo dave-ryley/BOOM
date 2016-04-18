@@ -10,7 +10,7 @@ local P = {}
 		V.sounds.step2 = audio.loadSound( "Sounds/Player/Step2.ogg" )
 		V.sounds.torchIdle = audio.loadSound( "Sounds/Player/torchidle.ogg" )
 		audio.play(V.sounds.torchIdle, { channel = 2, loops = -1, fadein = 0})
-		audio.setVolume( 0.1, {channel = 2} )
+		audio.setVolume( 0.4, {channel = 2} )
 		audio.setVolume( 1, {channel = 3} )
 		-- Setting up the lower body Animation
 		V.lowerBody = display.newGroup()

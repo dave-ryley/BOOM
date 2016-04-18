@@ -28,6 +28,7 @@ function scene:create( event )
 	    align = "center"  
 	}
 	myText = display.newText( options )
+	myText:setFillColor(1,0,0)
 	myText.x = g.ccx
 	myText.y = g.ccy
 	-- Initialize the scene here.
