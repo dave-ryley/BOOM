@@ -27,7 +27,7 @@ local Q = {}
 		P.maxSpeed = 1000.0
 		P.isAlive = true
 		P.health = g.health
-
+		P.isSlowed = false
 		-- Collision object setup
 		P.bounds = display.newRect(0,0,70,70)
 		P.bounds.alpha = 0.0
@@ -163,7 +163,7 @@ local Q = {}
 		local function blastDisppear( event )
 			P.shotgun.bounds.isAwake = false
 			P.shotgun.shooting = false
-			if(P.shotgun.bounds ~= nil) then
+			if(P.shotgun ~= nil) then
 				physics.removeBody( P.shotgun.bounds )
 			end
 			P.shotgun.blast.alpha = 0

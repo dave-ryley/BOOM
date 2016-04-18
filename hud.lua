@@ -83,7 +83,7 @@ local HUD = {}
 		end
 		for i=1,power-9,1 do
 			HUD.blocks[i]=display.newRect( HUD.hudGroup,(i*42)+340, 95, 40,40 )
-			HUD.blocks[i]:setFillColor((i/5),5/i,0,0.9)
+			HUD.blocks[i]:setFillColor((i/2.5),2/i,0,0.8)
 			HUD.blocks[i]:toBack()
 		end
 	end
