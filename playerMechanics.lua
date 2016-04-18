@@ -72,7 +72,7 @@ local Q = {}
         P.parent.y, P.torchLight.y = P.bounds.y -50, P.bounds.y
         P.visuals.animate(90, 90, 0, 0)
 
-		local function update ( )
+		local function update ()
 			P.shotgun.aimAngle = P.thisAimAngle
 			if(P.isAlive == true ) then
 				P.parent.x, P.torchLight.x = P.bounds.x, P.bounds.x

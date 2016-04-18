@@ -28,6 +28,14 @@ local music = {
 	"HeadShredder.mp3",
 }
 
+local satanVFX = {
+	"ImComingHaHa.ogg",
+	"Laugh.ogg",
+	"RunMortal.ogg",
+	"YouCannotEscape.ogg",
+	"YourSoulIsMine.ogg"
+}
+
 local map = {
 	params = {},
 	enemies = {},
@@ -85,9 +93,13 @@ function createMap()
 	--camera:add(hud.satanIndicatorGroup,1)
 
 	-- BEGIN GAME
+	local voice = audio.loadSound("Sounds/Satan/"..satanVFX[math.random(5)])
+	audio.setVolume( 0.5, {channel = 6} )
+	audio.play(voice,{channel = 6})
 	timer.performWithDelay(2000, 
 		-- Stays on satan for 2 seconds
 		function() 
+			audio.dispose(voice)
 			g.gameState = "introTransition" 
 			-- Pans over to the player
 			transition.to( 	map.player.cameraLock, 
@@ -105,16 +117,10 @@ function createMap()
 						hud.initializeHUD()
 						hud.updateShotgunOMeter(g.shotgun)
 						startText:setFillColor( 1,0,0 )
-						--local runMortal = audio.loadSound("Sounds/Satan/satan_RunMortal.ogg")
-						--audio.play(runMortal)
 						g.gameState = "playing"
 						timer.performWithDelay(2000, 
 							function()
-								--startText:removeSelf()
-								--startText = nil 
 								startText.alpha = 0
-								--runMortal:removeSelf()
-								--runMortal = nil
 							end
 						)
 					end
@@ -323,7 +329,6 @@ end
 local function gameLoop( event )
 
 	if g.pause == false and g.gameState == "playing" then
-
 		if(g.android) then
 			map.player.virtualJoystickInput(leftJoystick.angle, 
 											leftJoystick.xLoc/70, 
