@@ -57,7 +57,7 @@ function scene:create( event )
 
 	io.close(file)
 	local sceneGroup = self.view
-	local leaderBoardString = "Medal | Name Hrs : Mins : Secs Kills | Deaths\n\n"
+	local leaderBoardString = "Medal | Name | Time | Kills | Deaths\n\n"
 	for i=1,table.getn(Leaderboard) do
 	  leaderBoardString =  leaderBoardString..Leaderboard[i][1].." | "
 						   ..Leaderboard[i][2].." ["
@@ -67,7 +67,8 @@ function scene:create( event )
 						   ..Leaderboard[i][6].." | "
 						   ..Leaderboard[i][7].."\n"
 	end
-	myText = display.newText( leaderBoardString, g.ccx, g.ccy, "Bloody", 50 )
+	myText = display.newText( leaderBoardString, g.ccx, g.ccy, 1300, 0, "Avengeance Mightiest Avenger", 50 )
+	--t = display.newText("This is a test\nThis is only a test.", 0, 0, 320, 0, "Helvetica", 16)
 	myText:setFillColor(1,0,0)
 	sceneGroup:insert(myText)
 

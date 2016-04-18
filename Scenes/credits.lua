@@ -32,18 +32,23 @@ end
 function scene:create( event )
 	composer.removeScene(g.scenePath.."menu")
 	local sceneGroup = self.view
-	myText = display.newText( 	"CREDITS:\n"..
-								"-NARCOLEPTIC GAMES\n".. 
-								"-DAVID RYLEY\n".. 
-								"-DAVID RYAN\n".. 
-								"-CHRIS BRADY\n"..
-								"\nMUSIC \"HEADSHREDDER\" BY:"..
-								"\n-CIARAN RYAN", 
-								g.ccx, 
+	creditsImage = display.newImage( sceneGroup,
+						"Graphics/Art/ChaseArt.png", 
+						g.cw - 500,g.ccy - 100 )
+	creditsImage.xScale = creditsImage.xScale*3/7
+	creditsImage.yScale = creditsImage.yScale*3/7
+	myText = display.newText( 	"Created By:\n\n".. 
+								"Dave Ryan\n".. 
+								"Dave Ryley\n".. 
+								"Chris Brady\n"..
+								"\nMusic by Ciaran Ryan",
+								g.cw/3, 
 								g.ccy, 
-								"Bloody.ttf", 
+								800, 
+								0,
+								"Avengeance Mightiest Avenger", 
 								70 )
-	myText:setFillColor( 1,0,0 )
+	myText:setFillColor( 1,1,0 )
 	sceneGroup:insert(myText)
 
 	function buttonPress( self, event )
