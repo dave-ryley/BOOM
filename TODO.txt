@@ -17,8 +17,8 @@ TODO!
 	b. Death Traps
 	c. You Win Illustration
 	d. Leaderboard Graphics
-	e. Speed Powerup
-	f. Shotgun Powerup
+	e. Speed Powerup // DONE
+	f. Shotgun Powerup // DONE
 
 3. WIN
 	a. Enter your name IO

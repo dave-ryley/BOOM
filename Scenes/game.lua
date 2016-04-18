@@ -69,7 +69,7 @@ function createMap()
 	camera:add(map.enemiesDisplay, 2)
 	camera:add(map.trapsDisplay, 4)
 	camera:add(map.floor,5)
-	camera:add(map.player.torchLight, 5)
+	camera:add(map.player.torchLight, 4)
 	--print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
 	camera:prependLayer()
 	camera.damping = 10
