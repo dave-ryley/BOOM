@@ -220,7 +220,9 @@ local Q = {}
 			audio.stop( 2 )
 			timer.performWithDelay( 10, 
 				function ()
-					display.remove( P.bounds )
+					if P.bounds ~= nil then
+						display.remove( P.bounds )
+					end
 					display.remove( P.shotgun.shotgunOMeter )
 					display.remove( P.shotgun.blast )
 					display.remove( P.shotgun.bounds)
@@ -235,11 +237,15 @@ local Q = {}
 			if (event.phase == "began" and event.other ~= nil) then
 				local other = event.other.super
 				local s = string.sub(event.other.myName, 1, 2)
-				if(s == "e_" or s == "p_" or other.enemyType == "satan") then
+				if(s == "e_" or s == "p_" or other.enemyType == "satan" or other.enemyType == "fireball") then
 					--print("in player collided with: ".. other.myName)
 					if(other.enemyType== "fireball") then
 						--print("player health taking damage: "..P.health)
-						P.health = P.health - 1
+						if other.myName == "fireTrap" then
+							P.health = 0
+						else
+							P.health = P.health - 1
+						end
 					elseif (other.enemyType == "spot") then
 						P.health = 0
 						other.hasTarget = false

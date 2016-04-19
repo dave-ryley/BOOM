@@ -3,7 +3,8 @@ local B = {}
 	local function buildLevel(levelNo)
 		local b = {}
 		b.enemies = {}
-		b.traps = {}
+		b.slowTraps = {}
+		b.deathTraps = {}
 		b.physlevel = {}
 		b.satanPath = {}
 		b.level = display.newGroup( )
@@ -13,6 +14,7 @@ local B = {}
 		local imp = require "imp"
 		local spot = require "spot"
 		local slowTrap = require "Traps.slowTrap"
+		local deathTrap = require "Traps.fireTrap"
 		local winTrap = require "Traps.winTrap"
 		local levelName = "Levels/level"..levelNo..".BOOMMAP"
 		local map = {}
@@ -125,15 +127,21 @@ local B = {}
 				elseif (enemyType == 13) then
 					--spawn rosy
 				end
-			elseif(tonumber(map[mapCounter][1]) <31)then
+			--elseif(tonumber(map[mapCounter][1]) <31)then
 				--spawn items/deco
 			elseif(tonumber(map[mapCounter][1]) <51)then
 				--traps
-				b.traps[#b.traps + 1] = slowTrap.spawn(	tonumber((map[mapCounter][3])-448)*size, 
+				if tonumber(map[mapCounter][1]) == 41 then
+					b.slowTraps[#b.slowTraps + 1] = slowTrap.spawn(	tonumber((map[mapCounter][3])-448)*size, 
 														tonumber((map[mapCounter][4])-448)*size)
+				else
+					--traps
+					b.deathTraps[#b.deathTraps + 1] = deathTrap.spawn(	tonumber((map[mapCounter][3])-448)*size, 
+															tonumber((map[mapCounter][4])-448)*size)
+				end
 
 			elseif(tonumber(map[mapCounter][1]) ==100)then
-				b.traps[#b.traps + 1] = winTrap.spawn(	tonumber((map[mapCounter][3])-448)*size,
+				b.slowTraps[#b.slowTraps + 1] = winTrap.spawn(	tonumber((map[mapCounter][3])-448)*size,
 														tonumber((map[mapCounter][4])-448)*size)
 			elseif(tonumber(map[mapCounter][1]) ==666)then
 				satanPathLength = satanPathLength+1

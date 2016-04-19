@@ -40,6 +40,7 @@ function scene:show( event )
 	if ( phase == "will" ) then
 	-- Called when the scene is still off screen (but is about to come on screen).
 	elseif ( phase == "did" ) then
+		composer.removeScene( g.scenePath.."game", false )
 		transition.to( 	myText, 
 				{time = 2000, 
 				x = myText.x + 500, 
@@ -50,13 +51,6 @@ function scene:show( event )
 						composer.gotoScene( g.scenePath.."game")
 					end
 				} )
-
-		composer.removeScene( g.scenePath.."game", false )
-		timer.performWithDelay( 2000, 
-		function()
-			composer.gotoScene( g.scenePath.."game")
-		end
-	 )
 	-- Called when the scene is now on screen.
 	-- Insert code here to make the scene come alive.
 	-- Example: start timers, begin animation, play audio, etc.
