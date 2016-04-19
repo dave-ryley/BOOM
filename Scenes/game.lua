@@ -168,7 +168,7 @@ local function onKeyEvent( event )
 	print(event.keyName)
 	if (event.phase == "down") then
 		-- Adjust velocity for testing, remove for final game        
-		if ( event.keyName == "[" ) then
+		--[[if ( event.keyName == "[" ) then
 			if (map.player.velocity > 0 ) then
 			map.player.maxSpeed = map.player.maxSpeed - 50
 				map.player.shotgun.powerUp(-1)
@@ -180,7 +180,7 @@ local function onKeyEvent( event )
 			--player.velocity = player.velocity - 1
 				--map.player.shotgun.powerUp(-1)
 			end
-		end
+		end]]
 		-- WASD and ArrowKeys pressed down
 		if ( event.keyName == "w" ) then
 			value = -1.0
