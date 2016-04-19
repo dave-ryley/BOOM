@@ -487,8 +487,8 @@ function scene:destroy( event )
 
 	camera.destroy()
 	g.pause = true
-	audio.stop( 20 )
 	hud.killHUD()
+	audio.stop( 20 )
 	print("here in destroy")
 	timer.performWithDelay( 10, 
 		function()
@@ -500,7 +500,6 @@ function scene:destroy( event )
 			Runtime:removeEventListener( "youWin", youWin)
 			Runtime:removeEventListener( "youDied", youDied)
 			Runtime:removeEventListener( "getPlayerLocation", getPlayerLocation)
-
 			map.player.die()
 			map.player = nil
 			map.player = {}

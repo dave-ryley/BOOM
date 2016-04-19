@@ -68,7 +68,7 @@ function scene:create( event )
 
   objectFileName = {"lavaTile","lavaTile","wall_diagonal","wall_flat","winTile"}
   enemyFileName = {"Imp","HellPup","Minator"}
-  trapFileName = {"Slow","Fire", "FlameThrower"}
+  trapFileName = {"slow","death", "FlameThrower"}
   miscFileName = {}
 
   objectColours = {{0,0,1},{0,1,0},{0,1,1},{1,0,0}}

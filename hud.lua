@@ -1,5 +1,5 @@
 local HUD = {}
-	hudInitialized = false
+	local hudInitialized = false
 	local g = require "globals"
 	local s = require "HUD.speedometer"
 
@@ -139,38 +139,11 @@ local HUD = {}
 	HUD.updateTimer = updateTimer
 	
 	local function killHUD()
-		if (hudInitialized)then
-			HUD.hudGroup:removeSelf( )
+		if (hudInitialized == true)then
+			HUD.hudGroup:removeSelf()
+			HUD.hudGroup = nil
 		end
 	end
 	HUD.killHUD = killHUD
 
 return HUD
-
-
-
---[[function updateGUI()
-	sceneGroup:insert(map.player.shotgun.displayPower())
-	if(playerTextSpeed)then
-		playerTextSpeed:removeSelf()
-	end
-	playerTextSpeed = display.newText( sceneGroup, tostring(map.player.maxSpeed/50)..
-										" KMPH", 
-										400, 
-										100, 
-										"Curse of the Zombie", 
-										50 )
-	playerTextSpeed:setFillColor( 1,1,0 )
-end
-local function displayPower()
-	C.shotgunOMeter:removeSelf()
-	local blocks = {}
-	C.shotgunOMeter = display.newGroup()
-	for i=1,C.power-9,1 do
-		blocks[i]=display.newRect( C.shotgunOMeter,(i*42)+250, 40, 40,40 )
-		blocks[i]:setFillColor((i/5),5/i,0,0.9)
-	end
-	return C.shotgunOMeter
-end
-C.displayPower = displayPower
-]]--
