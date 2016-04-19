@@ -21,6 +21,7 @@ local S = {}
 				audio.play(fx,{channel = audio.findFreeChannel()})
 				audio.dispose( fx )
 				other.shotgun.powerUp(1)
+				g.shotgun = other.shotgun.power
 				display.remove( T.bounds )
 			end
 			T.bounds:addEventListener( "collision", T.powerup )

@@ -16,7 +16,9 @@ local playerTextSpeed
 local controllerMapping = require "controllerMapping"
 local levelBuilder = require "levelBuilder"
 local camera = perspective.createView()
-local startText
+local pauseButton
+local timeOffset
+local pauseTime
 local music = {
 	"HeadShredder.mp3",
 	"DeathCell.mp3",
@@ -91,44 +93,7 @@ function createMap()
 	camera:add(map.player.shotgun.bounds, 1)
 	camera:add(map.satan.parent, 1)
 	--camera:add(hud.satanIndicatorGroup,1)
-
-	-- BEGIN GAME
-	local voice = audio.loadSound("Sounds/Satan/"..satanVFX[math.random(5)])
-	audio.setVolume( 0.5, {channel = 6} )
-	audio.play(voice,{channel = 6})
-	timer.performWithDelay(2000, 
-		-- Stays on satan for 2 seconds
-		function() 
-			audio.dispose(voice)
-			g.gameState = "introTransition" 
-			-- Pans over to the player
-			transition.to( 	map.player.cameraLock, 
-				{time = 1000, 
-				x = map.player.bounds.x, 
-				y = map.player.bounds.y, 
-				onComplete = 
-					-- Game begins
-					function()
-						startText = display.newText("RUN!", 
-											g.ccx, 
-											g.ccy-140, 
-											"Curse of the Zombie", 
-											180 )
-						hud.initializeHUD()
-						hud.updateShotgunOMeter(g.shotgun)
-						startText:setFillColor( 1,0,0 )
-						g.gameState = "playing"
-						timer.performWithDelay(2000, 
-							function()
-								startText.alpha = 0
-							end
-						)
-					end
-				} )
-		end
-	)
-
-end 
+end
 
 local function onAxisEvent( event )
 	-- Map event data to simple variables
@@ -157,6 +122,7 @@ local function youWin( event )
 	local nextLevel = ""
 	g.level = g.level + 1
 	g.gameState = "win"
+	g.time = gameTime
 	g.speed = map.player.maxSpeed
 	g.shotgun = map.player.shotgun.power
 	-- Player runs off screen
@@ -339,6 +305,8 @@ local function gameLoop( event )
 											rightJoystick.yLoc/70)
 		end
 		hud.updateSatanPointer(map.satan.bounds.x,map.satan.bounds.y,map.player.bounds.x,map.player.bounds.y,map.player.cameraLock.x,map.player.cameraLock.y)
+		gameTime = system.getTimer() - timeOffset
+		hud.updateTimer( gameTime )
 		map.player.update()
 	elseif g.gameState == "intro" then
 		map.player.cameraLock.x, map.player.cameraLock.y = map.satan.bounds.x, map.satan.bounds.y - 300
@@ -347,7 +315,10 @@ local function gameLoop( event )
 end
 
 function scene:pause()
+	pauseTime = system.getTimer()
 	g.pause = true	
+	pauseButton.change(2)
+	pauseButton.id = 2
 	physics.pause( )
 	map.player.pause()
 	map.satan.pause()
@@ -366,7 +337,10 @@ function scene:pause()
 end
 
 function scene:unpause()
+	timeOffset = system.getTimer() - pauseTime + timeOffset
 	g.pause = false
+	pauseButton.change(1)
+	pauseButton.id = 1
 	physics.start( )
 	map.player.unpause()
 	map.satan.unpause()
@@ -381,6 +355,7 @@ function scene:unpause()
 			map.fireballs[i].unpause()
 		end
 	end
+	composer.hideOverlay(g.scenePath.."pauseMenu")
 end
 
 function buttonPress( self, event )
@@ -388,11 +363,13 @@ function buttonPress( self, event )
 		audio.play(press, {channel = 31})
 		if self.id == 1 then
 			scene:pause()
-			
+		else
+			scene:unpause()
 		end
 		return true
 	end
 end
+
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
 -- unless "composer.removeScene()" is called.
@@ -433,14 +410,44 @@ function scene:create( event )
 		leftJoystick.y = g.ach -250
 		leftJoystick.activate()
 	end
-	local pauseButton = display.newCircle(0,0,200)
-	sceneGroup:insert(pauseButton)
+	
+	-- PAUSE BUTTON ---
+	local pButtonMaker = require "HUD.pauseButton"
+	pauseButton = pButtonMaker.spawn()
+	pauseButton.x = -200
+	pauseButton.y = -200
 	pauseButton.id = 1
 	pauseButton.touch = buttonPress
+	sceneGroup:insert(pauseButton)
 	pauseButton:addEventListener( "touch", pauseButton )
-	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
-	-- Initialize the scene here.
-	-- Example: add display objects to "sceneGroup", add touch listeners, etc.
+
+
+	-- BEGIN GAME
+	local voice = audio.loadSound("Sounds/Satan/"..satanVFX[math.random(5)])
+	audio.setVolume( 0.5, {channel = 6} )
+	audio.play(voice,{channel = 6})
+	timer.performWithDelay(2000, 
+		-- Stays on satan for 2 seconds
+		function() 
+			audio.dispose(voice)
+			g.gameState = "introTransition" 
+			-- Pans over to the player
+			hud.initializeHUD()
+			hud.updateShotgunOMeter(g.shotgun)
+			transition.to( 	pauseButton, {time = 1000, x = 100, y = 100,} )
+			transition.to( 	map.player.cameraLock, 
+				{time = 1000, 
+				x = map.player.bounds.x, 
+				y = map.player.bounds.y,
+				onComplete = 
+					-- Game begins
+					function()
+						g.gameState = "playing"
+						timeOffset = system.getTimer() - g.time
+					end
+				} )
+		end
+	)
 end
 
 -- "scene:show()"
@@ -483,7 +490,6 @@ function scene:destroy( event )
 	audio.stop( 20 )
 	hud.killHUD()
 	print("here in destroy")
-	display.remove( startText )
 	timer.performWithDelay( 10, 
 		function()
 			Runtime:removeEventListener( "enterFrame", gameLoop )

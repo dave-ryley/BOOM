@@ -21,6 +21,7 @@ local S = {}
 				audio.play(fx,{channel = audio.findFreeChannel()})
 				audio.dispose( fx )
 				other.maxSpeed = other.maxSpeed + 50
+				g.speed = other.maxSpeed
 				display.remove( T.bounds )
 			end
 			T.bounds:addEventListener( "collision", T.powerup )

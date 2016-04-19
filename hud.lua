@@ -1,7 +1,8 @@
 local HUD = {}
 	hudInitialized = false
 	local g = require "globals"
-	local shotgun = require "shotgun"
+	local s = require "HUD.speedometer"
+
 	local function initializeHUD()
 		hudInitialized = true
 		HUD.hudGroup = display.newGroup()
@@ -33,7 +34,7 @@ local HUD = {}
 		HUD.satanIndicator:scale(0.75,0.75)
 		HUD.satanIndicator:setSequence("play")
 		HUD.satanIndicator:play()
-		HUD.distanceText = display.newText( HUD.satanIndicatorGroup, tostring(HUD.distance).."m", g.ccx, g.ccy+60, native.systemFont,60)
+		HUD.distanceText = display.newText( HUD.satanIndicatorGroup, tostring(HUD.distance).."m", g.ccx, g.ccy+60, "Avengeance Mightiest Avenger",60)
 		HUD.hudGroup:insert(HUD.satanIndicatorGroup)
 		HUD.satanIndicator.alpha = 0
 		HUD.pointer:setFillColor(1,0,0,0)
@@ -42,6 +43,44 @@ local HUD = {}
 
 		HUD.shotgunOMeter = display.newImage( HUD.hudGroup, "Graphics/UI/Shotgun.png",400,110,isFullResolution )
 		HUD.blocks = {}
+
+		-- SPEEDOMETER
+		HUD.speedometer = s.spawn()
+		HUD.speedometer.set(g.speed/50 - 10)
+		HUD.speedometer.x = 270
+		HUD.speedometer.y = 180
+		HUD.hudGroup:insert(HUD.speedometer)
+
+		HUD.hudGroup.x = -300
+		HUD.hudGroup.y = -500
+
+		-- TIMER
+		HUD.timer = display.newText( "00:00:00",
+								g.cw-150, 
+								80, 
+								400, 
+								0,
+								"LCD2B___.TTF", 
+								80 )
+		HUD.timer:setFillColor( 1,1,0 )
+		HUD.hudGroup:insert(HUD.timer)
+
+		-- STARTING THE GAME
+		HUD.startText = display.newText("RUN!", 
+											g.ccx, 
+											g.ccy-140, 
+											"Curse of the Zombie", 
+											180 )
+		HUD.startText:setFillColor( 1,0,0 )
+		HUD.startText.alpha = 0.0
+		HUD.hudGroup:insert(HUD.startText)
+		transition.to( 	HUD.hudGroup, 
+			{time = 1000, x = 0, y = 0, 
+			onComplete = function()
+					HUD.startText.alpha = 1.0
+					transition.scaleTo( HUD.startText, { xScale=2.0, yScale=2.0, time=1000 } )
+					transition.fadeOut( HUD.startText, {time=1000} )
+				end} )
 
 	end
 	HUD.initializeHUD = initializeHUD
@@ -74,6 +113,9 @@ local HUD = {}
 			HUD.pointer:setFillColor(1,0,0,0)
 			HUD.distanceText:setFillColor( 1,1,0,0)
 		end
+		-- NEED TO FIND A BETTER WAY OF DOING THIS..
+		HUD.speedometer.set(g.speed/50 - 10)
+
 	end
 	HUD.updateSatanPointer = updateSatanPointer
 
@@ -88,6 +130,13 @@ local HUD = {}
 		end
 	end
 	HUD.updateShotgunOMeter = updateShotgunOMeter
+
+	local function updateTimer( time )
+		HUD.timer.text = "" .. math.floor(time/600000) .. math.floor((time/60000)%10) ..":" 
+		    .. math.floor((time/10000)%6) .. math.floor((time/1000)%10) .. ":" .. math.floor((time/100)%10) .. math.floor((time/10)%10)
+	end
+
+	HUD.updateTimer = updateTimer
 	
 	local function killHUD()
 		if (hudInitialized)then

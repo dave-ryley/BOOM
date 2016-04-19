@@ -19,7 +19,7 @@ G = {}
 	---- PLAYER STATS ----
 	G.shotgun = 10
 	G.speed = 1000.0
-	G.time = 500.0
+	G.time = 0.0
 	G.deaths = 0
 	G.kills = 0
 	G.goldTime = 100 -- time needed in seconds to gain a gold medal

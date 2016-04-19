@@ -1,3 +1,4 @@
+local g = require "globals"
 local Q = {}
 
 	local function spawn()
@@ -24,7 +25,7 @@ local Q = {}
 		P.thisAimAngle = 0
 		P.thisDirectionAngle = 0
 		P.velocity = 0.5
-		P.maxSpeed = 1000.0
+		P.maxSpeed = g.speed
 		P.isAlive = true
 		P.health = g.health
 		P.isSlowed = false

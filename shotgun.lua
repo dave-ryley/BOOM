@@ -1,3 +1,4 @@
+local g = require "globals"
 local P = {}
 	local function spawn()
 		local C = {}
@@ -10,7 +11,7 @@ local P = {}
 		C.bounds.alpha = 0.0
 		C.max = 50
 		C.min = 10
-		C.power = 10 --Default
+		C.power = g.shotgun
 		C.force = C.power*50
 		C.vertices = { -40,90, -100,-150, 100,-150, 40,90 }
 		-- Blast animation and bounds Scale = 1/10 power
