@@ -17,6 +17,87 @@ local enterText
 local button
 ---------------------------------------------------------------------------------
 
+local function updateLeaderboard( name )
+	local ldb = {}
+	ldb.medal = {}
+	ldb.name = {}
+	ldb.time = {}
+	ldb.deaths = {}
+	ldb.kills = {}
+	local i = 1
+	-- READING IN THE LEADERBOARD
+	local path = system.pathForFile( "LeaderBoard.BOOMFILE", system.DocumentsDirectory )
+
+	-- Open the file handle
+	local file, errorString = io.open( path, "r" )
+
+	if not file then
+	    -- Error occurred; output the cause
+	    print( "File error: " .. errorString )
+	else
+	    for line in file:lines() do
+	    	print(line)
+	    	local split = mysplit(line, ",")
+	    	ldb.medal[i] = tonumber(split[1])
+			ldb.name[i] = split[2]
+			ldb.time[i] = tonumber(split[3])
+			ldb.deaths[i] = tonumber(split[4])
+			ldb.kills[i] = tonumber(split[5])
+	    	i = i + 1
+	    end
+	    -- Close the file handle
+	    io.close( file )
+	end
+
+	local playerMedal = 3
+	if g.time <= g.goldTime then
+		playerMedal = 1
+	elseif g.time <= g.silverTime then
+		playerMedal = 2
+	end
+
+	file = nil
+	--CHECKING IF PLAYER MADE THE LEADERBOARD
+	local notYetInserted = true
+	for i = 1, #ldb.medal do
+		if notYetInserted and ldb.time[i] > g.time then
+			table.insert( ldb.medal , i, playerMedal )
+			table.insert( ldb.name , i, name )
+			table.insert( ldb.time , i, g.time )
+			table.insert( ldb.deaths , i, g.deaths )
+			table.insert( ldb.kills , i, g.kills )
+			notYetInserted = false
+		end
+	end
+
+	-- CREATING THE FILE TO WRITE
+	local saveData = ""
+
+	for i = 1, 10 do
+		saveData = saveData .. ldb.medal[i] .. ","
+		saveData = saveData .. ldb.name[i] .. ","
+		saveData = saveData .. ldb.time[i] .. ","
+		saveData = saveData .. ldb.deaths[i] .. ","
+		saveData = saveData .. ldb.kills[i] .. "\n"
+	end
+	print(saveData)
+
+	--WRITING THE LEADERBOARD
+	local file2, errorString = io.open( path, "w" )
+	
+	if not file2 then
+    	-- Error occurred; output the cause
+    	print( "File error: " .. errorString )
+	else
+	    -- Write data to file
+	    file2:write( saveData )
+	    -- Close the file handle
+	    io.close( file2 )
+	end
+
+	file2 = nil
+
+end
 
 -- "scene:create()"
 
@@ -56,8 +137,9 @@ function scene:create( event )
 
 	function buttonPress( self, event )
     	if event.phase == "began" then
-    		audio.play(press, {channel = 31})
-    		composer.gotoScene( g.scenePath.."menu" )
+    		updateLeaderboard( userInput.text )
+			composer.removeScene("win", false)
+    		composer.gotoScene( g.scenePath.."leaderboard" )
     		return true
     	end
 	end
@@ -102,8 +184,9 @@ local function onWinKeyPress( event )
 		canPress = false
 		if (keyName == "buttonA" or keyName == "enter") then
 			audio.play(press, {channel = 31})
+			updateLeaderboard( userInput.text )
 			composer.removeScene("win", false)
-    		composer.gotoScene( g.scenePath.."menu" )
+    		composer.gotoScene( g.scenePath.."leaderboard" )
     		--NEED CODE FOR SENDING DATA TO LEADERBOARD
 		elseif( string.match("qwertyuiopasdfghjklzxcvbnm", string.lower(keyName)) ~= nil or keyName == "deleteBack" or keyName == "space" ) then
 			updateText( keyName )
@@ -113,6 +196,20 @@ local function onWinKeyPress( event )
 	end
 
 	return false
+end
+
+-- REFERENCE: http://stackoverflow.com/questions/1426954/split-string-in-lua
+function mysplit(inputstr, sep)
+        if sep == nil then
+                sep = "%s"
+        end
+        local t={}
+        local i=1
+        for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+                t[i] = str
+                i = i + 1
+        end
+        return t
 end
 
 -- "scene:show()"

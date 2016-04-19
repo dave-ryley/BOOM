@@ -18,6 +18,28 @@ local options = {
 
 -- "scene:create()"
 function scene:create( event )
+	local path = system.pathForFile( "LeaderBoard.BOOMFILE", system.DocumentsDirectory )
+
+	-- Open the file handle
+	local file, errorString = io.open( path, "w" )
+
+	local saveData = ""
+
+	for i = 1, 10 do
+		saveData = saveData .. "3,Gary,600000,99,99\n"
+	end
+
+	if not file then
+	    -- Error occurred; output the cause
+	    file:write( saveData )
+	    print( "File error: " .. errorString )
+	else
+	    -- Close the file handle
+	    -- Need to get rid of this line once we want our scoreboard to stay
+	    file:write( saveData )
+	    io.close( file )
+	end
+	file = nil
 
 	local sceneGroup = self.view
 	cinematics = true

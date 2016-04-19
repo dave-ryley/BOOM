@@ -115,7 +115,7 @@ function createMap()
 											"Curse of the Zombie", 
 											180 )
 						hud.initializeHUD()
-						hud.updateShotgunOMeter(10)
+						hud.updateShotgunOMeter(g.shotgun)
 						startText:setFillColor( 1,0,0 )
 						g.gameState = "playing"
 						timer.performWithDelay(2000, 
@@ -157,6 +157,8 @@ local function youWin( event )
 	local nextLevel = ""
 	g.level = g.level + 1
 	g.gameState = "win"
+	g.speed = map.player.maxSpeed
+	g.shotgun = map.player.shotgun.power
 	-- Player runs off screen
 	map.player.visuals.animate(90, 90, 100, 1.0)
 	transition.to( 	map.player.torchLight, 

@@ -32,8 +32,8 @@ TODO!
 
 5. BUGS
 	a. Satan still kills you after you exit the level
-	b. when you start Bob is pushed down a little
+	b. when you start Bob is pushed down a little // DONE
 
 6. ADDITIONAL IMPLEMENTATION
-	a. stats stay when moving from level to level
-	b. stats reset on death
+	a. stats stay when moving from level to level // DONE
+	b. stats reset on death // DONE

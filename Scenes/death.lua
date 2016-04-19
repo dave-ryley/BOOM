@@ -82,6 +82,8 @@ local deathImage
 -- "scene:create()"
 function scene:create( event )
 	composer.removeScene( g.scenePath.."game", false )
+	g.speed = 1000.0
+	g.shotgun = 10
 	local killer = event.params.killer
 	--print (killer)
 	local sceneGroup = self.view

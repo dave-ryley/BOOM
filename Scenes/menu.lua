@@ -72,6 +72,12 @@ end
 
 function scene:create( event )
 	composer.removeScene(g.scenePath.."leaderboard")
+	g.shotgun = 10
+	g.speed = 1000.0
+	g.time = 0.0
+	g.deaths = 0
+	g.kills = 0
+	g.level = 1
 	local sceneGroup = self.view
 	-- Called when the scene's view does not exist.
 	-- INSERT code here to initialize the scene
