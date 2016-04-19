@@ -250,12 +250,11 @@ local Q = {}
 					end
 				end
 				if(P.health == 0) then
-					--print("Killed by: "..other.enemyType)
+					print("Killed by: "..other.enemyType)
 					Runtime:dispatchEvent( {name="youDied",killer = other.enemyType} )
 				end
 			end
 		end
-
 
 
 		function virtualJoystickInput(ljsAngle, ljsX, ljsY, rjsAngle, rjsDistance, rjsX, rjsY)

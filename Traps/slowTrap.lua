@@ -9,11 +9,11 @@ local S = {}
 			local col = require "collisionFilters"
 			--T.joint = nil
 			--print(col.sensorCol.categoryBits)
-			T.bounds = display.newImageRect( "Graphics/Traps/slow.png", 400, 400 )
+			T.bounds = display.newImageRect( "Graphics/Traps/slow.png", 370, 370 )
 			T.bounds.myName = "trap_slow"
 			T.bounds.x = x
 			T.bounds.y = y
-			T.slow = 0.3
+			T.slow = 0.5
 			T.previousSpeed = 0
 			physics.addBody( T.bounds, "static", 	{
 														isSensor=true,

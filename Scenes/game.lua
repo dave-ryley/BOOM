@@ -17,8 +17,9 @@ local controllerMapping = require "controllerMapping"
 local levelBuilder = require "levelBuilder"
 local camera = perspective.createView()
 local pauseButton
-local timeOffset
-local pauseTime
+local timeOffset = 0
+local gameTime = 0
+local pauseTime = 0
 local music = {
 	"HeadShredder.mp3",
 	"DeathCell.mp3",
@@ -117,6 +118,7 @@ local function youDied( event )
 end
 
 local function youWin( event )
+	g.pause = true
 	audio.fade( { channel=20, time=3000, volume=0 } )
 	--print("you win")
 	local nextLevel = ""
@@ -293,7 +295,6 @@ local function getPlayerLocation( event )
 end
 
 local function gameLoop( event )
-
 	if g.pause == false and g.gameState == "playing" then
 		if(g.android) then
 			map.player.virtualJoystickInput(leftJoystick.angle, 
@@ -315,6 +316,7 @@ local function gameLoop( event )
 end
 
 function scene:pause()
+	hud.satanIndicator:pause()
 	pauseTime = system.getTimer()
 	g.pause = true	
 	pauseButton.change(2)
@@ -337,7 +339,9 @@ function scene:pause()
 end
 
 function scene:unpause()
-	timeOffset = system.getTimer() - pauseTime + timeOffset
+	hud.satanIndicator:play()
+	print("unpaused")
+	timeOffset = system.getTimer() - gameTime
 	g.pause = false
 	pauseButton.change(1)
 	pauseButton.id = 1

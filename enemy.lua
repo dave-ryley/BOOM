@@ -148,7 +148,7 @@ local C = {}
 														e.bounds.x,
 														e.bounds.y
 														)
-					--e.die(true, angle)
+					e.die(true, angle)
 				end
 				--if other.myName == shotgun
 				--print("from "..e.myName .. " colliding with " .. other.myName)
@@ -249,6 +249,7 @@ local C = {}
 			--print(e.myName.. " took hit: health = " .. e.health)
 			if(e.health <= 0) then
 				e.isDead = true
+				g.kills = g.kills + 1
 				e.die(true, angle)
 				--[[
 			else

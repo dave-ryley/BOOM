@@ -95,6 +95,11 @@ local S = {}
 							x=xDestination, 
 							y=yDestination, 
 							onComplete = s.destinationReached} )
+			transition.to(s.visuals,
+							{time = 3000, 
+							x=xDestination, 
+							y=yDestination
+							})
 			s.animate(angle, "Walk")
 		end
 
