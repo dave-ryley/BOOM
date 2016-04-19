@@ -232,7 +232,9 @@ local C = {}
 				--slight delay to let any running functions to finish
 					timer.performWithDelay( 20,
 						function()
-							e.splat(angle)
+							if(e ~= nil and e.splat ~= nil) then
+								e.splat(angle)
+							end
 						end
 						)
 				else
