@@ -53,6 +53,7 @@ local colFilters = require "collisionFilters"
 															y2)
 					if(distance <= i.diveRange and i.evil == false) then
 						audio.play(i.dogAngry,{channel = audio.findFreeChannel()})
+						
 						i.speedMod = 2.5
 						i.evil = true
 						i.animationParam = "Evil"
@@ -66,23 +67,25 @@ local colFilters = require "collisionFilters"
 					if (i.moving == false) then
 						i.moving = true
 						i.currentAngle = i.targetAngle
-						--print("target angle: "..i.currentAngle)
+						print("target angle: "..i.currentAngle)
 						i.xMove = 
 							math.cos(math.rad(i.currentAngle - 90))
 						i.yMove =
 							math.sin(math.rad(i.currentAngle - 90))
 
-						--print("xMove: " .. i.xMove .. " : yMove: " .. i.yMove)
-						timer.performWithDelay( 200,
-							function()
+						print("xMove: " .. i.xMove .. " : yMove: " .. i.yMove)
+						--timer.performWithDelay( 200,
+						--	function()
 								--print("spot angle: "..i.targetAngle.." : frame: ".. i.bounds.sequence)
-								i.moving = false
-							end
-						)
+						--		i.moving = false
+						--	end
+						--)
 					end
 				end
-				i.bounds.x = i.bounds.x + i.xMove*i.baseSpeed*i.speedMod
-				i.bounds.y = i.bounds.y + i.yMove*i.baseSpeed*i.speedMod
+				print(i.bounds.x .. " : " .. i.bounds.y)
+				i.bounds:setLinearVelocity( i.xMove*i.baseSpeed*i.speedMod*100, i.yMove*i.baseSpeed*i.speedMod*100 )
+				--i.bounds.x = i.bounds.x + i.xMove*i.baseSpeed*i.speedMod
+				--i.bounds.y = i.bounds.y + i.yMove*i.baseSpeed*i.speedMod
 			end
 		end
 		Runtime:addEventListener( "enterFrame", i.AI )
