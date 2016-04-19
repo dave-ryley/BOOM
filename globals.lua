@@ -22,14 +22,14 @@ G = {}
 	G.time = 0.0
 	G.deaths = 0
 	G.kills = 0
-	G.goldTime = 100 -- time needed in seconds to gain a gold medal
-	G.silverTime = 200 -- time needed in seconds to gain a silver medal
+	G.goldTime = 360000 -- 6 minutes.. time needed in milliseconds to gain a gold medal
+	G.silverTime = 600000 -- 10 minutes.. time in milliseconds to gain a silver medal
 
 	---- GAME INFO -----
 	G.level = 1
 	G.health = 3
 	G.maxGore = 20
-	G.lastLevel = 2
+	G.lastLevel = 4
 	G.gameState = "intro" --intro/introTrans/win/
 	G.pause = false
 

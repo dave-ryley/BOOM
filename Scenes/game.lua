@@ -42,12 +42,14 @@ local satanVFX = {
 local map = {
 	params = {},
 	enemies = {},
-	traps = {},
+	slowTraps = {},
+	deathTraps = {},
 	player = {},
 	satan = {},
 	level = display.newGroup( ),
 	floor = display.newGroup( ),
-	trapsDisplay = display.newGroup( ),
+	slowTrapsDisplay = display.newGroup( ),
+	deathTrapsDisplay = display.newGroup( ),
 	enemiesDisplay = display.newGroup( ),
 	gore = {},
 	fireballs = {},
@@ -58,7 +60,8 @@ local map = {
 function createMap()
 	map.params = levelBuilder.buildLevel(g.level)
 	map.enemies = map.params.enemies
-	map.traps = map.params.traps
+	map.slowTraps = map.params.slowTraps
+	map.deathTraps = map.params.deathTraps
 	map.level = map.params.level
 	map.floor = map.params.floor
 	map.player = playerBuilder.spawn()
@@ -67,8 +70,12 @@ function createMap()
 		map.enemiesDisplay:insert(map.enemies[i].parent)
 	end
 
-	for i = 1, #map.traps do
-		map.trapsDisplay:insert(map.traps[i].bounds)
+	for i = 1, #map.slowTraps do
+		map.slowTrapsDisplay:insert(map.slowTraps[i].bounds)
+	end
+
+	for i = 1, #map.deathTraps do
+		map.deathTrapsDisplay:insert(map.deathTraps[i].bounds)
 	end
 
 	map.satan = satanBuilder.spawn(map.params.satanPath)
@@ -78,9 +85,10 @@ function createMap()
 	-- INITIALIZING CAMERA
 	camera:add(map.level, 3)
 	camera:add(map.enemiesDisplay, 2)
-	camera:add(map.trapsDisplay, 4)
-	camera:add(map.floor,5)
-	camera:add(map.player.torchLight, 4)
+	camera:add(map.slowTrapsDisplay, 5)
+	camera:add(map.deathTrapsDisplay, 4)
+	camera:add(map.floor,6)
+	camera:add(map.player.torchLight, 5)
 	--print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
 	camera:prependLayer()
 	camera.damping = 10
@@ -120,6 +128,7 @@ end
 local function youWin( event )
 	g.pause = true
 	audio.fade( { channel=20, time=3000, volume=0 } )
+	map.player.bounds:removeSelf()
 	--print("you win")
 	local nextLevel = ""
 	g.level = g.level + 1
@@ -131,12 +140,12 @@ local function youWin( event )
 	map.player.visuals.animate(90, 90, 100, 1.0)
 	transition.to( 	map.player.torchLight, 
 					{time = 3000, 
-					x = map.player.bounds.x + 3000, 
-					y = map.player.bounds.y})
+					x = map.player.parent.x + 3000, 
+					y = map.player.parent.y})
 	transition.to( 	map.player.parent, 
 					{time = 3000, 
-					x = map.player.bounds.x + 3000, 
-					y = map.player.bounds.y, 
+					x = map.player.parent.x + 3000, 
+					y = map.player.parent.y, 
 					onComplete = 
 						-- Game begins
 						function()
@@ -514,9 +523,14 @@ function scene:destroy( event )
 				end
 			end
 			map.powerups = nil
-			for i = 1, #map.traps do
-				if(map.traps[i] ~= nil) then
-					map.traps[i] = nil
+			for i = 1, #map.slowTraps do
+				if(map.slowTraps[i] ~= nil) then
+					map.slowTraps[i] = nil
+				end
+			end
+			for i = 1, #map.deathTraps do
+				if(map.deathTraps[i] ~= nil) then
+					map.deathTraps[i] = nil
 				end
 			end
 
@@ -529,7 +543,8 @@ function scene:destroy( event )
 			end
 
 			display.remove( map.enemiesDisplay )
-			display.remove( map.trapsDisplay )
+			display.remove( map.slowTrapsDisplay )
+			display.remove( map.deathTrapsDisplay )
 			display.remove( map.level )
 			transition.cancel( map.satan.bounds )
 			display.remove( map.satan.bounds )
