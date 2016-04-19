@@ -41,6 +41,9 @@ function scene:show( event )
 	-- Called when the scene is still off screen (but is about to come on screen).
 	elseif ( phase == "did" ) then
 		composer.removeScene( g.scenePath.."game", false )
+		myText.text = "Entering level "..g.level .. "  "
+		myText.x = g.ccx - 250
+		myText.y = g.ccy + 250
 		transition.to( 	myText, 
 				{time = 2000, 
 				x = myText.x + 500, 
