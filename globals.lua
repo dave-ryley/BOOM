@@ -34,8 +34,8 @@ G = {}
 	G.pause = false
 
 	---- OTHER -----
-	G.drawMode = "hybrid"
+	G.drawMode = "normal"
 	G.android = (system.getInfo("platformName") == "Android")
-	--G.android = true
+	G.android = true
 
 return G
