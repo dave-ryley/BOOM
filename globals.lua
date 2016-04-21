@@ -36,6 +36,6 @@ G = {}
 	---- OTHER -----
 	G.drawMode = "normal"
 	G.android = (system.getInfo("platformName") == "Android")
-	G.android = true
+	--G.android = true
 
 return G
