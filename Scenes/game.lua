@@ -12,7 +12,6 @@ local satanBuilder = require "satan"
 local speedUp = require "Powerups.speedUp"
 local powerUp = require "Powerups.powerUp"
 local playerTextSpeed
-
 local controllerMapping = require "controllerMapping"
 local levelBuilder = require "levelBuilder"
 local camera = perspective.createView()
