@@ -59,10 +59,10 @@ local Q = {}
             --TORCH LIGHT--
 
         P.torchLight = display.newRect(P.bounds.x, P.bounds.y,51200,51200)
-        --display.setDefault( "textureWrapX", "clampToEdge" )
-        --display.setDefault( "textureWrapY", "clampToEdge" )
-        display.setDefault( "textureWrapX", "repeat" )
-        display.setDefault( "textureWrapY", "repeat" )
+        display.setDefault( "textureWrapX", "clampToEdge" )
+        display.setDefault( "textureWrapY", "clampToEdge" )
+        --display.setDefault( "textureWrapX", "repeat" )
+        --display.setDefault( "textureWrapY", "repeat" )
         P.torchLight.fill = {type = "image",filename ="Graphics/Animation/torchRad.png"}
         P.torchLight.fill.scaleX = 0.02
         P.torchLight.fill.scaleY = 0.02
