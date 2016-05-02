@@ -46,7 +46,7 @@ function scene:create( event )
 								g.ccy, 
 								800, 
 								0,
-								"Avengeance Mightiest Avenger", 
+								g.comicBookFont, 
 								70 )
 	myText:setFillColor( 1,1,0 )
 	sceneGroup:insert(myText)

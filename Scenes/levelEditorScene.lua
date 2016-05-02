@@ -51,7 +51,7 @@ function scene:create( event )
   local sceneGroup = self.view
   overlay = display.newGroup( )
 
-  myText = display.newText(overlay, "LEVEL EDITOR", display.contentCenterX, 40, "Curse of the Zombie.ttf", 80 )
+  myText = display.newText(overlay, "LEVEL EDITOR", display.contentCenterX, 40, g.zombieFont, 80 )
   menu = display.newRect( overlay, display.contentWidth/16, display.contentHeight/2, display.contentWidth/8, display.contentHeight )
 
   writeMap = {}
@@ -132,7 +132,7 @@ function scene:create( event )
   button.touch = buttonPress
   button:addEventListener( "touch", button )
 	
-  buttonText = display.newText(overlay,"MAIN MENU", 125,37.5, "Curse of the Zombie", 30 )
+  buttonText = display.newText(overlay,"MAIN MENU", 125,37.5, g.zombieFont, 30 )
   buttonText:setFillColor(1,0,0)
   sceneGroup:insert(grid)
   sceneGroup:insert(overlay)

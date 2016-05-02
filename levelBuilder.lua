@@ -64,7 +64,9 @@ local B = {}
 		b.floor = display.newRect(g.ccx, g.ccy,512000,512000)
 		display.setDefault( "textureWrapX", "repeat" )			
 		display.setDefault( "textureWrapY", "repeat" )
-		b.floor.fill = {type = "image",filename = g.backgroundPath.."floorTile.png"}
+		b.floor.fill = {type = "image",filename = g.backgroundPath.."FloorTile.png"}
+		--display.setDefault( "textureWrapX", "clampToEdge" )
+		--display.setDefault( "textureWrapY", "clampToEdge" )
 		b.floor.fill.scaleX = 0.001
 		b.floor.fill.scaleY = 0.001
 
@@ -89,7 +91,7 @@ local B = {}
 			--print (counter)
 		end
 		io.close(file)
-		local objectFileName = {"lavaTile","lavaTile","wall_diagonal","wall_flat"}
+		local objectFileName = {"LavaTile","LavaTile","wall_diagonal","wall_flat"}
 		
 		for mapCounter=1,table.getn(map),1 do
 			if (tonumber(map[mapCounter][1]) <11 and tonumber(map[mapCounter][1]) >0) then

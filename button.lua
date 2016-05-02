@@ -3,7 +3,7 @@ local B = {}
 
 	function spawn (x, y, text)
 		local button = display.newImage( g.UIPath.."Button.png", x, y )
-		button.text = display.newText(text, x, y-10, "Curse of the Zombie", 35)
+		button.text = display.newText(text, x, y-10, g.zombieFont, 35)
 		button.text:setFillColor( 0, 0, 0 )
 
 		local flamesSeq = 

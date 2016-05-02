@@ -34,7 +34,7 @@ local HUD = {}
 		HUD.satanIndicator:scale(0.75,0.75)
 		HUD.satanIndicator:setSequence("play")
 		HUD.satanIndicator:play()
-		HUD.distanceText = display.newText( HUD.satanIndicatorGroup, tostring(HUD.distance).."m", g.ccx, g.ccy+60, "Avengeance Mightiest Avenger",60)
+		HUD.distanceText = display.newText( HUD.satanIndicatorGroup, tostring(HUD.distance).."m", g.ccx, g.ccy+60, g.comicBookFont,60)
 		HUD.hudGroup:insert(HUD.satanIndicatorGroup)
 		HUD.satanIndicator.alpha = 0
 		HUD.pointer:setFillColor(1,0,0,0)
@@ -60,7 +60,7 @@ local HUD = {}
 								80, 
 								400, 
 								0,
-								"LCD2B___.TTF", 
+								g.lcdFont, 
 								80 )
 		HUD.timer:setFillColor( 1,1,0 )
 		HUD.hudGroup:insert(HUD.timer)
@@ -69,7 +69,7 @@ local HUD = {}
 		HUD.startText = display.newText("RUN!", 
 											g.ccx, 
 											g.ccy-140, 
-											"Curse of the Zombie", 
+											g.zombieFont, 
 											180 )
 		HUD.startText:setFillColor( 1,0,0 )
 		HUD.startText.alpha = 0.0

@@ -107,7 +107,7 @@ function scene:create( event )
 	winText = display.newText( "YOU WIN! ", 
 									g.ccx, 
 									g.ccy - 160, 
-									"Avengeance Mightiest Avenger", 
+									g.comicBookFont, 
 									200 )
 	winText:setFillColor(1,1,0)
 	winImage = display.newImage( sceneGroup,
@@ -117,7 +117,7 @@ function scene:create( event )
 	enterText = display.newText( "Enter your Name: ", 
 									400, 
 									g.ach - 200, 
-									"Avengeance Mightiest Avenger", 
+									g.comicBookFont, 
 									50 )
 	enterText:setFillColor(1,0,0)
 	local userInputOptions = 
@@ -127,7 +127,7 @@ function scene:create( event )
 	    x = g.ccx,
 	    y = g.ach - 200,
 	    width = 650,     --required for multi-line and alignment
-	    font = "Avengeance Mightiest Avenger",   
+	    font = g.comicBookFont,   
 	    fontSize = 100,
 	    align = "left"  --new alignment parameter
 	}

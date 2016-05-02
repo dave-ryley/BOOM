@@ -77,7 +77,7 @@ function scene:create( event )
 	if(system.getInfo("platformName") ~= "Android") then
     	-- code in here to highlight the first button
 	end
-	myText = display.newText( "PAUSED", g.ccx, g.ccy-200, "Curse of the Zombie", 80 )
+	myText = display.newText( "PAUSED", g.ccx, g.ccy-200, g.zombieFont, 80 )
 	myText:setFillColor(1,1,0,1)
 
 	function buttonPress( self, event )

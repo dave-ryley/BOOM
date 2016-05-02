@@ -95,12 +95,12 @@ function scene:create( event )
 	myText1 = display.newText(sceneGroup, "YOU", 
 									g.ccx-500, 
 									g.ccy, 
-									"Bloody", 
+									g.bloodyFont, 
 									300 )
 	myText2 = display.newText(sceneGroup, "DIED", 
 									g.ccx+500, 
 									g.ccy, 
-									"Bloody", 
+									g.bloodyFont, 
 									300 )
 	myText1:setFillColor(1,0,0)
 	myText2:setFillColor(1,0,0)

@@ -45,7 +45,7 @@ function scene:create( event )
 	cinematics = true
 	local options = {
 	    text = "NARCOLEPTICK GAMES \nPRESENTS",
-	    font="Curse of the Zombie",
+	    font=g.zombieFont,
 	    fontSize = 80,
 	    align = "center"  
 	}

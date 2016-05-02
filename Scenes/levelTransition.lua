@@ -19,7 +19,7 @@ function scene:create( event )
 	myText = display.newText( 	"Entering level "..g.level .. "  ",
 								g.ccx - 250, 
 								g.ccy + 250, 
-								"Avengeance Mightiest Avenger", 
+								g.comicBookFont, 
 								100 )
 	myText:setFillColor( 1,1,0 )
 	sceneGroup:insert(myText)

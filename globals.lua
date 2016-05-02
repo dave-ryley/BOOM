@@ -33,9 +33,15 @@ G = {}
 	G.gameState = "intro" --intro/introTrans/win/
 	G.pause = false
 
+	---- FONT NAMES -----
+	G.bloodyFont = "Bloody"
+	G.comicBookFont = "Avengeance Mightiest Avenger"
+	G.zombieFont = "Curse of the Zombie"
+	G.lcdFont = "LCD2 Bold"
+
 	---- OTHER -----
 	G.drawMode = "normal"
 	G.android = (system.getInfo("platformName") == "Android")
-	G.android = true
+	--G.android = true
 
 return G

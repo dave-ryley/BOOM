@@ -86,7 +86,7 @@ function scene:create( event )
 	local sceneGroup = self.view
 	composer.removeScene(g.scenePath.."menu")
 	lbData = generateLeaderboard()
-	local title = display.newText( "HIGH SCORES", g.ccx, 100 , "Avengeance Mightiest Avenger" , 80 )
+	local title = display.newText( "HIGH SCORES", g.ccx, 100 , g.comicBookFont , 80 )
 	title:setFillColor( 1,1,0 )
 	sceneGroup:insert(title)
 	local ldb = {}
@@ -111,7 +111,7 @@ function scene:create( event )
 		    x = 775,
 		    y = 150 + i*65,
 		    width = 650,     --required for multi-line and alignment
-		    font = "Avengeance Mightiest Avenger",   
+		    font = g.comicBookFont,   
 		    fontSize = 50,
 		    align = "left"  --new alignment parameter
 		}
@@ -123,7 +123,7 @@ function scene:create( event )
 		    x = 990,
 		    y = 150 + i*65,
 		    width = 300,     --required for multi-line and alignment
-		    font = "Avengeance Mightiest Avenger",   
+		    font = g.comicBookFont,   
 		    fontSize = 50,
 		    align = "left"  --new alignment parameter
 		}
@@ -134,7 +134,7 @@ function scene:create( event )
 		    x = 1320,
 		    y = 150 + i*65,
 		    width = 150,     --required for multi-line and alignment
-		    font = "Avengeance Mightiest Avenger",   
+		    font = g.comicBookFont,   
 		    fontSize = 50,
 		    align = "left"  --new alignment parameter
 		}
@@ -145,7 +145,7 @@ function scene:create( event )
 		    x = 1520,
 		    y = 150 + i*65,
 		    width = 150,     --required for multi-line and alignment
-		    font = "Avengeance Mightiest Avenger",   
+		    font = g.comicBookFont,   
 		    fontSize = 50,
 		    align = "left"  --new alignment parameter
 		}
