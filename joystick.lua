@@ -1,3 +1,5 @@
+--REFERENCE: https://forums.coronalabs.com/topic/32941-virtual-joystick-module-for-games/
+
 J = {}
 
 function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidth, bgHeight, distScale)

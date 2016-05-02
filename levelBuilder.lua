@@ -72,6 +72,8 @@ local B = {}
 
 		local path = system.pathForFile(levelName,system.ResourceDirectory)
 		local file = io.open(path,"r")
+
+		--REFERENCE: http://lua-users.org/wiki/MakingLuaLikePhp
 		function explode(div,str)
 			if (div=='') then 
 				return false 
@@ -84,6 +86,8 @@ local B = {}
 			table.insert(arr,string.sub(str,pos))
 			return arr
 		end
+		----
+
 		local counter = 1
 		for line in file:lines()do
 			map[counter] = explode(",",line)

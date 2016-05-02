@@ -1,3 +1,5 @@
+-- REFERENCE: https://gist.github.com/GymbylCoding/8675733
+
 --[[
 Perspective v2.1.0
 
