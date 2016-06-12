@@ -42,7 +42,7 @@ function mysplit(inputstr, sep)
         return t
 end
 
-local function generateLeaderboard()
+--[[local function generateLeaderboard()
 	local ldb = {}
 	ldb.medal = {}
 	ldb.name = {}
@@ -77,7 +77,7 @@ local function generateLeaderboard()
 
 	return ldb
 
-end
+end]]
 ---------------------------------------------------------------------------------
 
 -- "scene:create()"
@@ -85,7 +85,7 @@ function scene:create( event )
 -----Map-----
 	local sceneGroup = self.view
 	composer.removeScene(g.scenePath.."menu")
-	lbData = generateLeaderboard()
+	--lbData = generateLeaderboard()
 	local title = display.newText( "HIGH SCORES", g.ccx, 100 , g.comicBookFont , 80 )
 	title:setFillColor( 1,1,0 )
 	sceneGroup:insert(title)
@@ -100,14 +100,14 @@ function scene:create( event )
 	ldb.killsIcons = {}
 	for i = 1, 10 do
 
-		ldb.medal[i] = display.newImage( "Graphics/Leaderboard/medal".. lbData.medal[i] ..".png",  400, 150 + i*65 )
+		ldb.medal[i] = display.newImage( "Graphics/Leaderboard/medal".. g.highscores[i].medal ..".png",  400, 150 + i*65 )
 		ldb.timeIcons[i] = display.newImage( "Graphics/Leaderboard/time.png",  800, 150 + i*65 )
 		ldb.deathsIcons[i] = display.newImage( "Graphics/Leaderboard/deaths.png",  1200, 150 + i*65 )
 		ldb.killsIcons[i] = display.newImage( "Graphics/Leaderboard/kills.png",  1400, 150 + i*65 )
 
 		local nameOptions = 
 		{
-		    text = lbData.name[i],     
+		    text = g.highscores[i].name,     
 		    x = 775,
 		    y = 150 + i*65,
 		    width = 650,     --required for multi-line and alignment
@@ -118,8 +118,8 @@ function scene:create( event )
 		ldb.name[i] = display.newText( nameOptions )
 		local timeOptions = 
 		{
-		    text = "" .. math.floor(lbData.time[i]/600000) .. math.floor((lbData.time[i]/60000)%10) .." : " 
-		    .. math.floor((lbData.time[i]/10000)%6) .. math.floor((lbData.time[i]/1000)%10) .. " : " .. math.floor((lbData.time[i]/100)%10) .. math.floor((lbData.time[i]/10)%10),     
+		    text = "" .. math.floor(g.highscores[i].time/600000) .. math.floor((g.highscores[i].time/60000)%10) .." : " 
+		    .. math.floor((g.highscores[i].time/10000)%6) .. math.floor((g.highscores[i].time/1000)%10) .. " : " .. math.floor((g.highscores[i].time/100)%10) .. math.floor((g.highscores[i].time/10)%10),     
 		    x = 990,
 		    y = 150 + i*65,
 		    width = 300,     --required for multi-line and alignment
@@ -130,7 +130,7 @@ function scene:create( event )
 		ldb.time[i] = display.newText( timeOptions )
 		local deathsOptions = 
 		{
-		    text = lbData.deaths[i],     
+		    text = g.highscores[i].deaths,     
 		    x = 1320,
 		    y = 150 + i*65,
 		    width = 150,     --required for multi-line and alignment
@@ -141,7 +141,7 @@ function scene:create( event )
 		ldb.deaths[i] = display.newText( deathsOptions )
 		local killsOptions = 
 		{
-		    text = lbData.kills[i],     
+		    text = g.highscores[i].kills,     
 		    x = 1520,
 		    y = 150 + i*65,
 		    width = 150,     --required for multi-line and alignment
@@ -151,7 +151,7 @@ function scene:create( event )
 		}
 		ldb.kills[i] = display.newText( killsOptions )
 
-		if lbData.kills[i] == g.kills and lbData.time[i] == g.time and lbData.deaths[i] == g.deaths then
+		if g.highscores[i].kills == g.kills and g.highscores[i].time == g.time and g.highscores[i].deaths == g.deaths then
 			ldb.name[i]:setFillColor( 1,1,0 )
 			ldb.time[i]:setFillColor( 1,1,0 )
 			ldb.deaths[i]:setFillColor( 1,1,0 )

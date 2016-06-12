@@ -1,3 +1,5 @@
+json = require "json"
+
 G = {}
 
 	---- PATHS ----
@@ -7,6 +9,7 @@ G = {}
 	G.backgroundPath = "Graphics/Background/"
 	G.musicPath = "Sounds/Music/"
 	G.UIPath = "Graphics/UI/"
+	G.file_save_highscores = "highscores_new.txt"
 
 	---- COMMON VALUES ----
 	G.cw = display.contentWidth
@@ -24,6 +27,81 @@ G = {}
 	G.kills = 0
 	G.goldTime = 360000 -- 6 minutes.. time needed in milliseconds to gain a gold medal
 	G.silverTime = 600000 -- 10 minutes.. time in milliseconds to gain a silver medal
+
+	---- HIGHSCORES ----
+
+	G.highscores = {
+		{
+			medal = 1,
+			name = "Dave",
+			time = 100000,
+			deaths = 21,
+			kills = 46
+		},
+		{
+			medal = 3,
+			name = "Roger",
+			time = 600000,
+			deaths = 99,
+			kills = 99
+		},
+		{
+			medal = 3,
+			name = "Esther",
+			time = 600000,
+			deaths = 99,
+			kills = 99
+		},
+		{
+			medal = 3,
+			name = "Gary",
+			time = 600000,
+			deaths = 99,
+			kills = 99
+		},
+		{
+			medal = 3,
+			name = "Gary",
+			time = 600000,
+			deaths = 99,
+			kills = 99
+		},
+		{
+			medal = 3,
+			name = "Gary",
+			time = 600000,
+			deaths = 99,
+			kills = 99
+		},
+		{
+			medal = 3,
+			name = "Gary",
+			time = 600000,
+			deaths = 99,
+			kills = 99
+		},
+		{
+			medal = 3,
+			name = "Gary",
+			time = 600000,
+			deaths = 99,
+			kills = 99
+		},
+		{
+			medal = 3,
+			name = "Gary",
+			time = 600000,
+			deaths = 99,
+			kills = 99
+		},
+		{
+			medal = 3,
+			name = "Gary",
+			time = 600000,
+			deaths = 99,
+			kills = 99
+		}
+	}
 
 	---- GAME INFO -----
 	G.level = 1
@@ -43,5 +121,36 @@ G = {}
 	G.drawMode = "normal"
 	G.android = (system.getInfo("platformName") == "Android")
 	--G.android = true
+
+	local function load_highscores ()
+		print ("Loading Highscores")
+		local path = system.pathForFile( G.file_save_highscores, system.DocumentsDirectory )
+		local file, errorString = io.open( path, "r" )
+		if not file then 
+			print ("File Error:" .. errorString)
+			return 
+		end
+    	local read_in = file:read( "*all" )
+    	if read_in == nil then return end
+    	G.highscores = json.decode( read_in )
+    	file:close()
+	end
+
+	G.load_highscores = load_highscores
+
+	local function save_highscores ()
+		print ("Saving highscores")
+    	local path = system.pathForFile( G.file_save_highscores, system.DocumentsDirectory )
+    	local f, errorString = io.open( path, "w" )
+    	if not f then
+    		print ("File Error:" .. errorString)
+    	else
+    		local write_out = json.encode( G.highscores )
+    		f:write( write_out )
+    		f:close()
+    	end
+    end
+
+    G.save_highscores = save_highscores
 
 return G

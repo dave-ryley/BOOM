@@ -16,8 +16,33 @@ local winImage
 local enterText
 local button
 ---------------------------------------------------------------------------------
+local function compare( a, b )
+	return a.time < b.time
+end
 
-local function updateLeaderboard( name )
+local function updateHighscores ( player_name )
+	local medal_earned = 3
+	if g.time <= g.goldTime then
+		medal_earned = 1
+	elseif g.time <= g.silverTime then
+		medal_earned = 2
+	end
+	g.highscores[11] = 
+	{
+		medal = medal_earned,
+		name = player_name,
+		time = g.time,
+		deaths = g.deaths,
+		kills = g.kills
+	}
+	table.sort(g.highscores, compare)
+	table.remove(g.highscores, 11)
+	g.save_highscores()
+end
+
+
+
+--[[local function updateLeaderboard( name )
 	local ldb = {}
 	ldb.medal = {}
 	ldb.name = {}
@@ -98,7 +123,7 @@ local function updateLeaderboard( name )
 	file2 = nil
 
 end
-
+]]
 -- "scene:create()"
 
 function scene:create( event )
@@ -137,7 +162,7 @@ function scene:create( event )
 
 	function buttonPress( self, event )
     	if event.phase == "began" then
-    		updateLeaderboard( userInput.text )
+    		updateHighscores( userInput.text )
 			composer.removeScene("win", false)
     		composer.gotoScene( g.scenePath.."leaderboard" )
     		return true
@@ -180,11 +205,12 @@ local function onWinKeyPress( event )
 	local phase = event.phase
 	local keyName = event.keyName
 	print(keyName)
+	canPress = true
 	if (phase == "down" and canPress) then
 		canPress = false
 		if (keyName == "buttonA" or keyName == "enter") then
 			audio.play(press, {channel = 31})
-			updateLeaderboard( userInput.text )
+			updateHighscores( userInput.text )
 			composer.removeScene("win", false)
     		composer.gotoScene( g.scenePath.."leaderboard" )
     		--NEED CODE FOR SENDING DATA TO LEADERBOARD
