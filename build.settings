@@ -9,7 +9,7 @@ settings =
 		default = "landscapeRight",
 		supported = { "landscapeRight", }
 	},
-	
+
 	excludeFiles =
 	{
 		-- Include only the necessary icon files on each platform

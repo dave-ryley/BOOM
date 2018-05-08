@@ -1,11 +1,9 @@
-local g = require "globals"
 local P = {}
 	local function spawn()
 		local C = {}
-		local col = require "collisionFilters"
+		local col = require "collision_filters"
 		local hud = require "hud"
 		C.shooting = false
-		--C.collisionFilter = {categoryBits = 2, maskBits = 4}
 		local verts = { -20,0, -100,-300, 100,-300, 20,0 }
 		C.bounds = display.newPolygon( 0, 0, verts )
 		C.bounds.alpha = 0.0
@@ -22,23 +20,10 @@ local P = {}
 		C.bounds.xScale = C.power/10
 		C.bounds.yScale = C.power/10
 		C.shotgunOMeter = display.newGroup( )
-		--[[
-		physics.addBody( C.bounds, "dynamic", {     
-													density = 0.0, 
-													friction = 0.0, 
-													bounce = 0.0, 
-													shape = C.vertices, 
-													isSensor = true 
-											} )
-		C.bounds.isAwake = false
-		]]
-		-- Setting up the blast Animation
-		
 		C.blast = display.newGroup()
 		C.blast.xScale = C.power/10
 		C.blast.yScale = C.power/10
 		C.bounds.super = C
-		--C.blast:insert(C.bounds)
 
 		local blastSheetOptions =
 		{
@@ -46,7 +31,7 @@ local P = {}
 			height = 322,
 			numFrames = 5
 		}
-		C.blast_sheet = graphics.newImageSheet( "Graphics/Animation/shotBlast.png", blastSheetOptions )
+		C.blast_sheet = graphics.newImageSheet( g.animationPath.."ShotBlast.png", blastSheetOptions )
 		blast_sequences =
 		{
 			{
@@ -128,22 +113,16 @@ local P = {}
 		C.place = place
 
 	   C.onCollision = function( event )
-		   -- print("in shotgun collision")
-			if (event.phase == "began") then
+			if event.phase == "began" then
 				local other = event.other.super
-				--print("shotgun collided with "..other.myName)
-				--print(string.sub(other.myName, 1, 2))
-				if (other ~= nil) then
+				if other then
 					other.bounds:applyLinearImpulse(
-						math.cos(
-							(C.bounds.aimAngle - 90)*math.pi/180)*C.force*10, 
-						math.sin(
-							(C.bounds.aimAngle - 90)*math.pi/180)*C.force*10, 
-						0, 
-						0 
+						math.cos((C.bounds.aimAngle - 90)*math.pi/180)*C.force*10,
+						math.sin((C.bounds.aimAngle - 90)*math.pi/180)*C.force*10,
+						0,
+						0
 					)
 					if(string.sub(other.myName, 1, 2) == "e_") then
-						--print(other.health)
 						other.takeHit(C.aimAngle)
 					end
 				end
@@ -153,7 +132,6 @@ local P = {}
 		C.bounds:addEventListener( "collision", C.onCollision )
 
 		local function powerUp( value )
-			--print("int powerup: " ..value)
 			if value > 0 then
 				if value + C.power > C.max then
 					C.power = C.max
@@ -172,22 +150,34 @@ local P = {}
 			C.bounds.yScale = C.power/10
 			C.blast.xScale = C.power/10
 			C.blast.yScale = C.power/10
-			C.vertices = { -40,90, C.power*(-5)-25,C.power*(-25)+90, C.power*5+25,C.power*(-25)+90, 40,90 }
+			C.vertices = {
+				-40,
+				90,
+				C.power*(-5)-25,
+				C.power*(-25)+90,
+				C.power*5+25,
+				C.power*(-25)+90,
+				40,
+				90
+			}
 			hud.updateShotgunOMeter(C.power)
 		end
 
 		C.powerUp = powerUp
 
 		local function createBlastBounds()
-			physics.addBody( C.bounds, "dynamic", {     
-													density=0.0, 
-													friction=0.0, 
-													bounce=0.0, 
-													shape=C.vertices, 
-													isSensor=true ,
-													filter=col.shotgunCol
-											} )
-			
+			physics.addBody(
+				C.bounds,
+				"dynamic",
+				{
+					density=0.0,
+					friction=0.0,
+					bounce=0.0,
+					shape=C.vertices,
+					isSensor=true ,
+					filter=col.shotgunCol
+				}
+			)
 		end
 		C.createBlastBounds = createBlastBounds
 		return C

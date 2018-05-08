@@ -1,6 +1,5 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
-local g = require "globals"
 local cinematics = true
 local effects = ""
 local myText = ""
@@ -47,7 +46,7 @@ function scene:create( event )
 	    text = "NARCOLEPTICK GAMES \nPRESENTS",
 	    font=g.zombieFont,
 	    fontSize = 80,
-	    align = "center"  
+	    align = "center"
 	}
 	myText = display.newText( options )
 	myText:setFillColor(1,0,0)

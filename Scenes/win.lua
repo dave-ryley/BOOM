@@ -1,6 +1,5 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
-local g = require "globals"
 local buttonMaker = require "button"
 local canPress = false
 ---------------------------------------------------------------------------------
@@ -27,7 +26,7 @@ local function updateHighscores ( player_name )
 	elseif g.time <= g.silverTime then
 		medal_earned = 2
 	end
-	g.highscores[11] = 
+	g.highscores[11] =
 	{
 		medal = medal_earned,
 		name = player_name,
@@ -40,119 +39,40 @@ local function updateHighscores ( player_name )
 	g.save_highscores()
 end
 
-
-
---[[local function updateLeaderboard( name )
-	local ldb = {}
-	ldb.medal = {}
-	ldb.name = {}
-	ldb.time = {}
-	ldb.deaths = {}
-	ldb.kills = {}
-	local i = 1
-	-- READING IN THE LEADERBOARD
-	local path = system.pathForFile( "LeaderBoard.BOOMFILE", system.DocumentsDirectory )
-
-	-- Open the file handle
-	local file, errorString = io.open( path, "r" )
-
-	if not file then
-	    -- Error occurred; output the cause
-	    print( "File error: " .. errorString )
-	else
-	    for line in file:lines() do
-	    	print(line)
-	    	local split = mysplit(line, ",")
-	    	ldb.medal[i] = tonumber(split[1])
-			ldb.name[i] = split[2]
-			ldb.time[i] = tonumber(split[3])
-			ldb.deaths[i] = tonumber(split[4])
-			ldb.kills[i] = tonumber(split[5])
-	    	i = i + 1
-	    end
-	    -- Close the file handle
-	    io.close( file )
-	end
-
-	local playerMedal = 3
-	if g.time <= g.goldTime then
-		playerMedal = 1
-	elseif g.time <= g.silverTime then
-		playerMedal = 2
-	end
-
-	file = nil
-	--CHECKING IF PLAYER MADE THE LEADERBOARD
-	local notYetInserted = true
-	for i = 1, #ldb.medal do
-		if notYetInserted and ldb.time[i] > g.time then
-			table.insert( ldb.medal , i, playerMedal )
-			table.insert( ldb.name , i, name )
-			table.insert( ldb.time , i, g.time )
-			table.insert( ldb.deaths , i, g.deaths )
-			table.insert( ldb.kills , i, g.kills )
-			notYetInserted = false
-		end
-	end
-
-	-- CREATING THE FILE TO WRITE
-	local saveData = ""
-
-	for i = 1, 10 do
-		saveData = saveData .. ldb.medal[i] .. ","
-		saveData = saveData .. ldb.name[i] .. ","
-		saveData = saveData .. ldb.time[i] .. ","
-		saveData = saveData .. ldb.deaths[i] .. ","
-		saveData = saveData .. ldb.kills[i] .. "\n"
-	end
-	print(saveData)
-
-	--WRITING THE LEADERBOARD
-	local file2, errorString = io.open( path, "w" )
-	
-	if not file2 then
-    	-- Error occurred; output the cause
-    	print( "File error: " .. errorString )
-	else
-	    -- Write data to file
-	    file2:write( saveData )
-	    -- Close the file handle
-	    io.close( file2 )
-	end
-
-	file2 = nil
-
-end
-]]
--- "scene:create()"
-
 function scene:create( event )
 
 	local sceneGroup = self.view
-	winText = display.newText( "YOU WIN! ", 
-									g.ccx, 
-									g.ccy - 160, 
-									g.comicBookFont, 
-									200 )
+	winText = display.newText(
+		"YOU WIN! ",
+		g.ccx,
+		g.ccy - 160,
+		g.comicBookFont,
+		200
+	)
 	winText:setFillColor(1,1,0)
-	winImage = display.newImage( sceneGroup,
-						"Graphics/Art/win.png", 
-						g.ccx,g.ccy )
+	winImage = display.newImage(
+		sceneGroup,
+		g.graphicsPath.."Art/Win.png",
+		g.ccx,
+		g.ccy
+	)
 
-	enterText = display.newText( "Enter your Name: ", 
-									400, 
-									g.ach - 200, 
-									g.comicBookFont, 
-									50 )
+	enterText = display.newText(
+		"Enter your Name: ",
+		400,
+		g.ach - 200,
+		g.comicBookFont,
+		50
+	)
 	enterText:setFillColor(1,0,0)
-	local userInputOptions = 
+	local userInputOptions =
 	{
 	    --parent = textGroup,
-	    text = "",     
+	    text = "",
 	    x = g.ccx,
 	    y = g.ach - 200,
 	    width = 650,     --required for multi-line and alignment
-	    font = g.comicBookFont,   
+	    font = g.comicBookFont,
 	    fontSize = 100,
 	    align = "left"  --new alignment parameter
 	}
@@ -214,7 +134,7 @@ local function onWinKeyPress( event )
 			composer.removeScene("win", false)
     		composer.gotoScene( g.scenePath.."leaderboard" )
     		--NEED CODE FOR SENDING DATA TO LEADERBOARD
-		elseif( string.match("qwertyuiopasdfghjklzxcvbnm", string.lower(keyName)) ~= nil or keyName == "deleteBack" or keyName == "space" ) then
+		elseif( string.match("qwertyuiopasdfghjklzxcvbnm", string.lower(keyName)) or keyName == "deleteBack" or keyName == "space" ) then
 			updateText( keyName )
 		end
 	elseif (phase == "up") then
@@ -226,16 +146,16 @@ end
 
 -- REFERENCE: http://stackoverflow.com/questions/1426954/split-string-in-lua
 function mysplit(inputstr, sep)
-        if sep == nil then
-                sep = "%s"
-        end
-        local t={}
-        local i=1
-        for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-                t[i] = str
-                i = i + 1
-        end
-        return t
+	if sep == nil then
+		sep = "%s"
+	end
+	local t={}
+	local i=1
+	for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+		t[i] = str
+		i = i + 1
+	end
+	return t
 end
 
 -- "scene:show()"

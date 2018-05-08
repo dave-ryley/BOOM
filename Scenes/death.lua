@@ -1,7 +1,6 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
-local g = require "globals"
-local controllerMapping = require "controllerMapping"
+local controller_mapping = require "controller_mapping"
 local buttonMaker = require "button"
 local buttons = {}
 local buttonSelect = 0
@@ -13,13 +12,10 @@ local canSelect = true
 
 
 local function onDeathAxisEvent( event )
-	--print("axis event running")
 	-- Map event data to simple variables
 	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
-		local axis = controllerMapping.axis[event.axis.number]
-		--if g.pause then print("g.pause = true") else print("g.pause = false") end
-		if ( "left_x" == axis ) then
-			--print("left axis")
+		local axis = controller_mapping.axis[event.axis.number]
+		if "left_x" == axis then
 			if event.normalizedValue < 0.1 and event.normalizedValue > -0.1 then
 				canSelect = true
 			elseif canSelect then
@@ -31,7 +27,7 @@ local function onDeathAxisEvent( event )
 					value = (-1)
 				end
 				buttonSelect = (((buttonSelect-1 + value) + #buttons) % #buttons) + 1
-				for i=1, #buttons do
+				for i = 1, #buttons do
 					if i ~= buttonSelect then
 						buttons[i].highlight(false)
 					else
@@ -39,14 +35,14 @@ local function onDeathAxisEvent( event )
 					end
 				end
 			end
-			
+
 		end
 	end
 	return true
 end
 
 local function buttonFunction( key )
-	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
+	local press = audio.loadSound( g.soundsPath.."GUI/ButtonPress.ogg")
 	if key ~= 0 then
 		audio.play(press, {channel = 31})
 	end
@@ -60,7 +56,6 @@ local function buttonFunction( key )
 end
 
 local function onDeathKeyPress( event )
-	--print("key pressed")
 	local phase = event.phase
 	local keyName = event.keyName
 
@@ -85,23 +80,28 @@ function scene:create( event )
 	g.speed = 1000.0
 	g.shotgun = 10
 	local killer = event.params.killer
-	--print (killer)
 	local sceneGroup = self.view
 	deathImage = display.newImage( sceneGroup,
-						"Graphics/Death/"..killer..".png", 
+						g.graphicsPath.."Death/"..killer..".png",
 						g.ccx,g.ccy ,
 						isFullResolution )
 
-	myText1 = display.newText(sceneGroup, "YOU", 
-									g.ccx-500, 
-									g.ccy, 
-									g.bloodyFont, 
-									300 )
-	myText2 = display.newText(sceneGroup, "DIED", 
-									g.ccx+500, 
-									g.ccy, 
-									g.bloodyFont, 
-									300 )
+	myText1 = display.newText(
+		sceneGroup,
+		"YOU",
+		g.ccx-500,
+		g.ccy,
+		g.bloodyFont,
+		300
+	)
+	myText2 = display.newText(
+		sceneGroup,
+		"DIED",
+		g.ccx+500,
+		g.ccy,
+		g.bloodyFont,
+		300
+	)
 	myText1:setFillColor(1,0,0)
 	myText2:setFillColor(1,0,0)
 
@@ -113,7 +113,7 @@ function scene:create( event )
 	end
 
 	local buttonLabels = {"RETRY","MAIN MENU"}
-	for i=1,2 do 
+	for i = 1 , 2 do
 		buttons[i] = buttonMaker.spawn(g.acw/(4) + (i-1)*g.acw/2, g.ach - 100, buttonLabels[i])
 		sceneGroup:insert(buttons[i])
 		sceneGroup:insert(buttons[i].text)

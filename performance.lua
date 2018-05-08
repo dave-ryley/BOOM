@@ -2,11 +2,11 @@
 
 
 local _M = {}
- 
+
 local mFloor = math.floor
 local sGetInfo = system.getInfo
 local sGetTimer = system.getTimer
- 
+
 local prevTime = 0
 _M.added = true
 local function createText()
@@ -30,7 +30,7 @@ local function createText()
     memory:addEventListener('tap', memory)
     return memory
 end
- 
+
 function _M.labelUpdater(event)
     local curTime = sGetTimer()
     _M.text.text = tostring(mFloor( 1000 / (curTime - prevTime))) .. ' ' ..
@@ -39,10 +39,10 @@ function _M.labelUpdater(event)
     _M.text:toFront()
     prevTime = curTime
 end
- 
+
 function _M:newPerformanceMeter()
     self.text = createText(self)
     Runtime:addEventListener('enterFrame', _M.labelUpdater)
 end
- 
+
 return _M

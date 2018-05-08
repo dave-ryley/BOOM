@@ -1,7 +1,6 @@
 local HUD = {}
 	local hudInitialized = false
-	local g = require "globals"
-	local s = require "HUD.speedometer"
+		local s = require "HUD.speedometer"
 
 	local function initializeHUD()
 		hudInitialized = true
@@ -16,8 +15,8 @@ local HUD = {}
 			height = 165,
 			numFrames = 12
 		}
-		HUD.sheet_satanIndicator = graphics.newImageSheet("Graphics/UI/SatanIndicator.png", sheetOptions)
-		local sequences_satanIndicator = 
+		HUD.sheet_satanIndicator = graphics.newImageSheet(G.UIPath .. "SatanIndicator.png", sheetOptions)
+		local sequences_satanIndicator =
 		{
 		    {
 		        name = "play",
@@ -41,7 +40,7 @@ local HUD = {}
 		HUD.distanceText:setFillColor( 1,1,0,0)
 		HUD.pointer.anchorX=-1
 
-		HUD.shotgunOMeter = display.newImage( HUD.hudGroup, "Graphics/UI/Shotgun.png",400,110,isFullResolution )
+		HUD.shotgunOMeter = display.newImage( HUD.hudGroup, g.UIPath.."Shotgun.png", 400, 110, isFullResolution )
 		HUD.blocks = {}
 
 		-- SPEEDOMETER
@@ -55,60 +54,72 @@ local HUD = {}
 		HUD.hudGroup.y = -500
 
 		-- TIMER
-		HUD.timer = display.newText( "00:00:00",
-								g.cw-150, 
-								80, 
-								400, 
-								0,
-								g.lcdFont, 
-								80 )
+		HUD.timer = display.newText(
+			"00:00:00",
+			g.cw-150,
+			80,
+			400,
+			0,
+			g.lcdFont,
+			80
+		)
 		HUD.timer:setFillColor( 1,1,0 )
 		HUD.hudGroup:insert(HUD.timer)
 
 		-- STARTING THE GAME
-		HUD.startText = display.newText("RUN!", 
-											g.ccx, 
-											g.ccy-140, 
-											g.zombieFont, 
-											180 )
+		HUD.startText = display.newText(
+			"RUN!",
+			g.ccx,
+			g.ccy-140,
+			g.zombieFont,
+			180
+		)
 		HUD.startText:setFillColor( 1,0,0 )
 		HUD.startText.alpha = 0.0
 		HUD.hudGroup:insert(HUD.startText)
-		transition.to( 	HUD.hudGroup, 
-			{time = 1000, x = 0, y = 0, 
-			onComplete = function()
+		transition.to(
+			HUD.hudGroup,
+			{
+				time = 1000, x = 0, y = 0,
+				onComplete = function()
 					HUD.startText.alpha = 1.0
 					transition.scaleTo( HUD.startText, { xScale=2.0, yScale=2.0, time=1000 } )
 					transition.fadeOut( HUD.startText, {time=1000} )
-				end} )
+				end
+			}
+		)
 
 	end
 	HUD.initializeHUD = initializeHUD
 
 	local function updateSatanPointer(satanX,satanY,playerX,playerY,cameraLockX,cameraLockY)
 		HUD.distance = math.sqrt(math.pow((satanX-playerX),2)+math.pow((satanY-playerY),2))
-		if(HUD.distance/100 >10)then
+		if HUD.distance/100 > 10 then
 			HUD.satanIndicator.alpha = 1
 			HUD.pointer:setFillColor(1,0,0,1)
 			HUD.distanceText:setFillColor( 1,1,0,1)
 			HUD.distanceText.text = tostring(math.floor(HUD.distance/100)).."m"
+
 			local xDiff = satanX-playerX
 			local yDiff = satanY-playerY
 			local rotation = math.atan2(yDiff,xDiff)*(180/math.pi)
-			HUD.pointer.rotation = rotation	
-			if(xDiff < (g.ccx*-1)+100)then
+			HUD.pointer.rotation = rotation
+
+			if xDiff < (g.ccx*-1)+100 then
 				xDiff = (g.ccx*-1)+100
-			elseif(xDiff > g.ccx-100)then
+			elseif xDiff > g.ccx-100 then
 				xDiff = g.ccx-100
 			end
-			if(yDiff < (g.ccy*-1)+100)then
-				yDiff = (g.ccy*-1)+100
-			elseif(yDiff > g.ccy-100)then
+
+			if yDiff < (g.ccy*-1) + 100 then
+				yDiff = (g.ccy*-1) + 100
+			elseif yDiff > g.ccy-100 then
 				yDiff = g.ccy-100
 			end
+
 			HUD.satanIndicatorGroup.x = xDiff
 			HUD.satanIndicatorGroup.y = yDiff
-		else 
+		else
 			HUD.satanIndicator.alpha = 0
 			HUD.pointer:setFillColor(1,0,0,0)
 			HUD.distanceText:setFillColor( 1,1,0,0)
@@ -120,10 +131,10 @@ local HUD = {}
 	HUD.updateSatanPointer = updateSatanPointer
 
 	local function updateShotgunOMeter(power)
-		for j = 1,table.getn(HUD.blocks),1 do
-				HUD.blocks[j]:removeSelf( )
+		for j = 1,table.getn(HUD.blocks), 1 do
+			HUD.blocks[j]:removeSelf( )
 		end
-		for i=1,power-9,1 do
+		for i = 1, power - 9, 1 do
 			HUD.blocks[i]=display.newRect( HUD.hudGroup,(i*42)+340, 95, 40,40 )
 			HUD.blocks[i]:setFillColor((i/2.5),2/i,0,0.8)
 			HUD.blocks[i]:toBack()
@@ -132,14 +143,14 @@ local HUD = {}
 	HUD.updateShotgunOMeter = updateShotgunOMeter
 
 	local function updateTimer( time )
-		HUD.timer.text = "" .. math.floor(time/600000) .. math.floor((time/60000)%10) ..":" 
+		HUD.timer.text = "" .. math.floor(time/600000) .. math.floor((time/60000)%10) ..":"
 		    .. math.floor((time/10000)%6) .. math.floor((time/1000)%10) .. ":" .. math.floor((time/100)%10) .. math.floor((time/10)%10)
 	end
 
 	HUD.updateTimer = updateTimer
-	
+
 	local function killHUD()
-		if (hudInitialized == true)then
+		if hudInitialized == true then
 			HUD.hudGroup:removeSelf()
 			HUD.hudGroup = nil
 		end

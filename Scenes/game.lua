@@ -1,21 +1,19 @@
-local composer = require( "composer" )
-local scene = composer.newScene()
-local col = require "collisionFilters"
-local g = require "globals"
+local composer = require "composer"
+local col = require "collision_filters"
 local joysticks = require "joystick"
 local hud = require "hud"
-local perspective = require("perspective")
-local goreCount = 0
+local perspective = require "perspective"
 local physics = require "physics"
-local playerBuilder = require "playerMechanics"
+local playerBuilder = require "player_mechanics"
 local satanBuilder = require "satan"
-local speedUp = require "Powerups.speedUp"
-local powerUp = require "Powerups.powerUp"
-local playerTextSpeed
-local controllerMapping = require "controllerMapping"
-local levelBuilder = require "levelBuilder"
+local speedUp = require "Powerups.speed_up"
+local powerUp = require "Powerups.power_up"
+local controller_mapping = require "controller_mapping"
+local levelBuilder = require "level_builder"
+local scene = composer.newScene()
 local camera = perspective.createView()
 local pauseButton
+local goreCount = 0
 local timeOffset = 0
 local gameTime = 0
 local pauseTime = 0
@@ -65,6 +63,7 @@ function createMap()
 	map.floor = map.params.floor
 	map.player = playerBuilder.spawn()
 	g.gameState = "intro"
+
 	for i = 1, #map.enemies do
 		map.enemiesDisplay:insert(map.enemies[i].parent)
 	end
@@ -88,27 +87,22 @@ function createMap()
 	camera:add(map.deathTrapsDisplay, 4)
 	camera:add(map.floor,6)
 	camera:add(map.player.torchLight, 5)
-	--print ("player x: " .. player.bounds.x .. ", player y: " .. player.bounds.y )
 	camera:prependLayer()
 	camera.damping = 10
 	camera:setFocus(map.player.cameraLock)
 	camera:track()
-
 
 	camera:add(map.player.parent, 1)
 	camera:add(map.player.bounds, 1)
 	camera:add(map.player.shotgun.blast, 1)
 	camera:add(map.player.shotgun.bounds, 1)
 	camera:add(map.satan.parent, 1)
-	--camera:add(hud.satanIndicatorGroup,1)
 end
 
 local function onAxisEvent( event )
 	-- Map event data to simple variables
-	--print("axis: "..event.axis.number)
 	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
-		local axis = controllerMapping.axis[event.axis.number]
-		--if g.pause then print("g.pause = true") else print("g.pause = false") end
+		local axis = controller_mapping.axis[event.axis.number]
 		if(g.gameState == "playing") then
 			map.player.playerAxis(axis, event.normalizedValue)
 		end
@@ -117,10 +111,8 @@ local function onAxisEvent( event )
 end
 
 local function youDied( event )
-	--print("you Died")
 	g.gameState = "dead"
 	g.pause = true
-	--print("your killer is"..event.killer)
 	composer.gotoScene( g.scenePath.."death",{params = {killer = event.killer}})
 end
 
@@ -128,7 +120,6 @@ local function youWin( event )
 	g.pause = true
 	audio.fade( { channel=20, time=3000, volume=0 } )
 	map.player.bounds:removeSelf()
-	--print("you win")
 	local nextLevel = ""
 	g.level = g.level + 1
 	g.gameState = "win"
@@ -137,26 +128,31 @@ local function youWin( event )
 	g.shotgun = map.player.shotgun.power
 	-- Player runs off screen
 	map.player.visuals.animate(90, 90, 100, 1.0)
-	transition.to( 	map.player.torchLight, 
-					{time = 3000, 
-					x = map.player.parent.x + 3000, 
-					y = map.player.parent.y})
-	transition.to( 	map.player.parent, 
-					{time = 3000, 
-					x = map.player.parent.x + 3000, 
-					y = map.player.parent.y, 
-					onComplete = 
-						-- Game begins
-						function()
-							--print(g.level .. " : " .. g.lastLevel)
-							if(g.level > g.lastLevel) then
-								nextLevel = "win"
-							else
-								nextLevel = "levelTransition"
-							end
-							composer.gotoScene( g.scenePath..nextLevel)
-						end
-					} )
+	transition.to(
+		map.player.torchLight,
+		{
+			time = 3000,
+			x = map.player.parent.x + 3000,
+			y = map.player.parent.y
+		}
+	)
+	transition.to(
+		map.player.parent,
+		{
+			time = 3000,
+			x = map.player.parent.x + 3000,
+			y = map.player.parent.y,
+			onComplete = function()
+				-- Game begins
+				if g.level > g.lastLevel then
+					nextLevel = "win"
+				else
+					nextLevel = "level_transition"
+				end
+				composer.gotoScene( g.scenePath..nextLevel)
+			end
+			}
+		)
 end
 
 local function onKeyEvent( event )
@@ -166,20 +162,6 @@ local function onKeyEvent( event )
 	local value = 0
 	print(event.keyName)
 	if (event.phase == "down") then
-		-- Adjust velocity for testing, remove for final game        
-		--[[if ( event.keyName == "[" ) then
-			if (map.player.velocity > 0 ) then
-			map.player.maxSpeed = map.player.maxSpeed - 50
-				map.player.shotgun.powerUp(-1)
-			end
-		elseif ( event.keyName == "]" or event.keyName == "leftShoulderButton1" ) then
-			map.player.maxSpeed = map.player.maxSpeed + 50
-			map.player.shotgun.powerUp(1)
-			if (map.player.velocity > 0 ) then
-			--player.velocity = player.velocity - 1
-				--map.player.shotgun.powerUp(-1)
-			end
-		end]]
 		-- WASD and ArrowKeys pressed down
 		if ( event.keyName == "w" ) then
 			value = -1.0
@@ -236,10 +218,8 @@ local function onKeyEvent( event )
 			value = 0
 			axis = "right_x"
 		elseif (event.keyName == "l") then
-			--composer.gotoScene( g.scenePath.."death")
 			youWin()
 		elseif (event.keyName == "k") then
-			--composer.gotoScene( g.scenePath.."death")
 			youDied()
 		elseif (event.keyName == "buttonStart") then
 			if(g.pause == false) then
@@ -250,9 +230,8 @@ local function onKeyEvent( event )
 		end
 	end
 
-	if (g.pause == false) then 
-		--print(map.player.myName)
-		map.player.playerAxis(axis, value) 
+	if (g.pause == false) then
+		map.player.playerAxis(axis, value)
 	end
 
 	return false
@@ -263,40 +242,37 @@ local function makeGore( event )
 	local y = event.y
 	math.randomseed( os.time() )
 	local r = math.random(1, 25)
-	if(r < 6) then
-		if(map.powerups ~= nil) then
+	if r < 6 then
+		if map.powerups then
 			map.powerups[#map.powerups + 1] = powerUp.spawn(x, y)
 			camera:add(map.powerups[#map.powerups].bounds, 2)
 		end
-		--print("adding powerup at: "..x .." , " .. y)
-	elseif(r < 12) then
-		if(map.powerups ~= nil) then
+	elseif r < 12 then
+		if map.powerups then
 			map.powerups[#map.powerups + 1] = speedUp.spawn(x, y)
 			camera:add(map.powerups[#map.powerups].bounds, 2)
 		end
-		--print("adding powerup at: "..x .." , " .. y)
 	end
 	goreCount = goreCount + 1
-	if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil) then
+	if map.gore[math.fmod(goreCount, g.maxGore)] then
 		map.gore[math.fmod(goreCount, g.maxGore)]:removeSelf()
 		map.gore[math.fmod(goreCount, g.maxGore)] = nil
 	end
 		map.gore[math.fmod(goreCount, g.maxGore)] = event.gore
-	if(map.gore[math.fmod(goreCount, g.maxGore)] ~= nil)then
-		print("making gore")
+	if map.gore[math.fmod(goreCount, g.maxGore)] then
 		camera:add(map.gore[math.fmod(goreCount, g.maxGore)], 4)
 	end
 end
 
 local function fireball( event )
 	map.fireballs[#map.fireballs + 1] = event.f
-	if(map.fireballs[#map.fireballs] ~= nil)then
+	if map.fireballs[#map.fireballs] then
 		camera:add(map.fireballs[#map.fireballs].fireball , 3)
 	end
 end
 
 local function getPlayerLocation( event )
-	if(map.player.isAlive == true) then
+	if map.player.isAlive == true then
 		local p = event.updatePlayerLocation(map.player.bounds.x, map.player.bounds.y)
 		return p
 	end
@@ -304,16 +280,25 @@ end
 
 local function gameLoop( event )
 	if g.pause == false and g.gameState == "playing" then
-		if(g.android) then
-			map.player.virtualJoystickInput(leftJoystick.angle, 
-											leftJoystick.xLoc/70, 
-											leftJoystick.yLoc/70, 
-											rightJoystick.angle, 
-											rightJoystick.distance/70,
-											rightJoystick.xLoc/70, 
-											rightJoystick.yLoc/70)
+		if g.android then
+			map.player.virtualJoystickInput(
+				leftJoystick.angle,
+				leftJoystick.xLoc/70,
+				leftJoystick.yLoc/70,
+				rightJoystick.angle,
+				rightJoystick.distance/70,
+				rightJoystick.xLoc/70,
+				rightJoystick.yLoc/70
+			)
 		end
-		hud.updateSatanPointer(map.satan.bounds.x,map.satan.bounds.y,map.player.bounds.x,map.player.bounds.y,map.player.cameraLock.x,map.player.cameraLock.y)
+		hud.updateSatanPointer(
+			map.satan.bounds.x,
+			map.satan.bounds.y,
+			map.player.bounds.x,
+			map.player.bounds.y,
+			map.player.cameraLock.x,
+			map.player.cameraLock.y
+		)
 		gameTime = system.getTimer() - timeOffset
 		hud.updateTimer( gameTime )
 		map.player.update()
@@ -326,7 +311,7 @@ end
 function scene:pause()
 	hud.satanIndicator:pause()
 	pauseTime = system.getTimer()
-	g.pause = true	
+	g.pause = true
 	pauseButton.change(2)
 	pauseButton.id = 2
 	physics.pause( )
@@ -334,12 +319,12 @@ function scene:pause()
 	map.satan.pause()
 	audio.pause()
 	for i = 1, #map.enemies do
-		if(map.enemies[i] ~= nil) then
+		if(map.enemies[i]) then
 			map.enemies[i].pause()
 		end
 	end
 	for i = 1, #map.fireballs do
-		if(map.fireballs[i] ~= nil) then
+		if(map.fireballs[i]) then
 			map.fireballs[i].pause()
 		end
 	end
@@ -348,7 +333,6 @@ end
 
 function scene:unpause()
 	hud.satanIndicator:play()
-	print("unpaused")
 	timeOffset = system.getTimer() - gameTime
 	g.pause = false
 	pauseButton.change(1)
@@ -358,16 +342,16 @@ function scene:unpause()
 	map.satan.unpause()
 	audio.resume()
 	for i = 1, #map.enemies do
-		if(map.enemies[i] ~= nil) then
+		if(map.enemies[i]) then
 			map.enemies[i].unpause()
 		end
 	end
 	for i = 1, #map.fireballs do
-		if(map.fireballs[i] ~= nil) then
+		if(map.fireballs[i]) then
 			map.fireballs[i].unpause()
 		end
 	end
-	composer.hideOverlay(g.scenePath.."pauseMenu")
+	composer.hideOverlay(g.scenePath.."pause_menu")
 end
 
 function buttonPress( self, event )
@@ -397,7 +381,7 @@ function scene:create( event )
 	sceneGroup = self.view
 	createMap()
 	sceneGroup:insert(camera)
-	
+
 	local bgOptions =
 	{
 		channel = 20,
@@ -407,24 +391,24 @@ function scene:create( event )
 	audio.setVolume( 0.2, { channel=20 } )
 	local bgMusic = audio.loadStream( g.musicPath..music[g.level])
 	audio.play(bgMusic,bgOptions)
-	
-	if(g.android) then
-		rightJoystick = joysticks.joystick(sceneGroup, 
-							"Graphics/UI/analogStickHead.png", 200, 200, 
-							"Graphics/UI/analogStickBase.png", 280, 280, 2.5 )
+
+	if g.android then
+		rightJoystick = joysticks.joystick(sceneGroup,
+							g.UIPath.."AnalogStickHead.png", 200, 200,
+							g.UIPath.."AnalogStickBase.png", 280, 280, 2.5 )
 		rightJoystick.x = g.acw -250
 		rightJoystick.y = g.ach -250
 		rightJoystick.activate()
-		leftJoystick = joysticks.joystick(sceneGroup, 
-							"Graphics/UI/analogStickHead.png", 200, 200, 
-							"Graphics/UI/analogStickBase.png", 280, 280, 1.0 )
+		leftJoystick = joysticks.joystick(sceneGroup,
+							g.UIPath.."AnalogStickHead.png", 200, 200,
+							g.UIPath.."AnalogStickBase.png", 280, 280, 1.0 )
 		leftJoystick.x = 250
 		leftJoystick.y = g.ach -250
 		leftJoystick.activate()
 	end
-	
+
 	-- PAUSE BUTTON ---
-	local pButtonMaker = require "HUD.pauseButton"
+	local pButtonMaker = require "HUD.pause_button"
 	pauseButton = pButtonMaker.spawn()
 	pauseButton.x = -200
 	pauseButton.y = -200
@@ -435,36 +419,36 @@ function scene:create( event )
 
 
 	-- BEGIN GAME
-	local voice = audio.loadSound("Sounds/Satan/"..satanVFX[math.random(5)])
+	local voice = audio.loadSound(g.soundsPath.."Satan/"..satanVFX[math.random(5)])
 	audio.setVolume( 0.5, {channel = 6} )
 	audio.play(voice,{channel = 6})
-	timer.performWithDelay(2000, 
+	timer.performWithDelay(2000,
 		-- Stays on satan for 2 seconds
-		function() 
+		function()
 			audio.dispose(voice)
-			g.gameState = "introTransition" 
+			g.gameState = "intro_transition"
 			-- Pans over to the player
 			hud.initializeHUD()
 			hud.updateShotgunOMeter(g.shotgun)
 			transition.to( 	pauseButton, {time = 1000, x = 100, y = 100,} )
-			transition.to( 	map.player.cameraLock, 
-				{time = 1000, 
-				x = map.player.bounds.x, 
+			transition.to( 	map.player.cameraLock,
+				{time = 1000,
+				x = map.player.bounds.x,
 				y = map.player.bounds.y,
-				onComplete = 
+				onComplete =
 					-- Game begins
 					function()
 						g.gameState = "playing"
 						timeOffset = system.getTimer() - g.time
 					end
-				} )
+				}
+			)
 		end
 	)
 end
 
 -- "scene:show()"
 function scene:show( event )
-	print("in scene show")
 	local sceneGroup = self.view
 	local phase = event.phase
 
@@ -481,8 +465,6 @@ end
 
 -- "scene:hide()"
 function scene:hide( event )
-	print("in scene hide")
-
 	local sceneGroup = self.view
 	local phase = event.phase
 	if ( phase == "will" ) then
@@ -501,8 +483,7 @@ function scene:destroy( event )
 	g.pause = true
 	hud.killHUD()
 	audio.stop( 20 )
-	print("here in destroy")
-	timer.performWithDelay( 10, 
+	timer.performWithDelay( 10,
 		function()
 			Runtime:removeEventListener( "enterFrame", gameLoop )
 			Runtime:removeEventListener( "key", onKeyEvent )
@@ -516,27 +497,27 @@ function scene:destroy( event )
 			map.player = nil
 			map.player = {}
 			for i = 1, #map.powerups do
-				if(map.powerups[i] ~= nil) then
+				if map.powerups[i] then
 					display.remove(map.powerups.bounds)
 					map.powerups[i] = nil
 				end
 			end
 			map.powerups = nil
 			for i = 1, #map.slowTraps do
-				if(map.slowTraps[i] ~= nil) then
+				if map.slowTraps[i] then
 					map.slowTraps[i] = nil
 				end
 			end
 			for i = 1, #map.deathTraps do
-				if(map.deathTraps[i] ~= nil) then
+				if map.deathTraps[i] then
 					map.deathTraps[i] = nil
 				end
 			end
 
 			for i = 1, #map.enemies do
-				if(map.enemies[i] ~= nil) then
+				if map.enemies[i] then
 					map.enemies[i].hasTarget = false
-					--map.enemies[i].die(false, 0)
+					map.enemies[i].cleanup()
 					map.enemies[i] = nil
 				end
 			end
@@ -553,28 +534,28 @@ function scene:destroy( event )
 			map.params = nil
 			map.params = {}
 			for i = 1, #map.gore do
-				if(map.gore[i] ~= nil) then
+				if map.gore[i] then
 					display.remove(map.gore[i])
 					map.gore[i] = nil
 				end
 			end
 			for i = 1, #map.fireballs do
-				if(map.fireballs[i] ~= nil) then
-					map.fireballs[i].die()
+				if map.fireballs[i] then
+					map.fireballs[i].cleanup()
 					map.fireballs[i] = nil
 				end
 			end
 			physics.stop()
-		
+
 			end
 		 )
-	
+
 	--scene:removeEventListener( "create", scene )
 	--scene:removeEventListener( "show", scene )
 	--scene:removeEventListener( "hide", scene )
 	--scene:removeEventListener( "destroy", scene )
 	--]]
-	
+
 -- Called prior to the removal of scene's view ("sceneGroup").
 -- Insert code here to clean up the scene.
 -- Example: remove display objects, save state, etc.
@@ -595,9 +576,9 @@ scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
 Runtime:addEventListener( "enterFrame", gameLoop )
-if(g.android == false) then 
-  Runtime:addEventListener( "key", onKeyEvent )
-  Runtime:addEventListener( "axis", onAxisEvent )
+if g.android == false then
+	Runtime:addEventListener( "key", onKeyEvent )
+	Runtime:addEventListener( "axis", onAxisEvent )
 end
 ---------------------------------------------------------------------------------
 

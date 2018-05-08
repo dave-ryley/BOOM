@@ -4,12 +4,16 @@ G = {}
 
 	---- PATHS ----
 	G.scenePath = "Scenes."
-	G.animationPath = "Graphics/Animation/"
-	G.gorePath = "Graphics/Animation/Gore/"
-	G.backgroundPath = "Graphics/Background/"
-	G.musicPath = "Sounds/Music/"
-	G.UIPath = "Graphics/UI/"
+	G.graphicsPath = "Resources/Graphics/"
+	G.animationPath = "Resources/Graphics/Animation/"
+	G.gorePath = "Resources/Graphics/Animation/Gore/"
+	G.backgroundPath = "Resources/Graphics/Background/"
+	G.soundsPath = "Resources/Sounds/"
+	G.musicPath = "Resources/Sounds/Music/"
+	G.UIPath = "Resources/Graphics/UI/"
+	G.levelsPath = "Resources/Levels/"
 	G.file_save_highscores = "highscores_new.txt"
+	G.fontPath = "Resources/Fonts/"
 
 	---- COMMON VALUES ----
 	G.cw = display.contentWidth
@@ -25,8 +29,8 @@ G = {}
 	G.time = 0.0
 	G.deaths = 0
 	G.kills = 0
-	G.goldTime = 360000 -- 6 minutes.. time needed in milliseconds to gain a gold medal
-	G.silverTime = 600000 -- 10 minutes.. time in milliseconds to gain a silver medal
+	G.goldTime = 6 * 60 * 1000 -- 6 minutes.. time needed in milliseconds to gain a gold medal
+	G.silverTime = 60 * 10 * 1000 -- 10 minutes.. time in milliseconds to gain a silver medal
 
 	---- HIGHSCORES ----
 
@@ -112,10 +116,10 @@ G = {}
 	G.pause = false
 
 	---- FONT NAMES -----
-	G.bloodyFont = "Bloody"
-	G.comicBookFont = "Avengeance Mightiest Avenger"
-	G.zombieFont = "Curse of the Zombie"
-	G.lcdFont = "LCD2 Bold"
+	G.bloodyFont = G.fontPath.."Bloody"
+	G.comicBookFont = G.fontPath.."Avengeance Mightiest Avenger"
+	G.zombieFont = G.fontPath.."Curse of the Zombie"
+	G.lcdFont = G.fontPath.."LCD2 Bold"
 
 	---- OTHER -----
 	G.drawMode = "normal"
@@ -126,9 +130,9 @@ G = {}
 		print ("Loading Highscores")
 		local path = system.pathForFile( G.file_save_highscores, system.DocumentsDirectory )
 		local file, errorString = io.open( path, "r" )
-		if not file then 
+		if not file then
 			print ("File Error:" .. errorString)
-			return 
+			return
 		end
     	local read_in = file:read( "*all" )
     	if read_in == nil then return end

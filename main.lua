@@ -1,10 +1,10 @@
-local g = require "globals"
+g = require "globals"
 
 g.load_highscores()
 
 native.setProperty("windowMode", "fullscreen")
 
-if(system.getInfo("platformName") == "Android") then
+if system.getInfo("platformName") == "Android" then
     display.setStatusBar( display.HiddenStatusBar )
     system.activate( "multitouch" )
 end

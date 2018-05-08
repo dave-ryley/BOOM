@@ -1,8 +1,6 @@
 F = {}
---local physics = require "physics"
-local g = require "globals"
 function spawn(angle, x, y)
-	local col = require "collisionFilters"
+	local col = require "collision_filters"
 	local t
 	local f = {}
 	local fireballSheetOptions =
@@ -11,7 +9,7 @@ function spawn(angle, x, y)
 		height = 160,
 		numFrames = 8
 	}
-	local fireballSheet = graphics.newImageSheet(g.animationPath.."fireball.png", fireballSheetOptions )
+	local fireballSheet = graphics.newImageSheet(g.animationPath.."Fireball.png", fireballSheetOptions )
 	local fireballSeq =
 	{
 		{
@@ -30,70 +28,59 @@ function spawn(angle, x, y)
 	f.fireball.x = math.cos(math.rad(angle - 90))*100 + x -- need to determine actual angle
 	f.fireball.y = math.sin(math.rad(angle - 90))*100 + y -- need to determine actual angle
 	f.fireball.myName = "p_fireball"
-	--local fireballShape = { -80,-70, 80,-70, 80,120, -80,120 }
 	local fireballShape = { -30,-30, 30,-30, 30,30, -30,30 }
-	local fireballData = {   
-					physicsData =   {
-								shape=fireballShape,
-								density=0.025, 
-								friction=0.0, 
-								bounce=0.0,
-								isFixedRotation=true,
-								filter=col.projCol
-									}
-								}
+	local fireballData = {
+		physicsData =   {
+			shape=fireballShape,
+			density=0.025,
+			friction=0.0,
+			bounce=0.0,
+			isFixedRotation=true,
+			filter=col.projCol
+		}
+	}
 	f.fireball.rotation = angle
 	f.fireball.isFixedRotation=true
---[[
-	physics.addBody( fireball, "dynamic", fireballData.physicsData )
-	xForce = math.cos(math.rad(angle - 90))*200
-	yForce = math.sin(math.rad(angle - 90))*200
-	]]
 	physics.addBody( f.fireball, "dynamic", fireballData.physicsData )
 	local xForce = math.cos(math.rad(angle - 90))*2
 	local yForce = math.sin(math.rad(angle - 90))*2
 	f.fireball:applyLinearImpulse( xForce, yForce, x, y )
 	f.fireball.super = f.fireball
-	
-	local function die()
-		if(f ~= nil) then
-			--fireball:removeEventListener( "collision", fireball.onCollision )
+
+	local function cleanup()
+		if f then
 			display.remove( f.fireball )
 			timer.cancel( t )
 			f = nil
 		end
 	end
-	f.die = die
+	f.cleanup = cleanup
 
 
 	local function pause()
-		if(f ~= nil) then
+		if(f) then
 			f.fireball:pause()
 		end
 	end
 	f.pause = pause
 
 	local function unpause()
-		if(f ~= nil) then
+		if(f) then
 			f.fireball:play()
 		end
 	end
 	f.unpause = unpause
 
 	f.fireball.onCollision = function (event)
-		if (event.phase == "began" and event.other ~= nil) then
+		if event.phase == "began" and event.other then
 			local other = event.other.super
-			if(other.myName == "player") then
-				--print("Fireball killing player")
-			end
-			f.die()
+			f.cleanup()
 		end
 	end
-	t = timer.performWithDelay( 10000, 
+	t = timer.performWithDelay( 10000,
 		function ()
-			--print("fireball removing self")
-			if(f ~= nil) then
-				f.die()
+			if f then
+				f.cleanup()
 			end
 		end
 	)
