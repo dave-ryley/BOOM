@@ -14,15 +14,13 @@ local C = {}
 		data:		Table containing initialization data for specified enemy
 	]]
 	local function spawn(enemyType, startX, startY, data)
-
 		local m = require "movement_functions"
-		local enemy = require(  path .. enemyType .. "_visuals")
 		C.id = C.id + 1
 		local splatterParts = require "splatter_parts"
 ------------------------------------------------------------
 ------------VARIABLE INITIALIZATION------------------------------------------------
 -----------------------------------------------------------------------------------
-		local e = require(  path .. enemyType .. "_visuals").spawn()
+		local e = require(  path .. string.lower(enemyType) .. "_visuals").spawn()
 		e.move = m.spawn()
 		e.parent = display.newGroup()
 		e.timers = {}

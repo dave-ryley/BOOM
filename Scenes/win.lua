@@ -67,26 +67,25 @@ function scene:create( event )
 	enterText:setFillColor(1,0,0)
 	local userInputOptions =
 	{
-	    --parent = textGroup,
-	    text = "",
-	    x = g.ccx,
-	    y = g.ach - 200,
-	    width = 650,     --required for multi-line and alignment
-	    font = g.comicBookFont,
-	    fontSize = 100,
-	    align = "left"  --new alignment parameter
+		text = "",
+		x = g.ccx,
+		y = g.ach - 200,
+		width = 650,	--required for multi-line and alignment
+		font = g.comicBookFont,
+		fontSize = 100,
+		align = "left"	--new alignment parameter
 	}
 
 	userInput = display.newText( userInputOptions )
 	userInput:setFillColor(1,1,0)
 
 	function buttonPress( self, event )
-    	if event.phase == "began" then
-    		updateHighscores( userInput.text )
+		if event.phase == "began" then
+			updateHighscores( userInput.text )
 			composer.removeScene("win", false)
-    		composer.gotoScene( g.scenePath.."leaderboard" )
-    		return true
-    	end
+			composer.gotoScene( g.scenePath.."leaderboard" )
+			return true
+		end
 	end
 
 	button = buttonMaker.spawn(g.acw - 400, g.ach - 200, "ACCEPT")
@@ -124,7 +123,6 @@ end
 local function onWinKeyPress( event )
 	local phase = event.phase
 	local keyName = event.keyName
-	print(keyName)
 	canPress = true
 	if (phase == "down" and canPress) then
 		canPress = false
@@ -132,8 +130,8 @@ local function onWinKeyPress( event )
 			audio.play(press, {channel = 31})
 			updateHighscores( userInput.text )
 			composer.removeScene("win", false)
-    		composer.gotoScene( g.scenePath.."leaderboard" )
-    		--NEED CODE FOR SENDING DATA TO LEADERBOARD
+			composer.gotoScene( g.scenePath.."leaderboard" )
+			--NEED CODE FOR SENDING DATA TO LEADERBOARD
 		elseif( string.match("qwertyuiopasdfghjklzxcvbnm", string.lower(keyName)) or keyName == "deleteBack" or keyName == "space" ) then
 			updateText( keyName )
 		end

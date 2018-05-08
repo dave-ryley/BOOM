@@ -3,7 +3,7 @@ local Q = {}
 	local function spawn()
 		local P = {}
 		local col = require "collision_filters"
-				local v = require "player_visuals"
+		local v = require "player_visuals"
 		local s = require "shotgun"
 		local m = require "movement_functions"
 		P.movement_functions = m.spawn()
@@ -24,7 +24,7 @@ local Q = {}
 		P.maxSpeed = g.speed
 		P.isAlive = true
 		P.health = g.health
-		P.isSlowed = false
+		P.slowModifier = 1.0
 		P.bounds = display.newRect(0,0,70,70)
 		P.bounds.alpha = 0.0
 		P.bounds.myName = "player"
@@ -83,9 +83,9 @@ local Q = {}
                 x = x + P.isMovingX*P.velocity
                 y = y + P.isMovingY*P.velocity
                 local hyp = math.sqrt(x*x + y*y) * 1.0
-                if hyp > P.maxSpeed then
-                    x = x/hyp * P.maxSpeed
-                    y = y/hyp * P.maxSpeed
+                if hyp > P.maxSpeed*P.slowModifier then
+                    x = (x/hyp * P.maxSpeed)*P.slowModifier
+                    y = (y/hyp * P.maxSpeed)*P.slowModifier
                 end
                 P.bounds:setLinearVelocity( x, y )
             end
@@ -245,7 +245,6 @@ local Q = {}
 					end
 				end
 				if P.health == 0 then
-					print("Killed by: "..other.enemyType)
 					Runtime:dispatchEvent( {name="youDied",killer = other.enemyType} )
 				end
 			end

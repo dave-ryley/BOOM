@@ -11,9 +11,7 @@ local function onPauseAxisEvent( event )
 	-- Map event data to simple variables
 	if g.pause == true and string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
 		local axis = controller_mapping.axis[event.axis.number]
-		--if g.pause then print("g.pause = true") else print("g.pause = false") end
 		if "left_y" == axis then
-			--print("left axis")
 			if event.normalizedValue < 0.1 and event.normalizedValue > -0.1 then
 				canSelect = true
 			elseif canSelect then
@@ -54,7 +52,6 @@ end
 
 local function onPauseKeyPress( event )
 	if g.pause == true then
-		--print("key pressed")
 		local phase = event.phase
 		local keyName = event.keyName
 

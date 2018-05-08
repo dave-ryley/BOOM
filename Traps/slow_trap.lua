@@ -8,7 +8,6 @@ local S = {}
 			T.bounds.x = x
 			T.bounds.y = y
 			T.slow = 0.5
-			T.previousSpeed = 0
 			physics.addBody(
 				T.bounds,
 				"static",
@@ -17,14 +16,12 @@ local S = {}
 					filter=col.sensorCol,
 				}
 			)
-
 			T.trap = function(event)
 				local other = event.other.super
 				if event.phase == "began" then
-					T.previousSpeed = other.maxSpeed
-					other.maxSpeed = T.previousSpeed * T.slow
+					other.slowModifier = T.slow
 				elseif event.phase == "ended" then
-					other.maxSpeed = T.previousSpeed
+					other.slowModifier = 1.0
 				end
 				return true
 			end

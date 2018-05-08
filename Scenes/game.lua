@@ -160,7 +160,6 @@ local function onKeyEvent( event )
 	local keyName = event.keyName
 	local axis = ""
 	local value = 0
-	print(event.keyName)
 	if (event.phase == "down") then
 		-- WASD and ArrowKeys pressed down
 		if ( event.keyName == "w" ) then

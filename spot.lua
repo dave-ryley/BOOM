@@ -60,7 +60,6 @@ local colFilters = require "collision_filters"
 					if i.moving == false then
 						i.moving = true
 						i.currentAngle = i.targetAngle
-						print("target angle: "..i.currentAngle)
 						i.xMove = math.cos(math.rad(i.currentAngle - 90))
 						i.yMove = math.sin(math.rad(i.currentAngle - 90))
 					end

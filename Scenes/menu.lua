@@ -10,7 +10,6 @@ local function onAxisEvent( event )
 	-- Map event data to simple variables
 	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
 		local axis = controller_mapping.axis[event.axis.number]
-		--if g.pause then print("g.pause = true") else print("g.pause = false") end
 		if "left_x" == axis then
 			if event.normalizedValue < 0.1 and event.normalizedValue > -0.1 then
 				canSelect = true
@@ -49,7 +48,6 @@ local function buttonFunction( key )
 	elseif key == 3 then
 		composer.gotoScene( g.scenePath.."level_editor_scene" )
 	elseif key == 4 then
-		--print("credits")
 		composer.gotoScene( g.scenePath.."credits" )
 	elseif key == 5 then
 		native.requestExit()

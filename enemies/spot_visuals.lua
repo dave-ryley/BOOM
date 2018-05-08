@@ -1,7 +1,7 @@
 local T = {}
     local function spawn()
         local V = {}
-        local s = require "spriteSeq.spot_seq"
+        local s = require "SpriteSeq.spot_seq"
         V.anim = ""
         V.sounds = {}
         local spot_sheetOptions =
