@@ -131,19 +131,19 @@ function scene:create( event )
   button.id = 1
   button.touch = buttonPress
   button:addEventListener( "touch", button )
-	
+
   buttonText = display.newText(overlay,"MAIN MENU", 125,37.5, g.zombieFont, 30 )
   buttonText:setFillColor(1,0,0)
   sceneGroup:insert(grid)
   sceneGroup:insert(overlay)
 end
- 
+
 -- "scene:show()"
 function scene:show( event )
- 
+
    local sceneGroup = self.view
    local phase = event.phase
- 
+
    if ( phase == "will" ) then
 	  -- Called when the scene is still off screen (but is about to come on screen).
    elseif ( phase == "did" ) then
@@ -152,13 +152,13 @@ function scene:show( event )
 	  -- Example: start timers, begin animation, play audio, etc.
    end
 end
- 
+
 -- "scene:hide()"
 function scene:hide( event )
- 
+
    local sceneGroup = self.view
    local phase = event.phase
- 
+
    if ( phase == "will" ) then
 	  -- Called when the scene is on screen (but is about to go off screen).
 	  -- Insert code here to "pause" the scene.
@@ -167,16 +167,16 @@ function scene:hide( event )
 	  -- Called immediately after scene goes off screen.
    end
 end
- 
+
 -- "scene:destroy()"
 function scene:destroy( event )
- 
+
    local sceneGroup = self.view
    -- Called prior to the removal of scene's view ("sceneGroup").
    -- Insert code here to clean up the scene.
    -- Example: remove display objects, save state, etc.
 end
- 
+
 ---------------------------------------------------------------------------------
 local function writeBoomMap()
 	  local path = system.pathForFile( "level.BOOMMAP", system.ResourceDirectory )
@@ -200,9 +200,9 @@ local function onMouseEvent( event )
 		  if (mapSize > 0) then
 			  for i = 1,table.getn(writeMap),1 do
 				  if(math.floor((writeMap[i].x/squareSize))*128+64 == squareX and math.floor((writeMap[i].y/squareSize))*128+64 == squareY
-					  and writeMap[i].obj == selectedObject)then 
+					  and writeMap[i].obj == selectedObject)then
 					  if(selectedObject < 3 or writeMap[i].rot == rotation)then
-						blocked = true 
+						blocked = true
 						i=table.getn(writeMap)
 					  end
 				  end
@@ -245,7 +245,7 @@ local function onMouseEvent( event )
 		  mapPoint(selectedObject,rotation,localX,localY)
 		end
 	end
-	
+
 	if(event.isSecondaryButtonDown)then
 	--print(initPosX,initPosY)
 		if(initPosX == 0 and initPosY == 0)then
@@ -264,34 +264,34 @@ end
 
 local function onKeyEvent( event )
 	if ( event.keyName == "z" and event.phase == "down") then
-		if(mapSize >2)then 
+		if(mapSize >2)then
 		map[mapSize]:removeSelf()
 		writeMap[mapSize] = nil
 		mapSize = mapSize-1
-		end 
+		end
 	end
-	
+
 	if ( event.keyName == "a" and event.phase == "down") then
-		if(rotation > 1)then rotation = rotation -1 
+		if(rotation > 1)then rotation = rotation -1
 		else rotation = 4
 		end
 	end
-	
+
 	if ( event.keyName == "d" and event.phase == "down") then
-		if(rotation < 4)then rotation = rotation +1 
+		if(rotation < 4)then rotation = rotation +1
 		else rotation = 1
 		end
 	end
-	
+
 	if ( event.keyName == "w" and event.phase == "down") then
 		if(selectedObject > table.getn(objectFileName)-1)then selectedObject = 1 end
-		if(selectedObject > 1)then selectedObject = selectedObject -1 
+		if(selectedObject > 1)then selectedObject = selectedObject -1
 		else selectedObject = table.getn(objectFileName)-1
 		end
 	end
-	
+
 	if ( event.keyName == "s" and event.phase == "down") then
-		if(selectedObject < table.getn(objectFileName)-1)then selectedObject = selectedObject +1 
+		if(selectedObject < table.getn(objectFileName)-1)then selectedObject = selectedObject +1
 		else selectedObject = 1
 		end
 	end

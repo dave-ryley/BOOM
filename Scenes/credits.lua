@@ -1,6 +1,5 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
-local g = require "globals"
 local buttonMaker = require "button"
 local canPress = false
 ---------------------------------------------------------------------------------
@@ -33,21 +32,23 @@ function scene:create( event )
 	composer.removeScene(g.scenePath.."menu")
 	local sceneGroup = self.view
 	creditsImage = display.newImage( sceneGroup,
-						"Graphics/Art/ChaseArt.png", 
+						g.graphicsPath.."/Art/ChaseArt.png",
 						g.cw - 500,g.ccy - 100 )
 	creditsImage.xScale = creditsImage.xScale*3/7
 	creditsImage.yScale = creditsImage.yScale*3/7
-	myText = display.newText( 	"Created By:\n\n".. 
-								"Dave Ryan\n".. 
-								"Dave Ryley\n".. 
-								"Chris Brady\n"..
-								"\nMusic by Ciaran Ryan",
-								g.cw/3, 
-								g.ccy, 
-								800, 
-								0,
-								g.comicBookFont, 
-								70 )
+	myText = display.newText(
+		"Created By:\n\n"..
+		"Dave Ryan\n"..
+		"Dave Ryley\n"..
+		"Chris Brady\n\n"..
+		"Music by Ciaran Ryan",
+		g.cw/3,
+		g.ccy,
+		800,
+		0,
+		g.comicBookFont,
+		70
+	)
 	myText:setFillColor( 1,1,0 )
 	sceneGroup:insert(myText)
 

@@ -11,7 +11,7 @@ function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidt
     local mSqrt = math.sqrt;
     local mFloor = math.floor;
     local mPi = math.pi;
-    
+
     local joyGroup = display.newGroup();
     group:insert(joyGroup);
     local bgJoystick = display.newImageRect(joyGroup, imgBgJoystick, bgWidth, bgHeight );
@@ -21,7 +21,7 @@ function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidt
     local radToDeg = 180/mPi;
     local degToRad = mPi/180;
     local joystick = display.newImageRect(joyGroup, imgJoystick, joyWidth, joyHeight );
-    
+
     function joystick:touch(event)
         local phase = event.phase;
         if phase == "moved" then
@@ -77,7 +77,7 @@ function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidt
         end
         return true;
     end
-    
+
     joyGroup.activate = function()
         joyGroup[1]:addEventListener("touch", joyGroup[2]);
         joyGroup.angle, joyGroup.distance = 0, 0;
@@ -89,9 +89,6 @@ function joystick(group, imgJoystick, joyWidth, joyHeight, imgBgJoystick, bgWidt
         joyGroup.xLoc, joyGroup.yLoc = 0, 0;
     end
     joyGroup.x, joyGroup.y = joyGroup.contentWidth*0.5, display.contentHeight-joyGroup.contentHeight*0.5;
-    --joyGroup:rotate(-90)
-    --joyGroup:scale( 1, -1 )
-
     return (joyGroup);
 end
 

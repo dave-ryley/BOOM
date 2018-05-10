@@ -1,4 +1,3 @@
-local g = require "globals"
 local B = {}
 
 	function spawn (x, y, text)
@@ -6,16 +5,16 @@ local B = {}
 		button.text = display.newText(text, x, y-10, g.zombieFont, 35)
 		button.text:setFillColor( 0, 0, 0 )
 
-		local flamesSeq = 
+		local flamesSeq =
 		{
-		    {
-		        name = "default",
-		        start = 1,
-		        count = 6,
-		        time = 600,
-		        loopCount = 0,
-		        loopDirection = "forward"
-		    }
+			{
+				name = "default",
+				start = 1,
+				count = 6,
+				time = 600,
+				loopCount = 0,
+				loopDirection = "forward"
+			}
 		}
 		local flamesOptions =
 		{

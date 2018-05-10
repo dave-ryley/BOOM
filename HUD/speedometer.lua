@@ -8,9 +8,9 @@ local N = {}
 			height = 160,
 			numFrames = 10
 		}
-		local number_sheet = graphics.newImageSheet( "Graphics/UI/numberFont.png", 
+		local number_sheet = graphics.newImageSheet( g.graphicsPath.."UI/NumberFont.png",
 														number_sheetOptions )
-		local number_seq = 
+		local number_seq =
 		{
 			{
 				name = "0",
