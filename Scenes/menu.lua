@@ -1,5 +1,5 @@
 local composer = require("composer")
-local controllerMapping = require("controllerMapping")
+-- local controllerMapping = require("controllerMapping")
 local buttonMaker = require("button")
 local buttons = {}
 local selected = 0

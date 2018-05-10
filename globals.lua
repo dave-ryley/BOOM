@@ -10,6 +10,7 @@ GLOBAL_UIPath = "Resources/Graphics/UI/"
 GLOBAL_levelsPath = "Resources/Levels/"
 GLOBAL_file_save_highscores = "highscores_new.txt"
 GLOBAL_fontPath = "Resources/Fonts/"
+GLOBAL_scenePath = "Scenes."
 
 ---- COMMON VALUES ----
 GLOBAL_cw = display.contentWidth
