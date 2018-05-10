@@ -1,6 +1,6 @@
 local S = {}
 local colFilters = require "collisionFilters"
-local g = require "globals"
+ 
 	local function spawn(links, x, y)
 		local group = {}
 			--local t = display.newImage("Graphics/Temp/sausage.png", 60, 20)

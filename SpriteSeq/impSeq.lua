@@ -1,4 +1,4 @@
-local g = require "globals"
+ 
 local imp_sheetOptions =
 {
 	width = 300,

@@ -1,5 +1,5 @@
 local T = {}
-	local g = require "globals"
+	 
 	local function spawn()
 		local V = {}
 		V.anim = ""

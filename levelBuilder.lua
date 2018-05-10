@@ -8,7 +8,7 @@ local B = {}
 		b.physlevel = {}
 		b.satanPath = {}
 		b.level = display.newGroup( )
-		local g = require "globals"
+		 
 		local col = require "collisionFilters"
 		local enemy = require "enemy"
 		local imp = require "imp"

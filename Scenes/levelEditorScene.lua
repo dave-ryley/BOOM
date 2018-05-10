@@ -1,5 +1,5 @@
 local composer = require( "composer" )
-local g = require "globals"
+ 
 local scene = composer.newScene()
 composer.recycleOnSceneChange = true
 --composer.isDebug = true
@@ -114,7 +114,7 @@ function scene:create( event )
 	obj._tableListeners = nil
   end
 
-  local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
+  local press = audio.loadSound( "Sounds/UI/ButtonPress.ogg")
   function buttonPress( self, event )
 	  if event.phase == "began" then
 		audio.play(press, {channel = 31})

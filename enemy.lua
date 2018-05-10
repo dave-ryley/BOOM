@@ -7,7 +7,7 @@ local C = {}
 	startY:		Starting Y position in the game world
 	data:		Table containing initialization data for specified enemy
 ]]
-	local g = require "globals"
+	 
 	local path = "enemies."
 	--initializing id
 	C.id = 1

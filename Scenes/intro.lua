@@ -1,6 +1,6 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
-local g = require "globals"
+ 
 local cinematics = true
 local effects = ""
 local myText = ""

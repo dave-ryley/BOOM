@@ -1,6 +1,6 @@
 local HUD = {}
 	local hudInitialized = false
-	local g = require "globals"
+	 
 	local s = require "HUD.speedometer"
 
 	local function initializeHUD()

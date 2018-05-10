@@ -1,5 +1,5 @@
 local S = {}
-	local g = require "globals"
+	 
 	local function spawn()
 		local V = {}
 		local v = require "SpriteSeq.satanSeq"

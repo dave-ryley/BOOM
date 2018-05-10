@@ -1,10 +1,10 @@
-local g = require "globals"
+ 
 local Q = {}
 
 	local function spawn()
 		local P = {}
 		local col = require "collisionFilters"
-		local g = require "globals"
+		 
 		local v = require "playerVisuals"
 		local s = require "shotgun"
 		local m = require "movementFunctions"

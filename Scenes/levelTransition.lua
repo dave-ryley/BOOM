@@ -1,6 +1,6 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
-local g = require "globals"
+ 
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
 -- unless "composer.removeScene()" is called.

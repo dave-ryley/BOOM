@@ -1,6 +1,6 @@
 F = {}
 --local physics = require "physics"
-local g = require "globals"
+ 
 function spawn(angle, x, y)
 	local col = require "collisionFilters"
 	local t

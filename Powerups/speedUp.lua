@@ -1,7 +1,7 @@
 local S = {}
 
 	local function spawn(x, y)
-		local g = require "globals"
+		 
 		local col = require "collisionFilters"
 		local T = {}
 			T.bounds = display.newImageRect( "Graphics/Items/speedPowerUp.png", 100, 100 )

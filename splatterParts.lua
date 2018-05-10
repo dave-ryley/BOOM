@@ -1,7 +1,7 @@
 local C = {}
 local colFilters = require "collisionFilters"
 local partsList = require "splatter"
-local g = require "globals"
+ 
 	local function spawn( angle, x, y)
 		local files = partsList.imp
 		local parts = {}

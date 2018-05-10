@@ -1,7 +1,7 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local col = require "collisionFilters"
-local g = require "globals"
+ 
 local joysticks = require "joystick"
 local hud = require "hud"
 local perspective = require("perspective")

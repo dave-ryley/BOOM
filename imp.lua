@@ -1,6 +1,6 @@
 local I = {}
 local colFilters = require "collisionFilters"
-local g = require "globals"
+ 
 	local constructor = require "enemy"
 	local impShape = { -60,-90, 60,-90, 60,90, -60,90 }
 	local radius = 1000

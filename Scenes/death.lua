@@ -1,6 +1,6 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
-local g = require "globals"
+ 
 local controllerMapping = require "controllerMapping"
 local buttonMaker = require "button"
 local buttons = {}
@@ -46,7 +46,7 @@ local function onDeathAxisEvent( event )
 end
 
 local function buttonFunction( key )
-	local press = audio.loadSound( "Sounds/GUI/ButtonPress.ogg")
+	local press = audio.loadSound( "Sounds/UI/ButtonPress.ogg")
 	if key ~= 0 then
 		audio.play(press, {channel = 31})
 	end

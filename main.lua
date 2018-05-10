@@ -1,4 +1,4 @@
-local g = require "globals"
+ 
 
 g.load_highscores()
 

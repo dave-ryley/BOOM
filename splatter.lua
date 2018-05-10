@@ -1,4 +1,4 @@
-local g = require "globals"
+ 
 local F = {
 	imp = {	
 			{path=g.gorePath.."Imp/f_leftForearm.png",	x=40,	y=127	},

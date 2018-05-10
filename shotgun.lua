@@ -1,4 +1,4 @@
-local g = require "globals"
+ 
 local P = {}
 	local function spawn()
 		local C = {}
