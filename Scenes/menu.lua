@@ -1,7 +1,6 @@
 local composer = require("composer")
 local controllerMapping = require("controllerMapping")
 local buttonMaker = require("button")
-
 local buttons = {}
 local selected = 0
 local canSelect = true
@@ -51,18 +50,18 @@ end
 
 local function buttonFunction( key )
 	local press = audio.loadSound( "Sounds/UI/ButtonPress.ogg")
+
 	if key ~= 0 then
 		audio.play(press, {channel = 31})
 	end
 	if key == 1 then
-		composer.gotoScene( g.scenePath.."game" )
+		composer.gotoScene( GLOBAL_scenePath.."game" )
 	elseif key == 2 then
-		composer.gotoScene( g.scenePath.."leaderboard" )
+		composer.gotoScene( GLOBAL_scenePath.."leaderboard" )
 	elseif key == 3 then
-		composer.gotoScene( g.scenePath.."levelEditorScene" )
+		composer.gotoScene( GLOBAL_scenePath.."level_editor_scene" )
 	elseif key == 4 then
-		--print("credits")
-		composer.gotoScene( g.scenePath.."credits" )
+		composer.gotoScene( GLOBAL_scenePath.."credits" )
 	elseif key == 5 then
 		native.requestExit()
 	end
@@ -91,22 +90,25 @@ end
 ------------------------------------------------------------------------------------
 
 function scene:create( event )
-	composer.removeScene(g.scenePath.."leaderboard")
-	g.shotgun = 10
-	g.speed = 1000.0
-	g.time = 0.0
-	g.deaths = 0
-	g.kills = 0
-	g.level = 1
+	composer.removeScene(GLOBAL_scenePath.."leaderboard")
+	GLOBAL_shotgun = 10
+	GLOBAL_speed = 1000.0
+	GLOBAL_time = 0.0
+	GLOBAL_deaths = 0
+	GLOBAL_kills = 0
+	GLOBAL_level = 1
 	local sceneGroup = self.view
 	-- Called when the scene's view does not exist.
 	-- INSERT code here to initialize the scene
-	local background = display.newImageRect( 	"Graphics/UI/menuBackground.png", 
-												g.cw, 
-												g.ch )
+	local background = display.newImageRect(
+		GLOBAL_UIPath.."MenuBackground.png",
+		GLOBAL_cw,
+		GLOBAL_ch
+	)
+
 	sceneGroup:insert(background)
 	local numOfButtons = 5
-	if(g.android) then
+	if GLOBAL_android then
 		numOfButtons = 4
 	else
 		-- code in here to highlight the first button
@@ -120,8 +122,8 @@ function scene:create( event )
 	end
 
 	local buttonText = {"PLAY", "SCOREBOARD", "LEVEL EDITOR","CREDITS","QUIT"}
-	for i=1,numOfButtons do 
-		buttons[i] = buttonMaker.spawn(g.acw/(numOfButtons*2) + (i-1)*g.acw/numOfButtons, g.ach - 100, buttonText[i])
+	for i = 1,numOfButtons do
+		buttons[i] = buttonMaker.spawn(GLOBAL_acw/(numOfButtons*2) + (i-1)*GLOBAL_acw/numOfButtons, GLOBAL_ach - 100, buttonText[i])
 		sceneGroup:insert(buttons[i])
 		sceneGroup:insert(buttons[i].text)
 		sceneGroup:insert(buttons[i].flames)
@@ -132,31 +134,29 @@ function scene:create( event )
 		buttons[i]:addEventListener( "touch", buttons[i] )
 	end
 
-
 	background.anchorX = 0
 	background.anchorY = 0
 	background.x, background.y = 0, 0
-
 end
 
 function scene:show( event )
 	local sceneGroup = self.view
 	local phase = event.phase
 	if phase == "will" then
-		
+
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
-		composer.removeScene( g.scenePath.."intro", false )
-		composer.removeScene( g.scenePath.."leaderboard", false )
-		composer.removeScene( g.scenePath.."credits", false )
-		composer.removeScene( g.scenePath.."game", false )
-		composer.removeScene( g.scenePath.."death", false )
-		composer.removeScene( g.scenePath.."levelEditorScene", false )
-		composer.removeScene( g.scenePath.."levelTransition", false )
-		composer.removeScene( g.scenePath.."pauseMenu", false )
-		composer.removeScene( g.scenePath.."win", false )
+		composer.removeScene( GLOBAL_scenePath.."intro", false )
+		composer.removeScene( GLOBAL_scenePath.."leaderboard", false )
+		composer.removeScene( GLOBAL_scenePath.."credits", false )
+		composer.removeScene( GLOBAL_scenePath.."game", false )
+		composer.removeScene( GLOBAL_scenePath.."death", false )
+		composer.removeScene( GLOBAL_scenePath.."levelEditorScene", false )
+		composer.removeScene( GLOBAL_scenePath.."levelTransition", false )
+		composer.removeScene( GLOBAL_scenePath.."pauseMenu", false )
+		composer.removeScene( GLOBAL_scenePath.."win", false )
 		-- Called when the scene is now on screen
-		-- 
+		--
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
 		Runtime:addEventListener( "key", onKeyPress )
@@ -167,21 +167,21 @@ end
 function scene:hide( event )
 	local sceneGroup = self.view
 	local phase = event.phase
-	
+
 	if event.phase == "will" then
 		-- Called when the scene is on screen and is about to move off screen
 		Runtime:removeEventListener( "axis", onAxisEvent )
 		Runtime:removeEventListener( "key", onKeyPress )
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
-	end	
+	end
 end
 
 function scene:destroy( event )
 	local sceneGroup = self.view
 	
 	-- Called prior to the removal of scene's "view" (sceneGroup)
-	-- 
+	--
 	-- INSERT code here to cleanup the scene
 	-- e.g. remove display objects, remove touch listeners, save state, etc.
 end

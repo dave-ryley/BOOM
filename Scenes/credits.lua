@@ -1,6 +1,5 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
- 
 local buttonMaker = require "button"
 local canPress = false
 ---------------------------------------------------------------------------------
@@ -19,7 +18,7 @@ local function onCredKeyPress( event )
 	if (phase == "down" and canPress) then
 		if (keyName == "buttonA") then
 			audio.play(press, {channel = 31})
-    		composer.gotoScene( g.scenePath.."menu" )
+    		composer.gotoScene( GLOBAL_scenePath.."menu" )
 		end
 	elseif (phase == "up") then
 		canPress = true
@@ -30,36 +29,38 @@ end
 
 -- "scene:create()"
 function scene:create( event )
-	composer.removeScene(g.scenePath.."menu")
+	composer.removeScene(GLOBAL_scenePath.."menu")
 	local sceneGroup = self.view
 	creditsImage = display.newImage( sceneGroup,
-						"Graphics/Art/ChaseArt.png", 
-						g.cw - 500,g.ccy - 100 )
+						GLOBAL_graphicsPath.."/Art/ChaseArt.png",
+						GLOBAL_cw - 500,GLOBAL_ccy - 100 )
 	creditsImage.xScale = creditsImage.xScale*3/7
 	creditsImage.yScale = creditsImage.yScale*3/7
-	myText = display.newText( 	"Created By:\n\n".. 
-								"Dave Ryan\n".. 
-								"Dave Ryley\n".. 
-								"Chris Brady\n"..
-								"\nMusic by Ciaran Ryan",
-								g.cw/3, 
-								g.ccy, 
-								800, 
-								0,
-								g.comicBookFont, 
-								70 )
+	myText = display.newText(
+		"Created By:\n\n"..
+		"Dave Ryan\n"..
+		"Dave Ryley\n"..
+		"Chris Brady\n\n"..
+		"Music by Ciaran Ryan",
+		GLOBAL_cw/3,
+		GLOBAL_ccy,
+		800,
+		0,
+		GLOBAL_comicBookFont,
+		70
+	)
 	myText:setFillColor( 1,1,0 )
 	sceneGroup:insert(myText)
 
 	function buttonPress( self, event )
     	if event.phase == "began" then
     		audio.play(press, {channel = 31})
-    		composer.gotoScene( g.scenePath.."menu" )
+    		composer.gotoScene( GLOBAL_scenePath.."menu" )
     		return true
     	end
 	end
 
-	button = buttonMaker.spawn(g.acw-300, g.ach - 100, "BACK")
+	button = buttonMaker.spawn(GLOBAL_acw-300, GLOBAL_ach - 100, "BACK")
 	sceneGroup:insert(button)
 	sceneGroup:insert(button.text)
 	sceneGroup:insert(button.flames)

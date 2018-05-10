@@ -1,6 +1,5 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
- 
 local cinematics = true
 local effects = ""
 local myText = ""
@@ -45,14 +44,14 @@ function scene:create( event )
 	cinematics = true
 	local options = {
 	    text = "NARCOLEPTICK GAMES \nPRESENTS",
-	    font=g.zombieFont,
+	    font=GLOBAL_zombieFont,
 	    fontSize = 80,
-	    align = "center"  
+	    align = "center"
 	}
 	myText = display.newText( options )
 	myText:setFillColor(1,0,0)
-	myText.x = g.ccx
-	myText.y = g.ccy
+	myText.x = GLOBAL_ccx
+	myText.y = GLOBAL_ccy
 	-- Initialize the scene here.
 	-- Example: add display objects to "sceneGroup", add touch listeners, etc.
 end
@@ -104,7 +103,7 @@ end
 
 local function skipEvent( event )
 	if cinematics then
-		composer.gotoScene( g.scenePath.."menu", options )
+		composer.gotoScene( GLOBAL_scenePath.."menu", options )
 		cinematics = false
 		return true
 	end

@@ -1,13 +1,15 @@
 local json = require("json")
 
 ---- PATHS ----
-GLOBAL_scenePath = "Scenes."
-GLOBAL_animationPath = "Graphics/Animation/"
-GLOBAL_gorePath = "Graphics/Animation/Gore/"
-GLOBAL_backgroundPath = "Graphics/Background/"
-GLOBAL_musicPath = "Sounds/Music/"
-GLOBAL_UIPath = "Graphics/UI/"
+GLOBAL_animationPath = "Resources/Graphics/Animation/"
+GLOBAL_gorePath = "Resources/Graphics/Animation/Gore/"
+GLOBAL_backgroundPath = "Resources/Graphics/Background/"
+GLOBAL_soundsPath = "Resources/Sounds/"
+GLOBAL_musicPath = "Resources/Sounds/Music/"
+GLOBAL_UIPath = "Resources/Graphics/UI/"
+GLOBAL_levelsPath = "Resources/Levels/"
 GLOBAL_file_save_highscores = "highscores_new.txt"
+GLOBAL_fontPath = "Resources/Fonts/"
 
 ---- COMMON VALUES ----
 GLOBAL_cw = display.contentWidth
@@ -109,11 +111,12 @@ GLOBAL_lastLevel = 4
 GLOBAL_gameState = "intro" --intro/introTrans/win/
 GLOBAL_pause = false
 
+-- To replace with config!
 ---- FONT NAMES -----
-GLOBAL_bloodyFont = "Bloody"
-GLOBAL_comicBookFont = "Avengeance Mightiest Avenger"
-GLOBAL_zombieFont = "Curse of the Zombie"
-GLOBAL_lcdFont = "LCD2 Bold"
+GLOBAL_bloodyFont = GLOBAL_fontPath .. "Bloody"
+GLOBAL_comicBookFont = GLOBAL_fontPath .. "Avengeance Mightiest Avenger"
+GLOBAL_zombieFont = GLOBAL_fontPath .. "Curse of the Zombie"
+GLOBAL_lcdFont = GLOBAL_fontPath .. "LCD2 Bold"
 
 ---- OTHER -----
 GLOBAL_drawMode = "normal"

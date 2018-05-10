@@ -1,21 +1,20 @@
- 
 local B = {}
 
 	function spawn (x, y, text)
-		local button = display.newImage( g.UIPath.."Button.png", x, y )
-		button.text = display.newText(text, x, y-10, g.zombieFont, 35)
+		local button = display.newImage( GLOBAL_UIPath.."Button.png", x, y )
+		button.text = display.newText(text, x, y-10, GLOBAL_zombieFont, 35)
 		button.text:setFillColor( 0, 0, 0 )
 
-		local flamesSeq = 
+		local flamesSeq =
 		{
-		    {
-		        name = "default",
-		        start = 1,
-		        count = 6,
-		        time = 600,
-		        loopCount = 0,
-		        loopDirection = "forward"
-		    }
+			{
+				name = "default",
+				start = 1,
+				count = 6,
+				time = 600,
+				loopCount = 0,
+				loopDirection = "forward"
+			}
 		}
 		local flamesOptions =
 		{
@@ -23,7 +22,7 @@ local B = {}
 			height = 250,
 			numFrames = 6
 		}
-		local flamesSheet = graphics.newImageSheet( g.UIPath.."ButtonFire.png", flamesOptions )
+		local flamesSheet = graphics.newImageSheet( GLOBAL_UIPath.."ButtonFire.png", flamesOptions )
 		button.flames = display.newSprite( flamesSheet, flamesSeq )
 		button.flames.x, button.flames.y = x, y -80
 		button.flames:play( )

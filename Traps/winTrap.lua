@@ -14,7 +14,7 @@ local S = {}
 														filter=col.sensorCol
 													})
 			T.win = function(event)
-				if(g.gameState == "playing") then
+				if(GLOBAL_gameState == "playing") then
 					--print("in win tile")
 					Runtime:dispatchEvent( { name="youWin"})
 				end
