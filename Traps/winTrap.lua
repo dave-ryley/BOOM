@@ -2,7 +2,7 @@ local S = {}
 
 	local function spawn(x, y)
 		 
-		local col = require "collisionFilters"
+		local col = require "collision_filters"
 		local T = {}
 			T.bounds = display.newRect( x,y, 128*5, 128*5 )
 			T.bounds.myName = "trap_win"

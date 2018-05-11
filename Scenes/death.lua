@@ -1,79 +1,80 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
-local controllerMapping = require "controllerMapping"
+local controller_mapping = require "controller_mapping"
 
-local buttonMaker = require "button"
+local Button = require "button"
 local buttons = {}
-local buttonSelect = 0
+local selected = 0
 local canSelect = true
----------------------------------------------------------------------------------
--- All code outside of the listener functions will only be executed ONCE
--- unless "composer.removeScene()" is called.
----------------------------------------------------------------------------------
 
-
-local function onDeathAxisEvent( event )
-	-- Map event data to simple variables
-	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
-		local axis = controller_mapping.axis[event.axis.number]
-		if "left_x" == axis then
-			if event.normalizedValue < 0.1 and event.normalizedValue > -0.1 then
-				canSelect = true
-			elseif canSelect then
-				canSelect = false
-				local value = 0
-				if event.normalizedValue > 0 then
-					value = 1
-				else
-					value = (-1)
-				end
-				buttonSelect = (((buttonSelect-1 + value) + #buttons) % #buttons) + 1
-				for i = 1, #buttons do
-					if i ~= buttonSelect then
-						buttons[i].highlight(false)
-					else
-						buttons[i].highlight(true)
-					end
-				end
-			end
-
-		end
-	end
-	return true
-end
-
-local function buttonFunction( key )
-	local press = audio.loadSound( "Sounds/UI/ButtonPress.ogg")
-
-	if key ~= 0 then
-		audio.play(press, {channel = 31})
-	end
-	if key == 1 then
-		composer.removeScene( GLOBAL_scenePath.."death", false )
-		composer.gotoScene( GLOBAL_scenePath.."game" )
-	elseif key == 2 then
-		composer.removeScene( GLOBAL_scenePath.."death", false )
-    	composer.gotoScene( GLOBAL_scenePath.."menu" )
-	end
-end
-
-local function onDeathKeyPress( event )
-	local phase = event.phase
-	local keyName = event.keyName
-
-	if (phase == "down") then
-		if (keyName == "buttonA") then
-			buttonFunction(buttonSelect)
-		end
-	end
-
-	return false
-end
-
--- local forward references should go here
 local myText1
 local myText2
 local deathImage
+
+------------------------------------------------------------------------------------
+-- Local Functions
+------------------------------------------------------------------------------------
+
+local function selectButton(direction)
+	-- Deselect previous button
+	if buttons[selected] then
+		buttons[selected]:deselect()
+	end
+	selected = selected + direction
+	
+	-- Cap the selection
+	selected = selected > 0 and selected or #buttons
+	selected = selected <= #buttons and selected or 1
+
+	-- Select the button
+	buttons[selected]:select()
+end
+
+------------------------------------------------------------------------------------
+-- Button Functions
+------------------------------------------------------------------------------------
+
+local function retry()
+	composer.gotoScene( GLOBAL_scenePath.."game" )
+end
+
+local function menu()
+    composer.gotoScene( GLOBAL_scenePath.."menu" )
+end
+
+------------------------------------------------------------------------------------
+-- Event Listeners
+------------------------------------------------------------------------------------
+
+local function onAxisEvent(e)
+	if string.sub( e.device.descriptor, 1 , 7 ) == "Gamepad" then
+		local axis = controller_mapping.axis[e.axis.number]
+		if ( "left_x" == axis ) then
+			if e.normalizedValue < 0.1 and e.normalizedValue > -0.1 then
+				canSelect = true
+			elseif canSelect then
+				canSelect = false
+				local direction = e.normalizedValue > 0 and 1 or -1
+				selectButton(direction)
+			end
+		end
+	end
+end
+
+local function onKeyPress(e)
+	if (e.phase == "down") then
+		if (e.keyName == "buttonA") then
+			buttons[selected].callback()
+		elseif(e.keyName == "enter") then
+			buttons[selected].callback()
+		elseif(e.keyName == "left") then
+			selectButton(-1)
+		elseif(e.keyName == "right") then
+			selectButton(1)
+		end
+	end
+end
+
 ---------------------------------------------------------------------------------
 
 -- "scene:create()"
@@ -107,24 +108,14 @@ function scene:create( event )
 	myText1:setFillColor(1,0,0)
 	myText2:setFillColor(1,0,0)
 
-	function buttonPress( self, event )
-		if event.phase == "began" then
-			buttonFunction(self.id)
-			return true
-		end
-	end
-
-	local buttonLabels = {"RETRY","MAIN MENU"}
+	local buttonData = {
+		{ text = "RETRY", callback = retry },
+		{ text = "MAIN MENU", callback = menu },
+	}
 	for i = 1 , 2 do
-		buttons[i] = buttonMaker.spawn(GLOBAL_acw/(4) + (i-1)*GLOBAL_acw/2, GLOBAL_ach - 100, buttonLabels[i])
-		sceneGroup:insert(buttons[i])
-		sceneGroup:insert(buttons[i].text)
-		sceneGroup:insert(buttons[i].flames)
-		buttons[i]:toFront()
-		buttons[i].text:toFront()
+		buttons[i] = Button:new(GLOBAL_acw/(4) + (i-1)*GLOBAL_acw/2, GLOBAL_ach - 100, buttonData[i].text, buttonData[i].callback)
+		buttons[i]:insertIntoScene(sceneGroup)
 		buttons[i].id = i
-		buttons[i].touch = buttonPress
-		buttons[i]:addEventListener( "touch", buttons[i] )
 	end
 end
 
@@ -135,12 +126,12 @@ function scene:show( event )
 	local sceneGroup = self.view
 	local phase = event.phase
 	composer.removeScene( GLOBAL_scenePath.."game", false )
+
 	if ( phase == "will" ) then
-	-- Called when the scene is still off screen (but is about to come on screen).
+
 	elseif ( phase == "did" ) then
-	-- Called when the scene is now on screen.
-	-- Insert code here to make the scene come alive.
-	-- Example: start timers, begin animation, play audio, etc.
+		Runtime:addEventListener( "key", onKeyPress )
+		Runtime:addEventListener( "axis", onAxisEvent )
 	end
 end
 
@@ -151,11 +142,10 @@ function scene:hide( event )
 	local phase = event.phase
 
 	if ( phase == "will" ) then
-	-- Called when the scene is on screen (but is about to go off screen).
-	-- Insert code here to "pause" the scene.
-	-- Example: stop timers, stop animation, stop audio, etc.
+		Runtime:removeEventListener( "axis", onAxisEvent )
+		Runtime:removeEventListener( "key", onKeyPress )
 	elseif ( phase == "did" ) then
-	-- Called immediately after scene goes off screen.
+
 	end
 end
 
@@ -170,25 +160,16 @@ function scene:destroy( event )
 	display.remove( deathImage )
 	buttons = nil
 	buttonLabels = nil
-	Runtime:removeEventListener( "axis", onDeathAxisEvent )
-	Runtime:removeEventListener( "key", onDeathKeyPress )
 	local sceneGroup = self.view
-
--- Called prior to the removal of scene's view ("sceneGroup").
--- Insert code here to clean up the scene.
--- Example: remove display objects, save state, etc.
 end
 
----------------------------------------------------------------------------------
-
--- Listener setup
+------------------------------------------------------------------------------------
+-- Scene Listener Setup
+------------------------------------------------------------------------------------
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
-Runtime:addEventListener( "key", onDeathKeyPress )
-Runtime:addEventListener( "axis", onDeathAxisEvent )
 
----------------------------------------------------------------------------------
-
+------------------------------------------------------------------------------------
 return scene

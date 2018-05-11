@@ -9,7 +9,7 @@ local B = {}
 		b.satanPath = {}
 		b.level = display.newGroup( )
 		 
-		local col = require "collisionFilters"
+		local col = require "collision_filters"
 		local enemy = require "enemy"
 		local imp = require "imp"
 		local spot = require "spot"

@@ -1,6 +1,7 @@
 local json = require("json")
 
 ---- PATHS ----
+GLOBAL_graphicsPath = "Resources/Graphics/"
 GLOBAL_animationPath = "Resources/Graphics/Animation/"
 GLOBAL_gorePath = "Resources/Graphics/Animation/Gore/"
 GLOBAL_backgroundPath = "Resources/Graphics/Background/"

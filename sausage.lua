@@ -1,6 +1,6 @@
 local S = {}
 
-local colFilters = require "collisionFilters"
+local colFilters = require "collision_filters"
 
 local function spawn(links, x, y)
 	local group = {}

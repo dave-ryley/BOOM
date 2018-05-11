@@ -1,15 +1,18 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
-local buttonMaker = require "button"
+local Button = require "button"
 local canPress = false
 
----------------------------------------------------------------------------------
--- All code outside of the listener functions will only be executed ONCE
--- unless "composer.removeScene()" is called.
----------------------------------------------------------------------------------
-
--- local forward references should go here
 local leaderBoard = {}
+local button
+
+------------------------------------------------------------------------------------
+-- Button Functions
+------------------------------------------------------------------------------------
+
+local function back()
+	composer.gotoScene( GLOBAL_scenePath.."menu" )
+end
 
 local function onLBKeyPress( event )
 	local phase = event.phase
@@ -144,23 +147,9 @@ function scene:create( event )
 	local dogImage = display.newImage( GLOBAL_graphicsPath.."Leaderboard/Dog.png",  415, GLOBAL_ch - 215 )
 	sceneGroup:insert(dogImage)
 
-	function buttonPress( self, event )
-    	if event.phase == "began" then
-    		audio.play(press, {channel = 31})
-    		composer.gotoScene( GLOBAL_scenePath.."menu" )
-    		return true
-    	end
-	end
-
-	button = buttonMaker.spawn(GLOBAL_acw-300, GLOBAL_ach - 100, "MAIN MENU")
-	sceneGroup:insert(button)
-	sceneGroup:insert(button.text)
-	sceneGroup:insert(button.flames)
-	button:toFront()
-	button.text:toFront()
-	button.highlight(true)
-	button.touch = buttonPress
-	button:addEventListener( "touch", button )
+	button = Button:new(GLOBAL_acw-300, GLOBAL_ach - 100, "MAIN MENU", back)
+	button:insertIntoScene(sceneGroup)
+	button:select()
 end
 
 -- "scene:show()"

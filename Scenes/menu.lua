@@ -1,6 +1,6 @@
 local composer = require("composer")
--- local controllerMapping = require("controllerMapping")
-local buttonMaker = require("button")
+-- local controller_mapping = require("controller_mapping")
+local Button = require("button")
 local buttons = {}
 local selected = 0
 local canSelect = true
@@ -26,63 +26,60 @@ local function selectButton(direction)
 end
 
 ------------------------------------------------------------------------------------
+-- Button Functions
+------------------------------------------------------------------------------------
+
+local function play()
+	composer.gotoScene( GLOBAL_scenePath.."game" )
+end
+
+local function leaderboard()
+	composer.gotoScene( GLOBAL_scenePath.."leaderboard" )
+end
+
+local function levelEditor()
+	composer.gotoScene( GLOBAL_scenePath.."level_editor_scene" )
+end
+
+local function credits()
+	composer.gotoScene( GLOBAL_scenePath.."credits" )
+end
+
+local function quit()
+	native.requestExit()
+end
+
+------------------------------------------------------------------------------------
 -- Event Listeners
 ------------------------------------------------------------------------------------
 
-local function onAxisEvent( event )
-	-- Map event data to simple variables
-	print("Axis Event")
-	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
-		local axis = controllerMapping.axis[event.axis.number]
-
+local function onAxisEvent(e)
+	if string.sub( e.device.descriptor, 1 , 7 ) == "Gamepad" then
+		local axis = controller_mapping.axis[e.axis.number]
 		if ( "left_x" == axis ) then
-			if event.normalizedValue < 0.1 and event.normalizedValue > -0.1 then
+			if e.normalizedValue < 0.1 and e.normalizedValue > -0.1 then
 				canSelect = true
 			elseif canSelect then
 				canSelect = false
-				local direction = event.normalizedValue > 0 and 1 or -1
+				local direction = e.normalizedValue > 0 and 1 or -1
 				selectButton(direction)
 			end
 		end
 	end
-	return true -- If consuming the event? Why are we returning true?
 end
 
-local function buttonFunction( key )
-	local press = audio.loadSound( "Sounds/UI/ButtonPress.ogg")
-
-	if key ~= 0 then
-		audio.play(press, {channel = 31})
-	end
-	if key == 1 then
-		composer.gotoScene( GLOBAL_scenePath.."game" )
-	elseif key == 2 then
-		composer.gotoScene( GLOBAL_scenePath.."leaderboard" )
-	elseif key == 3 then
-		composer.gotoScene( GLOBAL_scenePath.."level_editor_scene" )
-	elseif key == 4 then
-		composer.gotoScene( GLOBAL_scenePath.."credits" )
-	elseif key == 5 then
-		native.requestExit()
-	end
-end
-
-local function onKeyPress( event )
-	print("Key Pressed:", event.keyName)
-	local phase = event.phase
-	local keyName = event.keyName
-
-	if (phase == "down") then
-		if (keyName == "buttonA") then
-			buttonFunction(buttonSelect)
-		elseif (keyName == "left") then
+local function onKeyPress(e)
+	if (e.phase == "down") then
+		if (e.keyName == "buttonA") then
+			buttons[selected].callback()
+		elseif(e.keyName == "enter") then
+			buttons[selected].callback()
+		elseif(e.keyName == "left") then
 			selectButton(-1)
-		elseif (keyName == "right") then
+		elseif(e.keyName == "right") then
 			selectButton(1)
 		end
 	end
-
-	return false
 end
 
 ------------------------------------------------------------------------------------
@@ -108,30 +105,26 @@ function scene:create( event )
 
 	sceneGroup:insert(background)
 	local numOfButtons = 5
-	if GLOBAL_android then
+	if GLOBAL_android then -- TODO: Need to change this to have the buttons know whether or not to show up.
 		numOfButtons = 4
-	else
-		-- code in here to highlight the first button
 	end
 
-	function buttonPress( self, event )
-		if event.phase == "began" then
-			buttonFunction(self.id)
-			return true
-		end
-	end
+	-- Set up the button text and callbacks
+	local buttonData = 
+	{
+		{ text = "PLAY", callback = play }, 
+		{ text = "SCOREBOARD", callback = leaderboard }, 
+		{ text = "LEVEL EDITOR", callback = levelEditor },
+		{ text = "CREDITS", callback = credits },
+		{ text = "QUIT", callback = quit }
+	}
 
-	local buttonText = {"PLAY", "SCOREBOARD", "LEVEL EDITOR","CREDITS","QUIT"}
+	-- Set up the buttons
 	for i = 1,numOfButtons do
-		buttons[i] = buttonMaker.spawn(GLOBAL_acw/(numOfButtons*2) + (i-1)*GLOBAL_acw/numOfButtons, GLOBAL_ach - 100, buttonText[i])
-		sceneGroup:insert(buttons[i])
-		sceneGroup:insert(buttons[i].text)
-		sceneGroup:insert(buttons[i].flames)
-		buttons[i]:toFront()
-		buttons[i].text:toFront()
-		buttons[i].id = i
-		buttons[i].touch = buttonPress
-		buttons[i]:addEventListener( "touch", buttons[i] )
+		local xPos = GLOBAL_acw/(numOfButtons*2) + (i-1)*GLOBAL_acw/numOfButtons
+		local yPos = GLOBAL_ach - 100
+		buttons[i] = Button:new(xPos, yPos, buttonData[i].text, buttonData[i].callback)
+		buttons[i]:insertIntoScene(sceneGroup)
 	end
 
 	background.anchorX = 0
@@ -143,22 +136,18 @@ function scene:show( event )
 	local sceneGroup = self.view
 	local phase = event.phase
 	if phase == "will" then
-
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
-		composer.removeScene( GLOBAL_scenePath.."intro", false )
-		composer.removeScene( GLOBAL_scenePath.."leaderboard", false )
-		composer.removeScene( GLOBAL_scenePath.."credits", false )
-		composer.removeScene( GLOBAL_scenePath.."game", false )
-		composer.removeScene( GLOBAL_scenePath.."death", false )
-		composer.removeScene( GLOBAL_scenePath.."levelEditorScene", false )
-		composer.removeScene( GLOBAL_scenePath.."levelTransition", false )
-		composer.removeScene( GLOBAL_scenePath.."pauseMenu", false )
-		composer.removeScene( GLOBAL_scenePath.."win", false )
 		-- Called when the scene is now on screen
-		--
-		-- INSERT code here to make the scene come alive
-		-- e.g. start timers, begin animation, play audio, etc.
+		composer.removeScene( GLOBAL_scenePath .. "intro", false )
+		composer.removeScene( GLOBAL_scenePath .. "leaderboard", false )
+		composer.removeScene( GLOBAL_scenePath .. "credits", false )
+		composer.removeScene( GLOBAL_scenePath .. "game", false )
+		composer.removeScene( GLOBAL_scenePath .. "death", false )
+		composer.removeScene( GLOBAL_scenePath .. "levelEditorScene", false )
+		composer.removeScene( GLOBAL_scenePath .. "levelTransition", false )
+		composer.removeScene( GLOBAL_scenePath .. "pauseMenu", false )
+		composer.removeScene( GLOBAL_scenePath .. "win", false )
 		Runtime:addEventListener( "key", onKeyPress )
 		Runtime:addEventListener( "axis", onAxisEvent )
 	end	
@@ -179,21 +168,15 @@ end
 
 function scene:destroy( event )
 	local sceneGroup = self.view
-	
-	-- Called prior to the removal of scene's "view" (sceneGroup)
-	--
-	-- INSERT code here to cleanup the scene
-	-- e.g. remove display objects, remove touch listeners, save state, etc.
 end
 
----------------------------------------------------------------------------------
-
--- Listener setup
+------------------------------------------------------------------------------------
+-- Scene Listener Setup
+------------------------------------------------------------------------------------
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
 
------------------------------------------------------------------------------------------
-
+------------------------------------------------------------------------------------
 return scene

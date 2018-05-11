@@ -1,6 +1,6 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
-local buttonMaker = require "button"
+local Button = require "button"
 local canPress = false
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
@@ -10,6 +10,10 @@ local canPress = false
 -- local forward references should go here
 
 ---------------------------------------------------------------------------------
+
+local function back()
+	composer.gotoScene( GLOBAL_scenePath.."menu" )
+end
 
 local function onCredKeyPress( event )
 	local phase = event.phase
@@ -52,26 +56,12 @@ function scene:create( event )
 	myText:setFillColor( 1,1,0 )
 	sceneGroup:insert(myText)
 
-	function buttonPress( self, event )
-    	if event.phase == "began" then
-    		audio.play(press, {channel = 31})
-    		composer.gotoScene( GLOBAL_scenePath.."menu" )
-    		return true
-    	end
-	end
-
-	button = buttonMaker.spawn(GLOBAL_acw-300, GLOBAL_ach - 100, "BACK")
-	sceneGroup:insert(button)
-	sceneGroup:insert(button.text)
-	sceneGroup:insert(button.flames)
-	button:toFront()
-	button.text:toFront()
-	button.highlight(true)
-	button.touch = buttonPress
-	button:addEventListener( "touch", button )
+	button = Button:new(GLOBAL_acw-300, GLOBAL_ach - 100, "BACK", back)
+	button:insertIntoScene(sceneGroup)
+	
+	button:select()
 end
 
--- "scene:show()"
 function scene:show( event )
 
 	local sceneGroup = self.view
@@ -86,7 +76,6 @@ function scene:show( event )
 	end
 end
 
--- "scene:hide()"
 function scene:hide( event )
 
 	local sceneGroup = self.view
@@ -101,7 +90,6 @@ function scene:hide( event )
 	end
 end
 
--- "scene:destroy()"
 function scene:destroy( event )
 
 	local sceneGroup = self.view
