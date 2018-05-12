@@ -1,5 +1,5 @@
 local composer = require("composer")
--- local controller_mapping = require("controller_mapping")
+local controller_mapping = require("controller_mapping")
 local Button = require("button")
 local buttons = {}
 local selected = 0
@@ -16,7 +16,7 @@ local function selectButton(direction)
 		buttons[selected]:deselect()
 	end
 	selected = selected + direction
-	
+
 	-- Cap the selection
 	selected = selected > 0 and selected or #buttons
 	selected = selected <= #buttons and selected or 1
@@ -53,30 +53,30 @@ end
 -- Event Listeners
 ------------------------------------------------------------------------------------
 
-local function onAxisEvent(e)
-	if string.sub( e.device.descriptor, 1 , 7 ) == "Gamepad" then
-		local axis = controller_mapping.axis[e.axis.number]
+local function onAxisEvent( event )
+	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
+		local axis = controller_mapping.axis[event.axis.number]
 		if ( "left_x" == axis ) then
-			if e.normalizedValue < 0.1 and e.normalizedValue > -0.1 then
+			if event.normalizedValue < 0.1 and event.normalizedValue > -0.1 then
 				canSelect = true
 			elseif canSelect then
 				canSelect = false
-				local direction = e.normalizedValue > 0 and 1 or -1
+				local direction = event.normalizedValue > 0 and 1 or -1
 				selectButton(direction)
 			end
 		end
 	end
 end
 
-local function onKeyPress(e)
-	if (e.phase == "down") then
-		if (e.keyName == "buttonA") then
+local function onKeyPress( event )
+	if (event.phase == "down") then
+		if (event.keyName == "buttonA") then
 			buttons[selected].callback()
-		elseif(e.keyName == "enter") then
+		elseif(event.keyName == "enter") then
 			buttons[selected].callback()
-		elseif(e.keyName == "left") then
+		elseif(event.keyName == "left") then
 			selectButton(-1)
-		elseif(e.keyName == "right") then
+		elseif(event.keyName == "right") then
 			selectButton(1)
 		end
 	end
@@ -110,10 +110,10 @@ function scene:create( event )
 	end
 
 	-- Set up the button text and callbacks
-	local buttonData = 
+	local buttonData =
 	{
-		{ text = "PLAY", callback = play }, 
-		{ text = "SCOREBOARD", callback = leaderboard }, 
+		{ text = "PLAY", callback = play },
+		{ text = "SCOREBOARD", callback = leaderboard },
 		{ text = "LEVEL EDITOR", callback = levelEditor },
 		{ text = "CREDITS", callback = credits },
 		{ text = "QUIT", callback = quit }
@@ -150,7 +150,7 @@ function scene:show( event )
 		composer.removeScene( GLOBAL_scenePath .. "win", false )
 		Runtime:addEventListener( "key", onKeyPress )
 		Runtime:addEventListener( "axis", onAxisEvent )
-	end	
+	end
 end
 
 function scene:hide( event )
