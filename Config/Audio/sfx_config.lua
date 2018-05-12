@@ -1,22 +1,37 @@
 local SFX = {
     -- UI
-    ["BUTTON_PRESS"] = "Sounds/UI/ButtonPress.ogg",
+    ["BUTTON_PRESS"] = "Resources/Sounds/UI/ButtonPress.ogg",
 
-    -- SATAN SOUNDS
+    -- SATAN
     ["SATAN_INTRO"] = {
-        "Sounds/Satan/ImComingHaHa",
-        "Sounds/Satan/Laugh",
-        "Sounds/Satan/RunMortal",
-        "Sounds/Satan/YouCannotEscape",
-        "Sounds/Satan/YourSoulIsMine",
+        "Resources/Sounds/Satan/ImComingHaHa",
+        "Resources/Sounds/Satan/Laugh",
+        "Resources/Sounds/Satan/RunMortal",
+        "Resources/Sounds/Satan/YouCannotEscape",
+        "Resources/Sounds/Satan/YourSoulIsMine",
     },
 
     -- POWER UPS
-    ["POWER_UP_SHOTGUN"] = "Sounds/PowerUps/ShotgunPowerUp.ogg",
-    ["POWER_UP_SPEED"] = "Sounds/PowerUps/SpeedPowerUp.ogg",
+    ["POWER_UP_SHOTGUN"] = "Resources/Sounds/PowerUps/ShotgunPowerUp.ogg",
+    ["POWER_UP_SPEED"] = "Resources/Sounds/PowerUps/SpeedPowerUp.ogg",
 
     -- PLAYER
-    ["WEAPON_SHOTGUN"] = "Sounds/Player/BOOMSTICK.ogg",
+    ["WEAPON_SHOTGUN"] = "Resources/Sounds/Player/BOOMSTICK.ogg",
+    ["CHARACTER_FOOTSTEPS_RUNNING"] = {
+        "Resources/Sounds/Player/Step1.ogg",
+        "Resources/Sounds/Player/Step2.ogg",
+    },
+    
+    -- ENEMIES
+    ["DOG_BARK"] = {
+        "Resources/Sounds/Enemies/DogBarkAngry.ogg",
+        "Resources/Sounds/Enemies/DogBarkHappy.ogg",
+    },
+    ["IMP_LAUGH"] = "Resources/Sounds/Enemies/ImpLaugh.ogg",
+    ["IMP_LAUGH"] = "Resources/Sounds/Enemies/ImpFire.ogg",
+
+    -- DEATH SOUNDS
+    ["SPLATTER"] = "Resources/Sounds/Enemies/Splat.ogg",
 }
 
 return SFX
