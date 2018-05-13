@@ -6,6 +6,7 @@ local Configs = {}
 ------------------------------------------------------------------------------------
 -- Local Functions - Populating Includes
 ------------------------------------------------------------------------------------
+local includedChecklist = {}
 local function populateInclude(parent, child)
     for k, v in pairs(parent) do
         if not child[k] and parent[k] ~= "_includes" then
@@ -16,11 +17,11 @@ local function populateInclude(parent, child)
     end
 end
 
-local includedChecklist = {}
 local recursiveCheckTable = {}
 local function include(namespace, k, v)
     if v._includes then
         if includedChecklist[v._includes] then -- Parent already populated
+            includedChecklist[k] = true
             populateInclude(namespace[v._includes], v)
         elseif recursiveCheckTable[k] then
             error("Circular dependency detected! Cannot build Config.")
@@ -29,7 +30,9 @@ local function include(namespace, k, v)
         else
             if namespace[v._includes] then -- If not, parent not yet loaded
                 recursiveCheckTable[k] = true
+                -- Include the parent, then attempt to include again
                 include(namespace, v._includes, namespace[v._includes])
+                include(namespace, k, v)
             end
         end
     else
