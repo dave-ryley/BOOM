@@ -19,7 +19,7 @@ local flamesOptions =
 	numFrames = 6
 }
 
-function B:new(x, y, text, callback)
+function B.new(x, y, text, callback)
 	local button = display.newImage( GLOBAL_UIPath.."Button.png", x, y )
 	button.text = display.newText(text, x, y-10, GLOBAL_zombieFont, 35)
 	button.text:setFillColor( 0, 0, 0 )
@@ -61,7 +61,7 @@ function B:new(x, y, text, callback)
 	return button
 end
 
-function B:dispose( button )
+function B.dispose( button )
 	button:removeEventListener( "touch", button )
 	if button.scene then
 		button.scene:remove(button.flames)

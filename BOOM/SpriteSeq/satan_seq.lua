@@ -1,6 +1,6 @@
 local S = {}
 	local function spawn()
-		 
+
 		local satan_DownWalkSheetOptions =
 		{
 			width = 730,

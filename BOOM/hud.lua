@@ -1,6 +1,6 @@
 local HUD = {}
 local hudInitialized = false
-	
+
 local s = require "HUD.speedometer"
 
 local function initializeHUD()
@@ -28,20 +28,30 @@ local function initializeHUD()
 			loopDirection = "forward"
 		}
 	}
-	HUD.satanIndicator = display.newSprite( HUD.satanIndicatorGroup, HUD.sheet_satanIndicator,sequences_satanIndicator)
+	HUD.satanIndicator = display.newSprite(
+		HUD.satanIndicatorGroup,
+		HUD.sheet_satanIndicator,
+		sequences_satanIndicator
+	)
 	HUD.satanIndicator.x = GLOBAL_ccx
 	HUD.satanIndicator.y = GLOBAL_ccy
 	HUD.satanIndicator:scale(0.75,0.75)
 	HUD.satanIndicator:setSequence("play")
 	HUD.satanIndicator:play()
-	HUD.distanceText = display.newText( HUD.satanIndicatorGroup, tostring(HUD.distance).."m", GLOBAL_ccx, GLOBAL_ccy+60, GLOBAL_comicBookFont,60)
+	HUD.distanceText = display.newText(
+		HUD.satanIndicatorGroup,
+		tostring(HUD.distance).."m",
+		GLOBAL_ccx, GLOBAL_ccy+60,
+		GLOBAL_comicBookFont,
+		60
+	)
 	HUD.hudGroup:insert(HUD.satanIndicatorGroup)
 	HUD.satanIndicator.alpha = 0
 	HUD.pointer:setFillColor(1,0,0,0)
 	HUD.distanceText:setFillColor( 1,1,0,0)
 	HUD.pointer.anchorX=-1
 
-	HUD.shotgunOMeter = display.newImage( HUD.hudGroup, GLOBAL_UIPath.."Shotgun.png", 400, 110, isFullResolution )
+	HUD.shotgunOMeter = display.newImage( HUD.hudGroup, GLOBAL_UIPath.."Shotgun.png", 400, 110 )
 	HUD.blocks = {}
 
 	-- SPEEDOMETER
@@ -93,7 +103,7 @@ local function initializeHUD()
 end
 HUD.initializeHUD = initializeHUD
 
-local function updateSatanPointer(satanX,satanY,playerX,playerY,cameraLockX,cameraLockY)
+local function updateSatanPointer(satanX, satanY, playerX, playerY)
 	HUD.distance = math.sqrt(math.pow((satanX-playerX),2)+math.pow((satanY-playerY),2))
 	if HUD.distance/100 > 10 then
 		HUD.satanIndicator.alpha = 1
@@ -132,7 +142,7 @@ end
 HUD.updateSatanPointer = updateSatanPointer
 
 local function updateShotgunOMeter(power)
-	for j = 1,table.getn(HUD.blocks), 1 do
+	for j = 1, #HUD.blocks, 1 do
 		HUD.blocks[j]:removeSelf( )
 	end
 	for i = 1, power - 9, 1 do
@@ -144,8 +154,10 @@ end
 HUD.updateShotgunOMeter = updateShotgunOMeter
 
 local function updateTimer( time )
-	HUD.timer.text = "" .. math.floor(time/600000) .. math.floor((time/60000)%10) ..":"
-		.. math.floor((time/10000)%6) .. math.floor((time/1000)%10) .. ":" .. math.floor((time/100)%10) .. math.floor((time/10)%10)
+	HUD.timer.text =
+		"" .. math.floor(time/600000) .. math.floor((time/60000)%10) ..":"
+		.. math.floor((time/10000)%6) .. math.floor((time/1000)%10) .. ":"
+		.. math.floor((time/100)%10) .. math.floor((time/10)%10)
 end
 
 HUD.updateTimer = updateTimer

@@ -2,11 +2,10 @@ local S = {}
 
 
 	local function spawn(path)
-		local s = {}
 		local c = require "enemies.satan_visuals"
 		local col = require "collision_filters"
 		local m = require "movement_functions"
-		s = c.spawn()
+		local s = c.spawn()
 		s.move = m.spawn()
 		s.currentPath = 1
 		s.speed = 0.77
@@ -44,7 +43,7 @@ local S = {}
 			s.path[i] = {path[i].x, path[i].y, time}
 		end
 
-		local function destinationReached( obj )
+		local function destinationReached()
 			if s.currentPath < #s.path then
 				s.currentPath = s.currentPath + 1
 				local xDestination = s.path[s.currentPath][1]

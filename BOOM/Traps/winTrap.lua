@@ -1,7 +1,5 @@
 local S = {}
-
 	local function spawn(x, y)
-		 
 		local col = require "collision_filters"
 		local T = {}
 			T.bounds = display.newRect( x,y, 128*5, 128*5 )
@@ -20,7 +18,6 @@ local S = {}
 				end
 			end
 			T.bounds:addEventListener( "collision", T.win )
-			
 		return T
 	end
 	S.spawn = spawn

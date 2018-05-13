@@ -8,7 +8,7 @@ local B = {}
 		b.physlevel = {}
 		b.satanPath = {}
 		b.level = display.newGroup( )
-		 
+
 		local col = require "collision_filters"
 		local enemy = require "enemy"
 		local imp = require "imp"
@@ -99,7 +99,7 @@ local B = {}
 			"WallFlat"
 		}
 
-		for mapCounter = 1, table.getn(map), 1 do
+		for mapCounter = 1, #map, 1 do
 			if tonumber(map[mapCounter][1]) < 11 and tonumber(map[mapCounter][1]) > 0 then
 				b.physlevel[mapCounter] = display.newPolygon(
 					b.level,

@@ -1,6 +1,5 @@
 
 local composer = require "composer"
-local col = require "collision_filters"
 local joysticks = require "joystick"
 local hud = require "hud"
 local perspective = require "perspective"
@@ -17,7 +16,6 @@ local pauseButton
 local goreCount = 0
 local timeOffset = 0
 local gameTime = 0
-local pauseTime = 0
 local music = {
 	"HeadShredder.mp3",
 	"DeathCell.mp3",
@@ -152,13 +150,11 @@ local function youWin( event )
 				end
 				composer.gotoScene( GLOBAL_scenePath..nextLevel)
 			end
-			}
-		)
+		}
+	)
 end
 
 local function onKeyEvent( event )
-	local phase = event.phase
-	local keyName = event.keyName
 	local axis = ""
 	local value = 0
 	if (event.phase == "down") then
@@ -313,7 +309,6 @@ end
 
 function scene:pause()
 	hud.satanIndicator:pause()
-	pauseTime = system.getTimer()
 	GLOBAL_pause = true
 	pauseButton.change(2)
 	pauseButton.id = 2
@@ -359,7 +354,7 @@ end
 
 function buttonPress( self, event )
 	if event.phase == "began" then
-		audio.play(press, {channel = 31})
+		--audio.play(press, {channel = 31}) --TODO load sound properly here
 		if self.id == 1 then
 			scene:pause()
 		else

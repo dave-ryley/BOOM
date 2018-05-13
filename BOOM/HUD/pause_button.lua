@@ -8,9 +8,9 @@ local function spawn()
 		height = 230,
 		numFrames = 2
 	}
-	local pause_sheet = graphics.newImageSheet( GLOBAL_UIPath.."PausePlay.png", 
+	local pause_sheet = graphics.newImageSheet( GLOBAL_UIPath.."PausePlay.png",
 													pause_sheetOptions )
-	local pause_seq = 
+	local pause_seq =
 	{
 		{
 			name = "default",

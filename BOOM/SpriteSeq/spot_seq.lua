@@ -1,7 +1,7 @@
 local S = {}
 
 	local function spawn()
-		 
+
 		local spot_sheetOptions =
 				{
 					width = 300,

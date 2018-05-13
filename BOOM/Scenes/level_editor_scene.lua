@@ -50,8 +50,8 @@ function scene:create( event )
 	local sceneGroup = self.view
 	overlay = display.newGroup( )
 
-	myText = display.newText(overlay, "LEVEL EDITOR", display.contentCenterX, 40, GLOBAL_zombieFont, 80 )
-	menu = display.newRect(
+	local myText = display.newText(overlay, "LEVEL EDITOR", display.contentCenterX, 40, GLOBAL_zombieFont, 80 )
+	local menu = display.newRect(
 		overlay,
 		display.contentWidth/16,
 		display.contentHeight/2,

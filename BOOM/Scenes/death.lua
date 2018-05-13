@@ -83,10 +83,11 @@ function scene:create( event )
 	GLOBAL_shotgun = 10
 	local killer = event.params.killer
 	local sceneGroup = self.view
-	deathImage = display.newImage( sceneGroup,
-						GLOBAL_graphicsPath.."Death/"..killer..".png",
-						GLOBAL_ccx,GLOBAL_ccy ,
-						isFullResolution )
+	deathImage = display.newImage(
+		sceneGroup,
+		GLOBAL_graphicsPath.."Death/"..killer..".png",
+		GLOBAL_ccx,GLOBAL_ccy
+	)
 
 	myText1 = display.newText(
 		sceneGroup,
@@ -112,7 +113,7 @@ function scene:create( event )
 		{ text = "MAIN MENU", callback = menu },
 	}
 	for i = 1 , 2 do
-		buttons[i] = Button:new(GLOBAL_acw/(4) + (i-1)*GLOBAL_acw/2, GLOBAL_ach - 100, buttonData[i].text, buttonData[i].callback)
+		buttons[i] = Button.new(GLOBAL_acw/(4) + (i-1)*GLOBAL_acw/2, GLOBAL_ach - 100, buttonData[i].text, buttonData[i].callback)
 		buttons[i]:insertIntoScene(sceneGroup)
 		buttons[i].id = i
 	end
@@ -158,7 +159,6 @@ function scene:destroy( event )
 	display.remove( buttons[2] )
 	display.remove( deathImage )
 	buttons = nil
-	buttonLabels = nil
 	local sceneGroup = self.view
 end
 

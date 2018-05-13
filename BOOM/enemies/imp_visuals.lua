@@ -17,6 +17,7 @@ local T = {}
 		local function animate(angle, ext) -- angle i.e 90, ext is the extension onto the animation, i.e "Shoot" or "Stand"
 			-- Animate Upper Body
 			local anim = ""
+
 			if angle > 337 or angle < 23 then
 				anim = "Up"
 			elseif angle < 68 then
@@ -31,7 +32,7 @@ local T = {}
 				anim = "DownLeft"
 			elseif angle < 293 then
 				anim = "Left"
-			else
+			elseif angle <= 337 then
 				anim = "UpLeft"
 			end
 

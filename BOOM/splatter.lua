@@ -1,5 +1,4 @@
- 
-local F = {
+ local F = {
 	imp = {
 			{path = GLOBAL_gorePath .. "Imp/LeftForearm.png",		x=40,	y=127	},
 			{path = GLOBAL_gorePath .. "Imp/LeftShoulder.png",		x=55,	y=111	},

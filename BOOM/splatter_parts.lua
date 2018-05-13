@@ -1,7 +1,7 @@
 local C = {}
 local colFilters = require "collision_filters"
 local partsList = require "splatter"
- 
+
 	local function spawn( angle, x, y)
 		local files = partsList.imp
 		local parts = {}
@@ -23,14 +23,14 @@ local partsList = require "splatter"
 				p.myName = "gore"
 				physics.addBody(
 					p,
-		          	"dynamic",
-			        {
-			        	density = 0.5,
-			        	friction = 0.5,
-			        	bounce = 0.7,
-			        	filter=colFilters.goreCol
-			        }
-		        )
+					"dynamic",
+					{
+						density = 0.5,
+						friction = 0.5,
+						bounce = 0.7,
+						filter=colFilters.goreCol
+					}
+				)
 				p.linearDamping = 5
 				p.angularDamping = 5
 				p.super = p

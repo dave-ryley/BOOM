@@ -1,4 +1,3 @@
- 
 local P = {}
 	local function spawn()
 		local C = {}

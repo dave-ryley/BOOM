@@ -99,7 +99,7 @@ function scene:create( event )
 	for i=1,2 do
 		local xPos = GLOBAL_ccx
 		local yPos = GLOBAL_ccy+(i-1)*200
-		buttons[i] = Button:new(xPos, yPos, buttonData[i].text, buttonData[i].callback)
+		buttons[i] = Button.new(xPos, yPos, buttonData[i].text, buttonData[i].callback)
 		buttons[i]:insertIntoScene(sceneGroup)
 	end
 	selectButton(1)
@@ -141,7 +141,7 @@ function scene:destroy( event )
 	Runtime:removeEventListener( "key", onKeyPress )
 	local sceneGroup = self.view
 	for i = 1,2 do
-		Button:dispose(buttons[i])
+		Button.dispose(buttons[i])
 	end
 	buttons = {}
 	myText:removeSelf()

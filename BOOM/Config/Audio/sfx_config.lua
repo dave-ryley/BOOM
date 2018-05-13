@@ -21,7 +21,7 @@ local SFX = {
         "Resources/Sounds/Player/Step1.ogg",
         "Resources/Sounds/Player/Step2.ogg",
     },
-    
+
     -- ENEMIES
     ["DOG_BARK"] = {
         "Resources/Sounds/Enemies/DogBarkAngry.ogg",

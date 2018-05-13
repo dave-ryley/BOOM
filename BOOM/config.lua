@@ -1,4 +1,4 @@
-application =
+application = -- luacheck: no global
 {
 	content =
 	{

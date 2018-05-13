@@ -1,7 +1,7 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 
-local buttonMaker = require "button"
+local buttonMaker = require ("button")
 local canPress = false
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
@@ -133,7 +133,7 @@ local function onWinKeyPress( event )
 			composer.removeScene("win", false)
 			composer.gotoScene( GLOBAL_scenePath.."leaderboard" )
 			--NEED CODE FOR SENDING DATA TO LEADERBOARD
-		elseif( string.match("qwertyuiopasdfghjklzxcvbnm", string.lower(keyName)) or keyName == "deleteBack" or keyName == "space" ) then
+		elseif ( string.match("qwertyuiopasdfghjklzxcvbnm", string.lower(keyName)) or keyName == "deleteBack" or keyName == "space" ) then
 			updateText( keyName )
 		end
 	elseif (phase == "up") then
@@ -141,20 +141,6 @@ local function onWinKeyPress( event )
 	end
 
 	return false
-end
-
--- REFERENCE: http://stackoverflow.com/questions/1426954/split-string-in-lua
-function mysplit(inputstr, sep)
-	if sep == nil then
-		sep = "%s"
-	end
-	local t={}
-	local i=1
-	for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-		t[i] = str
-		i = i + 1
-	end
-	return t
 end
 
 -- "scene:show()"

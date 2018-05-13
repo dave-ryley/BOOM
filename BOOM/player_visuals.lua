@@ -70,7 +70,7 @@ local P = {}
 		V.upperBody:insert( V.torch )
 
 
-		local function animate(aimAngle, directionAngle, moving, velocity)
+		local function animate(aimAngle, directionAngle, moving)
 			-- Animate Upper Body
 			local upperBodyAnim = ""
 			local lowerBodyAnim = ""
@@ -102,7 +102,7 @@ local P = {}
 				upperBodyAnim = "Left"
 				V.torch.x = -10
 				V.torch.y = -115
-			else
+			elseif aimAngle <= 337 then
 				upperBodyAnim = "UpLeft"
 				V.torch.x = -45
 				V.torch.y = -105
@@ -129,7 +129,7 @@ local P = {}
 				lowerBodyAnim = "DownLeft"
 			elseif directionAngle < 293 then
 				lowerBodyAnim = "Left"
-			else
+			elseif directionAngle <= 337 then
 				lowerBodyAnim = "UpLeft"
 			end
 
@@ -194,7 +194,7 @@ local P = {}
 				anim = "Left"
 				V.torch.x = -10
 				V.torch.y = -115
-			else
+			elseif aimAngle <= 337 then
 				anim = "UpLeft"
 				V.torch.x = -45
 				V.torch.y = -105

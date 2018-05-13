@@ -1,4 +1,3 @@
- 
 local imp_sheetOptions =
 {
 	width = 300,

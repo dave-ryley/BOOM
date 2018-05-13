@@ -3,7 +3,6 @@ local scene = composer.newScene()
 local Button = require "button"
 local canPress = false
 
-local leaderBoard = {}
 local button
 
 ------------------------------------------------------------------------------------
@@ -21,7 +20,7 @@ local function onLBKeyPress( event )
 	if (phase == "down" and canPress) then
 		if (keyName == "buttonA") then
 			audio.play(press, {channel = 31})
-    		composer.gotoScene( GLOBAL_scenePath.."menu" )
+			composer.gotoScene( GLOBAL_scenePath.."menu" )
 		end
 	elseif (phase == "up") then
 		canPress = true
@@ -30,19 +29,6 @@ local function onLBKeyPress( event )
 	return false
 end
 
--- REFERENCE: http://stackoverflow.com/questions/1426954/split-string-in-lua
-function mysplit(inputstr, sep)
-	if sep == nil then
-		sep = "%s"
-	end
-	local t = {}
-	local i = 1
-	for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-		t[i] = str
-		i = i + 1
-	end
-	return t
-end
 ---------------------------------------------------------------------------------
 
 -- "scene:create()"
@@ -83,14 +69,14 @@ function scene:create( event )
 		local timeOptions =
 		{
 		    text = ""
-		    	.. math.floor(GLOBAL_highscores[i].time/600000)
-	    		.. math.floor((GLOBAL_highscores[i].time/60000)%10)
-	    		.." : "
-		    	.. math.floor((GLOBAL_highscores[i].time/10000)%6)
-		    	.. math.floor((GLOBAL_highscores[i].time/1000)%10)
-		    	.. " : "
-		    	.. math.floor((GLOBAL_highscores[i].time/100)%10)
-		    	.. math.floor((GLOBAL_highscores[i].time/10)%10),
+				.. math.floor(GLOBAL_highscores[i].time/600000)
+				.. math.floor((GLOBAL_highscores[i].time/60000)%10)
+				.." : "
+				.. math.floor((GLOBAL_highscores[i].time/10000)%6)
+				.. math.floor((GLOBAL_highscores[i].time/1000)%10)
+				.. " : "
+				.. math.floor((GLOBAL_highscores[i].time/100)%10)
+				.. math.floor((GLOBAL_highscores[i].time/10)%10),
 		    x = 990,
 		    y = 150 + i*65,
 		    width = 300,     --required for multi-line and alignment
@@ -147,7 +133,7 @@ function scene:create( event )
 	local dogImage = display.newImage( GLOBAL_graphicsPath.."Leaderboard/Dog.png",  415, GLOBAL_ch - 215 )
 	sceneGroup:insert(dogImage)
 
-	button = Button:new(GLOBAL_acw-300, GLOBAL_ach - 100, "MAIN MENU", back)
+	button = Button.new(GLOBAL_acw-300, GLOBAL_ach - 100, "MAIN MENU", back)
 	button:insertIntoScene(sceneGroup)
 	button:select()
 end
@@ -185,8 +171,6 @@ end
 function scene:destroy( event )
 
 	local sceneGroup = self.view
-		path = nil
-		file = nil
 	Runtime:removeEventListener( "key", onLBKeyPress )
 -- Called prior to the removal of scene's view ("sceneGroup").
 -- Insert code here to clean up the scene.

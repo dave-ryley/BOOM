@@ -122,7 +122,7 @@ local C = {}
 		e.bounds:addEventListener( "collision", e.onCollision )
 
 		--onFrameEnter event
-		e.update = function( event )
+		e.update = function( event ) -- luacheck: no unused args
 			if GLOBAL_pause == false and e and e.isDead == false then
 				e.sensorArea.x = e.bounds.x
 				e.sensorArea.y = e.bounds.y
@@ -198,8 +198,6 @@ local C = {}
 							end
 						end
 						)
-				else
-					--timer.performWithDelay( 20, e.cleanup )
 				end
 			end
 

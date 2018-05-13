@@ -14,7 +14,11 @@ local myText
 function scene:create( event )
 
 	local sceneGroup = self.view
-	local transImage = display.newImage( sceneGroup, GLOBAL_graphicsPath.."Art/MorgueConcept.png",GLOBAL_ccx,GLOBAL_ccy-50,isFullResolution)
+	local transImage = display.newImage(
+		sceneGroup,
+		GLOBAL_graphicsPath.."Art/MorgueConcept.png",
+		GLOBAL_ccx,GLOBAL_ccy-50
+	)
 
 	myText = display.newText(
 		"Entering level "..GLOBAL_level .. "  ",

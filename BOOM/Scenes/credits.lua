@@ -22,7 +22,7 @@ local function onCredKeyPress( event )
 	if (phase == "down" and canPress) then
 		if (keyName == "buttonA") then
 			audio.play(press, {channel = 31})
-    		composer.gotoScene( GLOBAL_scenePath.."menu" )
+			composer.gotoScene( GLOBAL_scenePath.."menu" )
 		end
 	elseif (phase == "up") then
 		canPress = true
@@ -56,9 +56,9 @@ function scene:create( event )
 	myText:setFillColor( 1,1,0 )
 	sceneGroup:insert(myText)
 
-	button = Button:new(GLOBAL_acw-300, GLOBAL_ach - 100, "BACK", back)
+	button = Button.new(GLOBAL_acw-300, GLOBAL_ach - 100, "BACK", back)
 	button:insertIntoScene(sceneGroup)
-	
+
 	button:select()
 end
 

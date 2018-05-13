@@ -1,7 +1,6 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local cinematics = true
-local effects = ""
 local myText = ""
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
@@ -13,6 +12,14 @@ local options = {
 	effect = "fade",
 	time = 500
 }
+
+local function skipEvent( event )
+	if cinematics then
+		composer.gotoScene( GLOBAL_scenePath.."menu", options )
+		cinematics = false
+		return true
+	end
+end
 ---------------------------------------------------------------------------------
 
 -- "scene:create()"
@@ -24,7 +31,7 @@ function scene:create( event )
 
 	local saveData = ""
 
-	for i = 1, 10 do
+	for _ = 1, 10 do
 		saveData = saveData .. "3,Gary,600000,99,99\n"
 	end
 
@@ -38,17 +45,15 @@ function scene:create( event )
 	    file:write( saveData )
 	    io.close( file )
 	end
-	file = nil
 
-	local sceneGroup = self.view
 	cinematics = true
-	local options = {
+	local textOptions = {
 	    text = "NARCOLEPTICK GAMES \nPRESENTS",
 	    font=GLOBAL_zombieFont,
 	    fontSize = 80,
 	    align = "center"
 	}
-	myText = display.newText( options )
+	myText = display.newText( textOptions )
 	myText:setFillColor(1,0,0)
 	myText.x = GLOBAL_ccx
 	myText.y = GLOBAL_ccy
@@ -101,13 +106,6 @@ function scene:destroy( event )
 	-- Example: remove display objects, save state, etc.
 end
 
-local function skipEvent( event )
-	if cinematics then
-		composer.gotoScene( GLOBAL_scenePath.."menu", options )
-		cinematics = false
-		return true
-	end
-end
 ---------------------------------------------------------------------------------
 
 -- Listener setup

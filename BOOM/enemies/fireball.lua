@@ -74,7 +74,6 @@ function spawn(angle, x, y)
 
 	f.fireball.onCollision = function (event)
 		if event.phase == "began" and event.other then
-			local other = event.other.super
 			f.cleanup()
 		end
 	end

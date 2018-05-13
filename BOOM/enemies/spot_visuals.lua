@@ -33,7 +33,7 @@ local T = {}
                 anim = "DownLeft"
             elseif angle < 293 then
                 anim = "Left"
-            else
+            elseif angle <= 337 then
                 anim = "UpLeft"
             end
 

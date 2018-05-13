@@ -123,7 +123,7 @@ function scene:create( event )
 	for i = 1,numOfButtons do
 		local xPos = GLOBAL_acw/(numOfButtons*2) + (i-1)*GLOBAL_acw/numOfButtons
 		local yPos = GLOBAL_ach - 100
-		buttons[i] = Button:new(xPos, yPos, buttonData[i].text, buttonData[i].callback)
+		buttons[i] = Button.new(xPos, yPos, buttonData[i].text, buttonData[i].callback)
 		buttons[i]:insertIntoScene(sceneGroup)
 	end
 

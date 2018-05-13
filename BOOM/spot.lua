@@ -39,7 +39,6 @@ local colFilters = require "collision_filters"
 				if i.hit == true then
 					i.animate(i.targetAngle, "Run", "Hit")
 				elseif i.hasTarget == true then
-					local move = require "movement_functions"
 					local x1 = i.targetX
 					local y1 = i.targetY
 					local x2 = i.bounds.x

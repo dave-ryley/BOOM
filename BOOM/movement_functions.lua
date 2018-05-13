@@ -44,7 +44,6 @@ local P = {}
 		M.calculateAngle = calculateAngle
 
 		local function calculateLineAngle( x1, y1, x2, y2 )
-			local angle = 0
 			local deltaX = x2 - x1
 			local deltaY = y2 - y1
 			local angle = math.atan2( deltaY, deltaX )
