@@ -1,6 +1,10 @@
-local Audio = require("Code.Services.AudioService")
+local Audio = require("Code.Services.audio_service")
 local ConfigBuilder = require("Code.Services.ConfigBuilder")
 local CharacterAudio = {}
+
+------------------------------------------------------------------------------------
+-- Event Listeners
+------------------------------------------------------------------------------------
 
 local function onFootstep(self, e)
     local key = "FOOTSTEP"
@@ -25,6 +29,10 @@ local function onAttack(self, e)
     end
     Audio:oneShot(self.soundData[key])
 end
+
+------------------------------------------------------------------------------------
+-- Initialize
+------------------------------------------------------------------------------------
 
 function CharacterAudio:new()
     local audio = {}

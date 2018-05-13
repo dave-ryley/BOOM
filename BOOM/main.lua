@@ -1,4 +1,11 @@
 require("globals")
+require("Code.Utilities.global_utils")
+
+local ConfigService = require("Code.Services.config_service")
+local AudioService = require("Code.Services.audio_service")
+
+ConfigService:init()
+AudioService:init()
 
 GLOBAL_load_highscores()
 

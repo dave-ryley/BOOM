@@ -1,5 +1,4 @@
-local SFXConfig = require("Config.Sound.SFXConfig")
-local MusicConfig = require("Config.Sound.MusicConfig")
+local ConfigService = require("Code.Services.config_service")
 
 local AudioService = {}
 local SFXAssets = {}
@@ -10,9 +9,9 @@ local MUSIC_CHANNEL = 20
 ------------------------------------------------------------------------------------
 -- Services
 ------------------------------------------------------------------------------------
-
 function AudioService:oneShot(configId)
-    local asset = SFXConfig[configId]
+    local config = ConfigService:fromId(configId)
+    local asset = config.asset
     if type(asset) == "table" then
         asset = asset[math.random(#asset)]
     end
@@ -54,23 +53,10 @@ end
 -- Initialization
 ------------------------------------------------------------------------------------
 
-local function initializeConfig(Config, Assets, stream)
-    local loadFunction = (stream and audio.loadStream) or audio.loadSound
-    for k, v in pairs(Config) do
-        if type(v) == "table" then
-            initializeConfig(v, Assets, stream)
-        else
-            Assets[v] = loadFunction(v)
-        end
-    end
-    for i = 1, #Config do
-        Assets[Config[i]] = loadFunction(Config[i])
-    end
+function AudioService:init()
+    SFXAssets = ConfigService:buildAssetTable("SFX", "asset", audio.loadSound, SFXAssets)
+    MusicAssets = ConfigService:buildAssetTable("MUSIC", "asset", audio.loadStream, MusicAssets)
 end
 
-function AudioService:init()
-    initializeConfig(SFXConfig, SFXAssets, false)
-    initializeConfig(MusicConfig, MusicAssets, true)
-end
 ------------------------------------------------------------------------------------
 return AudioService
