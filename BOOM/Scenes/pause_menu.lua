@@ -156,8 +156,6 @@ scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
-Runtime:addEventListener( "key", onKeyPress )
-Runtime:addEventListener( "axis", onAxisEvent )
 
 -----------------------------------------------------------------------------------------
 
