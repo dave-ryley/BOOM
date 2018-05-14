@@ -78,11 +78,11 @@ local namespaceCheck = {}
 local function load(requirePath)
     -- print("Loading Config:", requirePath)
     local configFile = require(requirePath)
-    
+
     local namespaceKey = configFile._namespace
-    if not namespaceKey then 
+    if not namespaceKey then
         error(requirePath .. " is not a valid config. No namespace found.")
-        return 
+        return
     end
 
     -- Check the namespace isn't a sub-namespace
@@ -129,20 +129,22 @@ end
 -- Local Functions - Getter
 ------------------------------------------------------------------------------------
 local splitId = {}
-local function findAndLoadAsset(searchSpace, assetKey, loadFunction, result)
+local function findAndLoadAssets(searchSpace, assetKey, loadFunction, result)
     for k, v in pairs(searchSpace) do
         if k == assetKey then
             if v == "table" then
                 for i = 1, #v do
                     if not result[v[i]] then -- Avoiding duplicate load calls
                         result[v[i]] = loadFunction(v[i])
+                        return result
                     end
                 end
             elseif not result[v] then -- Avoiding duplicate load calls
                 result[v] = loadFunction(v)
+                return result
             end
         elseif type(v) == "table" then
-            findAndLoadAsset(v, assetKey, loadFunction, result)
+            return findAndLoadAssets(v, assetKey, loadFunction, result)
         end
     end
 end
@@ -169,13 +171,14 @@ function ConfigService:fromId(configId)
     return config
 end
 
-function ConfigService:buildAssetTable(namespaceKey, assetKey, loadFunction, result)
+function ConfigService:buildAssetTable(namespaceKey, assetKey, loadFunction)
     local namespace = Configs[namespaceKey]
     if not namespace then
         error("Cannot find namespace \"" .. namespaceKey .. "\" in Configs. Cannot build Asset Table.")
-        return result
+        return nil
     end
-    return find
+    local result = {}
+    return findAndLoadAssets(namespace, assetKey, loadFunction, result)
 end
 
 ------------------------------------------------------------------------------------
