@@ -29,8 +29,10 @@ function AudioService:oneShot(configId)
     end
 end
 
-function AudioService:playMusic(configId)
-    local asset = MusicConfig[configId]
+function AudioService:playMusic(id)
+    local configId = "MUSIC." .. id
+    local config = ConfigService:fromId(configId)
+    local asset = config.asset
     if type(asset) == "table" then
         asset = asset[math.random(#asset)]
     end
@@ -39,7 +41,7 @@ function AudioService:playMusic(configId)
 
     if asset then
         audio.play(
-            SFXAssets[asset],
+            MusicAssets[asset],
             {
                 channel = MUSIC_CHANNEL,
                 loops = -1,
@@ -54,8 +56,8 @@ end
 ------------------------------------------------------------------------------------
 
 function AudioService:init()
-    SFXAssets = ConfigService:buildAssetTable("SFX", "asset", audio.loadSound, SFXAssets)
-    MusicAssets = ConfigService:buildAssetTable("MUSIC", "asset", audio.loadStream, MusicAssets)
+    SFXAssets = ConfigService:buildAssetTable("SFX", "asset", audio.loadSound)
+    MusicAssets = ConfigService:buildAssetTable("MUSIC", "asset", audio.loadStream)
 end
 
 ------------------------------------------------------------------------------------
