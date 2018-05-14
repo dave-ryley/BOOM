@@ -129,9 +129,9 @@ function GLOBAL_load_highscores ()
 	print ("Loading Highscores")
 	local path = system.pathForFile( GLOBAL_file_save_highscores, system.DocumentsDirectory )
 	local file, errorString = io.open( path, "r" )
-	if not file then 
+	if not file then
 		print ("File Error:" .. errorString)
-		return 
+		return
 	end
 	local read_in = file:read( "*all" )
 	if read_in == nil then return end

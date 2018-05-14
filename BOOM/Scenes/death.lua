@@ -15,13 +15,13 @@ local deathImage
 -- Local Functions
 ------------------------------------------------------------------------------------
 
-local function selectButton(direction)
+local function selectButton( direction )
 	-- Deselect previous button
 	if buttons[selected] then
 		buttons[selected]:deselect()
 	end
 	selected = selected + direction
-	
+
 	-- Cap the selection
 	selected = selected > 0 and selected or #buttons
 	selected = selected <= #buttons and selected or 1
@@ -46,30 +46,30 @@ end
 -- Event Listeners
 ------------------------------------------------------------------------------------
 
-local function onAxisEvent(e)
-	if string.sub( e.device.descriptor, 1 , 7 ) == "Gamepad" then
-		local axis = controller_mapping.axis[e.axis.number]
+local function onAxisEvent( event )
+	if string.sub( event.device.descriptor, 1 , 7 ) == "Gamepad" then
+		local axis = controller_mapping.axis[event.axis.number]
 		if ( "left_x" == axis ) then
-			if e.normalizedValue < 0.1 and e.normalizedValue > -0.1 then
+			if event.normalizedValue < 0.1 and event.normalizedValue > -0.1 then
 				canSelect = true
 			elseif canSelect then
 				canSelect = false
-				local direction = e.normalizedValue > 0 and 1 or -1
+				local direction = event.normalizedValue > 0 and 1 or -1
 				selectButton(direction)
 			end
 		end
 	end
 end
 
-local function onKeyPress(e)
-	if (e.phase == "down") then
-		if (e.keyName == "buttonA") then
+local function onKeyPress( event )
+	if (event.phase == "down") then
+		if (event.keyName == "buttonA") then
 			buttons[selected].callback()
-		elseif(e.keyName == "enter") then
+		elseif(event.keyName == "enter") then
 			buttons[selected].callback()
-		elseif(e.keyName == "left") then
+		elseif(event.keyName == "left") then
 			selectButton(-1)
-		elseif(e.keyName == "right") then
+		elseif(event.keyName == "right") then
 			selectButton(1)
 		end
 	end
@@ -77,7 +77,6 @@ end
 
 ---------------------------------------------------------------------------------
 
--- "scene:create()"
 function scene:create( event )
 	composer.removeScene( GLOBAL_scenePath.."game", false )
 	GLOBAL_speed = 1000.0

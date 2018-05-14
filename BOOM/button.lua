@@ -56,9 +56,18 @@ function B:new(x, y, text, callback)
 		scene:insert(self.flames)
 		scene:insert(self)
 		scene:insert(self.text)
+		button.scene = scene
 	end
-
 	return button
+end
+
+function B:dispose( button )
+	button:removeEventListener( "touch", button )
+	if button.scene then
+		button.scene:remove(button.flames)
+		button.scene:remove(button.text)
+		button.scene:remove(button)
+	end
 end
 
 return B

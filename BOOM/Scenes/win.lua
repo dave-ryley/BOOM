@@ -1,6 +1,6 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
- 
+
 local buttonMaker = require "button"
 local canPress = false
 ---------------------------------------------------------------------------------
