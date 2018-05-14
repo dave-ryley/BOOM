@@ -1,3 +1,4 @@
+local Audio = require("Code.Services.audio_service")
 local composer = require("composer")
 local controller_mapping = require("controller_mapping")
 local Button = require("button")
@@ -17,7 +18,7 @@ local function selectButton(direction)
 	end
 	selected = selected + direction
 
-  -- Wrap the selection
+	-- Wrap the selection
 	selected = (selected > 0) and selected or #buttons
 	selected = (selected <= #buttons) and selected or 1
 
@@ -137,6 +138,7 @@ function scene:show( event )
 	local phase = event.phase
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
+		Audio:playMusic("MAIN_MENU")
 	elseif phase == "did" then
 		-- Called when the scene is now on screen
 		composer.removeScene( GLOBAL_scenePath .. "intro", false )
