@@ -222,10 +222,13 @@ local function onKeyEvent( event )
 		elseif (event.keyName == "k") then
 			youDied()
 		elseif (event.keyName == "buttonStart") then
-			if(GLOBAL_pause == false) then
-				scene:pause()
-			else
-				scene:unpause()
+			-- prevent pausing during intro and transition
+			if (GLOBAL_gameState == "playing") then
+				if (GLOBAL_pause == false) then
+					scene:pause()
+				else
+					scene:unpause()
+				end
 			end
 		end
 	end
@@ -328,7 +331,7 @@ function scene:pause()
 			map.fireballs[i].pause()
 		end
 	end
-	composer.showOverlay(GLOBAL_scenePath.."pauseMenu")
+	composer.showOverlay(GLOBAL_scenePath.."pause_menu")
 end
 
 function scene:unpause()
@@ -351,7 +354,7 @@ function scene:unpause()
 			map.fireballs[i].unpause()
 		end
 	end
-	composer.hideOverlay(GLOBAL_scenePath.."pause_menu")
+	composer.hideOverlay(GLOBAL_scenePath.."pause_menu", true)
 end
 
 function buttonPress( self, event )
@@ -493,6 +496,7 @@ function scene:destroy( event )
 			Runtime:removeEventListener( "youWin", youWin)
 			Runtime:removeEventListener( "youDied", youDied)
 			Runtime:removeEventListener( "getPlayerLocation", getPlayerLocation)
+
 			map.player.die()
 			map.player = nil
 			map.player = {}
