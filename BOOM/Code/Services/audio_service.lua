@@ -1,8 +1,8 @@
 local ConfigService = require("Code.Services.config_service")
 
 local AudioService = {}
-local SFXAssets = {}
-local MusicAssets = {}
+local SFXAssets
+local MusicAssets
 
 local MUSIC_CHANNEL = 20
 

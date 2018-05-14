@@ -54,7 +54,7 @@ function EventManager:mixin(o)
 
     o.addEventListener = addEventListener
     o.removeEventListener = removeEventListener
-    o.dispatchPooledEvent = dispatchPooledEvent
+    o.dispatchEvent = dispatchEvent
 end
 
 return EventManager
