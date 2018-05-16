@@ -151,3 +151,8 @@ function GLOBAL_save_highscores ()
 		f:close()
 	end
 end
+
+-- pass arguments to this function to suppress 'unused argument' warnings
+function UNUSED_ARGUMENT( unused )
+	local _ = unused
+end

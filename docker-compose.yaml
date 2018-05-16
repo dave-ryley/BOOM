@@ -1,0 +1,7 @@
+stylecheck:
+    image: boom
+    volumes:
+        - ./BOOM/:/src/BOOM/
+        - .luacheckrc:/src/.luacheckrc
+    working_dir: /src/
+    command: bash -c "luacheck ."

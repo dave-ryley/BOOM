@@ -19,9 +19,9 @@ local function selectButton(direction)
 	end
 	selected = selected + direction
 
-	-- Cap the selection
-	selected = selected > 0 and selected or #buttons
-	selected = selected <= #buttons and selected or 1
+	-- Wrap the selection
+	selected = (selected > 0) and selected or #buttons
+	selected = (selected <= #buttons) and selected or 1
 
 	-- Select the button
 	buttons[selected]:select()

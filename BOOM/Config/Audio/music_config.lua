@@ -1,7 +1,28 @@
-local Music = {
-    ["MAIN_MENU"] = "Resources/Sounds/Music/BOOMROCK.ogg",
-    ["LEVEL_2"] = "Resources/Sounds/Music/DeathCell.ogg",
-    ["LEVEL_3"] = "Resources/Sounds/Music/HeadShredder.ogg",
-}
+return
+{
+    _namespace = "MUSIC",
 
-return Music
+    BASE =
+    {
+        volume = 1,
+        asset = "Resources/Sounds/Music/BOOMROCK.mp3",
+    },
+
+    MAIN_MENU =
+    {
+        _includes = "BASE",
+        asset = "Resources/Sounds/Music/BOOMROCK.mp3",
+    },
+
+    LEVEL_1 =
+    {
+        _includes = "BASE",
+        asset = "Resources/Sounds/Music/DeathCell.mp3",
+    },
+
+    LEVEL_2 =
+    {
+        _includes = "BASE",
+        asset = "Resources/Sounds/Music/HeadShredder.mp3",
+    },
+}

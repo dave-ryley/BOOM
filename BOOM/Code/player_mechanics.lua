@@ -162,10 +162,10 @@ local Q = {}
 		end
 		P.unpause = unpause
 
-		local function blastDisppear( event )
+		local function blastDisappear( event )
 			P.shotgun.bounds.isAwake = false
 			P.shotgun.shooting = false
-			if P.shotgun then
+			if P.shotgun.bounds then
 				physics.removeBody( P.shotgun.bounds )
 			end
 			P.shotgun.blast.alpha = 0
@@ -193,7 +193,7 @@ local Q = {}
 			P.shotgun.blast_sprite.alpha = 1
 			P.shotgun.shooting = true
 			P.visuals.animateShotgunBlast(P.thisAimAngle )
-			timer.performWithDelay(200, blastDisppear)
+			timer.performWithDelay(200, blastDisappear)
 			return timer.performWithDelay(500, shootDelay)
 		end
 
@@ -217,7 +217,6 @@ local Q = {}
 
 
 		local function die()
-			physics.stop( )
 			P.isAlive = false
 			GLOBAL_pause = true
 			audio.stop( 2 )
@@ -239,9 +238,9 @@ local Q = {}
 		P.onCollision = function( event )
 			if event.phase == "began" and event.other then
 				local other = event.other.super
-				local s = string.sub(event.other.myName, 1, 2)
-				if s == "e_" or s == "p_" or other.enemyType == "Satan" or other.enemyType == "fireball" then
-					if other.enemyType== "fireball" then
+				local prefix = string.sub(event.other.myName, 1, 2)
+				if prefix == "e_" or prefix == "p_" or other.enemyType == "Satan" or other.enemyType == "fireball" then
+					if other.enemyType == "fireball" then
 						if other.myName == "fireTrap" then
 							P.health = 0
 						else
@@ -256,7 +255,7 @@ local Q = {}
 					end
 				end
 				if P.health == 0 then
-					Runtime:dispatchEvent( {name="youDied",killer = other.enemyType} )
+					Runtime:dispatchEvent( {name = "youDied", killer = other.enemyType} )
 				end
 			end
 		end

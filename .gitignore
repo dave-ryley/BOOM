@@ -1,2 +1,5 @@
 # created by vim
 *.stackdump
+
+# Mac
+.DS_Store

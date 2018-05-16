@@ -1,5 +1,8 @@
-files["BOOM/globals.lua"] = {ignore = {"111", "131"}}
+ignore = {"131"}
 
+files["BOOM/globals.lua"] = {ignore = {"111"}}
+files["**/Scenes/*.lua"] = {ignore = {"211/sceneGroup", "542"}}
+exclude_files = {"**/External/*.lua"}
 allow_defined = true
 
 globals = {
@@ -7,17 +10,17 @@ globals = {
 	"audio",
 	"application",
 	"display",
-	"require",
-	"Runtime",
 	"graphics",
 	"lfs",
-	"media",
 	"native",
+	"media",
 	"physics",
 	"system",
 	"timer",
 	"transition",
--- BOOM globals -----------------
+	"Runtime",
+-- BOOM globals -------------------
+	"UNUSED_ARGUMENT",
 	"GLOBAL_graphicsPath",
 	"GLOBAL_animationPath",
 	"GLOBAL_gorePath",

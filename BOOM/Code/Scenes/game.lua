@@ -2,7 +2,7 @@
 local composer = require "composer"
 local joysticks = require "joystick"
 local hud = require "hud"
-local perspective = require "perspective"
+local perspective = require "Exterperspective"
 local physics = require "physics"
 local playerBuilder = require "player_mechanics"
 local satanBuilder = require "satan"
@@ -116,6 +116,8 @@ local function youDied( event )
 end
 
 local function youWin( event )
+	_ = event
+
 	GLOBAL_pause = true
 	audio.fade( { channel=20, time=3000, volume=0 } )
 	map.player.bounds:removeSelf()
@@ -492,32 +494,34 @@ function scene:destroy( event )
 			Runtime:removeEventListener( "youDied", youDied)
 			Runtime:removeEventListener( "getPlayerLocation", getPlayerLocation)
 
+			physics.start() -- physics.stop() throws an error if physics is paused
+
 			map.player.die()
-			map.player = nil
-			map.player = {}
-			for i = 1, #map.powerups do
+
+			physics.stop()
+
+			for i = #map.powerups, 1, -1 do
 				if map.powerups[i] then
 					display.remove(map.powerups.bounds)
-					map.powerups[i] = nil
+					table.remove(map.powerups[i])
 				end
 			end
-			map.powerups = nil
-			for i = 1, #map.slowTraps do
+			for i = #map.slowTraps, 1, -1 do
 				if map.slowTraps[i] then
-					map.slowTraps[i] = nil
+					table.remove(map.slowTraps[i])
 				end
 			end
-			for i = 1, #map.deathTraps do
+			for i = #map.deathTraps, 1, -1 do
 				if map.deathTraps[i] then
-					map.deathTraps[i] = nil
+					table.remove(map.deathTraps[i])
 				end
 			end
 
-			for i = 1, #map.enemies do
+			for i = #map.enemies, 1, -1 do
 				if map.enemies[i] then
 					map.enemies[i].hasTarget = false
 					map.enemies[i].cleanup()
-					map.enemies[i] = nil
+					table.remove(map.enemies[i])
 				end
 			end
 
@@ -527,37 +531,21 @@ function scene:destroy( event )
 			display.remove( map.level )
 			transition.cancel( map.satan.bounds )
 			display.remove( map.satan.bounds )
-			map.satan = nil
-			map.satan = {}
 			display.remove( map.floor )
-			map.params = nil
-			map.params = {}
-			for i = 1, #map.gore do
+			for i = #map.gore, 1, -1 do
 				if map.gore[i] then
 					display.remove(map.gore[i])
-					map.gore[i] = nil
+					table.remove(map.gore[i])
 				end
 			end
-			for i = 1, #map.fireballs do
+			for i = #map.fireballs, 1, -1 do
 				if map.fireballs[i] then
 					map.fireballs[i].cleanup()
-					map.fireballs[i] = nil
+					table.remove(map.fireballs[i])
 				end
 			end
-			physics.stop()
-
-			end
-		 )
-
-	--scene:removeEventListener( "create", scene )
-	--scene:removeEventListener( "show", scene )
-	--scene:removeEventListener( "hide", scene )
-	--scene:removeEventListener( "destroy", scene )
-	--]]
-
--- Called prior to the removal of scene's view ("sceneGroup").
--- Insert code here to clean up the scene.
--- Example: remove display objects, save state, etc.
+		end
+	)
 end
 ---------------------------------------------------------------------------------
 
